@@ -1,0 +1,74 @@
+[
+  {
+    "signal_id": "sig-001",
+    "relevance_0_10": 10,
+    "persona_match": true,
+    "recency_band": "last_7d",
+    "hook_angle": "Your LinkedIn note on eval-debt accruing silently for 6 weeks then surfacing all at once is exactly the failure mode I built our regression harness to gate — happy to compare notes on what we promote and what we block",
+    "why_now": "Director MTech posted publicly about the eval-debt pain 5 days ago and described actively wiring a regression harness today",
+    "send_to_sdr": true
+  },
+  {
+    "signal_id": "sig-002",
+    "relevance_0_10": 9,
+    "persona_match": true,
+    "recency_band": "last_7d",
+    "hook_angle": "Your prior playbook at the marketplace likely depended on lead-to-opportunity match rates above 70 percent — most D2C CRMs cannot support that out of the box without a data-fabric rebuild in the first 90 days",
+    "why_now": "New Head of RevOps starting at Example Fashion last week with stated intent to bring marketplace playbook — month 3 is the data-quality wall",
+    "send_to_sdr": true
+  },
+  {
+    "signal_id": "sig-003",
+    "relevance_0_10": 7,
+    "persona_match": false,
+    "recency_band": "last_7d",
+    "hook_angle": "Your v3-with-Claude launch and 4-month investment in eval/guardrail is precisely the architecture we help marketing teams operationalize once the engineering build is in",
+    "why_now": "Launched 3 days ago with explicit emphasis on eval/guardrail maturity",
+    "send_to_sdr": false
+  },
+  {
+    "signal_id": "sig-004",
+    "relevance_0_10": 3,
+    "persona_match": false,
+    "recency_band": "last_30d",
+    "hook_angle": "Generic award announcement — not actionable",
+    "why_now": "Awards do not signal a buying need or persona change",
+    "send_to_sdr": false
+  },
+  {
+    "signal_id": "sig-005",
+    "relevance_0_10": 10,
+    "persona_match": true,
+    "recency_band": "last_7d",
+    "hook_angle": "Your open Marketing Engineering Lead role suggests you are building the agentic layer in-house this cycle — the integration and eval problems we solve sit one layer above what that hire will own, and we typically partner with that role rather than compete",
+    "why_now": "Active hiring signal for the exact role we partner with — Director MTech is the hiring manager and the buyer",
+    "send_to_sdr": true
+  },
+  {
+    "signal_id": "sig-006",
+    "relevance_0_10": 7,
+    "persona_match": true,
+    "recency_band": "last_30d",
+    "hook_angle": "The UK utilities expansion creates a signal-capture problem at scale across outage, billing, and digital transformation events — the agentic layer that reads those signals is where most BPMs stall",
+    "why_now": "Expanded contract announced 30 days ago — the build cycle for the supporting tech is happening now",
+    "send_to_sdr": false
+  },
+  {
+    "signal_id": "sig-007",
+    "relevance_0_10": 6,
+    "persona_match": true,
+    "recency_band": "last_90d",
+    "hook_angle": "Series C with 3x sales team expansion is the classic point where lead handoff quality collapses if the RevOps layer is not rebuilt ahead of the hiring wave",
+    "why_now": "Funding closed but past the 90-day actionability window",
+    "send_to_sdr": false
+  },
+  {
+    "signal_id": "sig-008",
+    "relevance_0_10": 1,
+    "persona_match": false,
+    "recency_band": "last_7d",
+    "hook_angle": "Anniversary post — pure noise",
+    "why_now": "Non-actionable HR content",
+    "send_to_sdr": false
+  }
+]

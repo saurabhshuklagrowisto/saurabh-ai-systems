@@ -1,0 +1,82 @@
+[
+  {
+    "signal_id": "sig-001",
+    "account_domain": "examplebpm.com",
+    "account_name": "ExampleBPM Solutions",
+    "persona_at_account": "Director Marketing Technology",
+    "signal_type": "linkedin_post",
+    "signal_date": "2026-06-18",
+    "source_url": "https://linkedin.com/posts/examplebpm-mtech",
+    "signal_text": "The thing nobody tells you about shipping Claude in production is that the eval debt accrues silently for 6 weeks, then surfaces all at once. Spent today wiring a regression harness across our agent suite. Worth it."
+  },
+  {
+    "signal_id": "sig-002",
+    "account_domain": "examplefashion.in",
+    "account_name": "Example Fashion D2C",
+    "persona_at_account": "Head of RevOps",
+    "signal_type": "leadership_change",
+    "signal_date": "2026-06-15",
+    "source_url": "https://linkedin.com/in/new-head-revops",
+    "signal_text": "Excited to share I've joined Example Fashion as Head of RevOps. Previously at a marketplace unicorn where I rebuilt the lead-to-opportunity pipeline. Looking forward to bringing that playbook here."
+  },
+  {
+    "signal_id": "sig-003",
+    "account_domain": "exampletechsaas.com",
+    "account_name": "ExampleTech SaaS",
+    "persona_at_account": "CTO",
+    "signal_type": "product_launch",
+    "signal_date": "2026-06-20",
+    "source_url": "https://exampletechsaas.com/blog/v3-launch",
+    "signal_text": "Today we launched v3 with AI features built on Claude. We've spent 4 months on the eval and guardrail layer — most of the work was making it boring and predictable for our enterprise customers."
+  },
+  {
+    "signal_id": "sig-004",
+    "account_domain": "examplelogistics.com",
+    "account_name": "Example Logistics",
+    "persona_at_account": "VP Sales",
+    "signal_type": "press",
+    "signal_date": "2026-06-10",
+    "source_url": "https://examplelogistics.com/news/award",
+    "signal_text": "We are proud to receive the Industry Excellence Award for the 5th consecutive year."
+  },
+  {
+    "signal_id": "sig-005",
+    "account_domain": "example-utilities.uk",
+    "account_name": "Example UK Utilities",
+    "persona_at_account": "Director Marketing Technology",
+    "signal_type": "hiring",
+    "signal_date": "2026-06-19",
+    "source_url": "https://example-utilities.uk/careers/agentic-systems-lead",
+    "signal_text": "Open role: Marketing Engineering Lead, Agentic Systems. Looking for a builder who has shipped Claude-based systems in production with HubSpot/Salesforce integration, eval frameworks, and the willingness to be the most technical person in a marketing room."
+  },
+  {
+    "signal_id": "sig-006",
+    "account_domain": "examplebpm.com",
+    "account_name": "ExampleBPM Solutions",
+    "persona_at_account": "Director Marketing Technology",
+    "signal_type": "press",
+    "signal_date": "2026-05-22",
+    "source_url": "https://examplebpm.com/news/utilities-uk-expansion",
+    "signal_text": "ExampleBPM announces expanded UK utilities BPM contract with major energy retailer to support customer experience transformation."
+  },
+  {
+    "signal_id": "sig-007",
+    "account_domain": "examplefintech.in",
+    "account_name": "Example Fintech India",
+    "persona_at_account": "Head of RevOps",
+    "signal_type": "funding",
+    "signal_date": "2026-03-01",
+    "source_url": "https://yourstory.com/example-fintech-series-c",
+    "signal_text": "Example Fintech closes $80M Series C led by global VC. Plans to expand sales team 3x over next 12 months."
+  },
+  {
+    "signal_id": "sig-008",
+    "account_domain": "example-manufacturing.com",
+    "account_name": "Example Manufacturing",
+    "persona_at_account": "VP Engineering",
+    "signal_type": "linkedin_post",
+    "signal_text": "Happy 25th work anniversary to our beloved Vice Chairman!",
+    "signal_date": "2026-06-21",
+    "source_url": "https://linkedin.com/posts/example-mfg-anniversary"
+  }
+]

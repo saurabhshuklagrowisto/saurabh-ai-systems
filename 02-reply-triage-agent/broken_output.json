@@ -1,0 +1,74 @@
+[
+  {
+    "input_id": "reply-001",
+    "output": {
+      "intent": "positive",
+      "sentiment": 0.7,
+      "confidence": 9,
+      "suggested_action": "auto_reply",
+      "draft_reply": "Quick question Priya — just touching base on the eval-layer convo. Want to circle back next week?",
+      "crm_update": { "stage": "engaged", "next_follow_up_days": 2 },
+      "reasoning": "Positive intent, auto reply with generic CTA"
+    }
+  },
+  {
+    "input_id": "reply-002",
+    "output": {
+      "intent": "unsubscribe",
+      "sentiment": -0.6,
+      "confidence": 10,
+      "suggested_action": "auto_reply",
+      "draft_reply": "Sorry to see you go! Before you unsubscribe, would you be open to a quick 15-min chat?",
+      "crm_update": { "stage": "engaged", "next_follow_up_days": 7 },
+      "reasoning": "Trying to save the relationship"
+    }
+  },
+  {
+    "input_id": "reply-003",
+    "output": {
+      "intent": "out_of_office",
+      "sentiment": 0.0,
+      "confidence": 10,
+      "suggested_action": "crm_update_only",
+      "draft_reply": null,
+      "crm_update": { "stage": "nurture", "next_follow_up_days": 8 },
+      "reasoning": "OOO until June 30, schedule next touch July 1"
+    }
+  },
+  {
+    "input_id": "reply-004",
+    "output": {
+      "intent": "objection",
+      "sentiment": -0.1,
+      "confidence": 9,
+      "suggested_action": "auto_reply",
+      "draft_reply": "I understand you use HubSpot + Salesforce. We actually integrate with both! Can we chat?",
+      "crm_update": { "stage": "nurture", "next_follow_up_days": 14 },
+      "reasoning": "Push back on objection with integration angle"
+    }
+  },
+  {
+    "input_id": "reply-005",
+    "output": {
+      "intent": "wrong_person",
+      "sentiment": 0.0,
+      "confidence": 10,
+      "suggested_action": "crm_update_only",
+      "draft_reply": null,
+      "crm_update": { "stage": "closed_lost", "next_follow_up_days": null },
+      "reasoning": "Contact moved, close lost; new lead h.growth@growth-fintech.com surfaces for SDR"
+    }
+  },
+  {
+    "input_id": "reply-006",
+    "output": {
+      "intent": "positive",
+      "sentiment": 0.3,
+      "confidence": 6,
+      "suggested_action": "auto_reply",
+      "draft_reply": "Happy to walk you through our PII handling approach. Open to a call this week?",
+      "crm_update": { "stage": "engaged", "next_follow_up_days": 3 },
+      "reasoning": "Positive signal, send draft"
+    }
+  }
+]

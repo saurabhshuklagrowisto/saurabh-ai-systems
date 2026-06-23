@@ -1,0 +1,98 @@
+[
+  {
+    "input_id": "reply-001",
+    "output": {
+      "intent": "positive",
+      "sentiment": 0.7,
+      "confidence": 9,
+      "suggested_action": "auto_reply",
+      "draft_reply": "Priya, glad the timing lined up. I'll send a 1-pager on how I'd structure the eval layer — golden set, LLM-as-judge, regression gates on prompt promote. Would Tuesday or Wednesday next week work better for a 20-min call?",
+      "crm_update": {
+        "stage": "engaged",
+        "next_follow_up_days": 2
+      },
+      "reasoning": "Clear positive intent with specific ask (1-pager) and open call request — high confidence routes to auto_reply with a single CTA on timing"
+    },
+    "guardrails_triggered": []
+  },
+  {
+    "input_id": "reply-002",
+    "output": {
+      "intent": "unsubscribe",
+      "sentiment": -0.6,
+      "confidence": 10,
+      "suggested_action": "suppress",
+      "draft_reply": null,
+      "crm_update": {
+        "stage": "unsubscribed",
+        "next_follow_up_days": null
+      },
+      "reasoning": "Explicit unsubscribe request — immediate suppression, no draft generated regardless of campaign rules"
+    },
+    "guardrails_triggered": []
+  },
+  {
+    "input_id": "reply-003",
+    "output": {
+      "intent": "out_of_office",
+      "sentiment": 0.0,
+      "confidence": 10,
+      "suggested_action": "crm_update_only",
+      "draft_reply": null,
+      "crm_update": {
+        "stage": "nurture",
+        "next_follow_up_days": 8
+      },
+      "reasoning": "Auto-reply with stated return date of June 30 — schedule next touch to June 30 plus one day buffer"
+    },
+    "guardrails_triggered": []
+  },
+  {
+    "input_id": "reply-004",
+    "output": {
+      "intent": "objection",
+      "sentiment": -0.1,
+      "confidence": 9,
+      "suggested_action": "human_review",
+      "draft_reply": null,
+      "crm_update": {
+        "stage": "nurture",
+        "next_follow_up_days": 180
+      },
+      "reasoning": "Soft objection on competitive displacement plus a 6-month revisit signal — AE should own this thread, not the agent"
+    },
+    "guardrails_triggered": []
+  },
+  {
+    "input_id": "reply-005",
+    "output": {
+      "intent": "wrong_person",
+      "sentiment": 0.0,
+      "confidence": 10,
+      "suggested_action": "crm_update_only",
+      "draft_reply": null,
+      "crm_update": {
+        "stage": "closed_lost",
+        "next_follow_up_days": null
+      },
+      "reasoning": "Contact has changed company — update CRM to mark this contact closed and surface the new lead at growth-fintech.com to the SDR queue"
+    },
+    "guardrails_triggered": []
+  },
+  {
+    "input_id": "reply-006",
+    "output": {
+      "intent": "positive",
+      "sentiment": 0.3,
+      "confidence": 6,
+      "suggested_action": "human_review",
+      "draft_reply": null,
+      "crm_update": {
+        "stage": "engaged",
+        "next_follow_up_days": 3
+      },
+      "reasoning": "Positive intent but explicit PII handling concern — confidence below 7 forces human review per routing rule 6, AE should address the data classification question directly"
+    },
+    "guardrails_triggered": []
+  }
+]

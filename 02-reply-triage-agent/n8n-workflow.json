@@ -1,0 +1,156 @@
+{
+  "name": "Reply Triage Agent — Smartlead to Zoho",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "smartlead-reply",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook: Smartlead Reply",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "smartlead-reply-trigger"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract fields from Smartlead payload into the shape Claude expects\nconst payload = $input.first().json;\nreturn [{\n  json: {\n    id: payload.reply_id || payload.id,\n    from: payload.from_email,\n    subject: payload.subject,\n    body: payload.reply_body || payload.body,\n    context: {\n      campaign: payload.campaign_name,\n      previous_touches: payload.previous_touches || 0,\n      last_touch_days_ago: payload.last_touch_days_ago || 0\n    }\n  }\n}];"
+      },
+      "name": "Normalize Reply Shape",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.anthropic.com/v1/messages",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $credentials.anthropicApi.apiKey }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-6\",\n  \"max_tokens\": 1024,\n  \"system\": \"You are a reply-triage agent. Output strict JSON matching the schema in prompt.md. Apply routing rules in order. Force human_review when confidence < 7.\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify($json) }}\n    }\n  ]\n}"
+      },
+      "name": "Claude: Classify Reply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse Claude response, validate schema, route on suggested_action\nconst claudeOutput = $input.first().json;\nconst rawText = claudeOutput.content[0].text;\nlet parsed;\ntry {\n  const match = rawText.match(/\\{[\\s\\S]*\\}/);\n  parsed = JSON.parse(match[0]);\n} catch (e) {\n  return [{ json: { error: 'unparseable', raw: rawText }, pairedItem: 0 }];\n}\n\nconst required = ['intent', 'confidence', 'suggested_action', 'crm_update', 'reasoning'];\nconst missing = required.filter(k => !(k in parsed));\nif (missing.length) {\n  return [{ json: { error: 'schema_violation', missing, parsed }, pairedItem: 0 }];\n}\n\n// Force human review on low confidence regardless of model output\nif (parsed.confidence < 7) {\n  parsed.suggested_action = 'human_review';\n  parsed.reasoning += ' [override: confidence below threshold]';\n}\n\nreturn [{ json: parsed }];"
+      },
+      "name": "Parse & Guardrail Output",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.suggested_action }}",
+        "rules": {
+          "rules": [
+            { "value2": "auto_reply", "output": 0 },
+            { "value2": "human_review", "output": 1 },
+            { "value2": "crm_update_only", "output": 2 },
+            { "value2": "suppress", "output": 3 }
+          ]
+        },
+        "fallbackOutput": 1
+      },
+      "name": "Route by Action",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "subject": "=Re: {{ $('Webhook: Smartlead Reply').first().json.subject }}",
+        "to": "={{ $('Webhook: Smartlead Reply').first().json.from_email }}",
+        "message": "={{ $json.draft_reply }}",
+        "additionalFields": {
+          "approvalRequired": true
+        }
+      },
+      "name": "Draft Email (AE Approval)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [1360, 180]
+    },
+    {
+      "parameters": {
+        "channel": "#ae-review-queue",
+        "text": "=:eyes: Reply needs review — {{ $('Webhook: Smartlead Reply').first().json.from_email }}\nIntent: {{ $json.intent }} | Confidence: {{ $json.confidence }}\nReason: {{ $json.reasoning }}\nThread: <link to Smartlead>"
+      },
+      "name": "Slack: Human Review Queue",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [1360, 300]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "module": "Leads",
+        "matchField": "Email",
+        "matchValue": "={{ $('Webhook: Smartlead Reply').first().json.from_email }}",
+        "updateFields": {
+          "Lead_Status": "={{ $json.crm_update.stage }}",
+          "Next_Follow_Up_Date": "={{ DateTime.now().plus({days: $json.crm_update.next_follow_up_days}).toISO() }}",
+          "Last_Reply_Sentiment": "={{ $json.sentiment }}",
+          "Last_Triage_Reasoning": "={{ $json.reasoning }}"
+        }
+      },
+      "name": "Zoho CRM: Update Lead",
+      "type": "n8n-nodes-base.zohoCrm",
+      "typeVersion": 1,
+      "position": [1360, 420]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "module": "Leads",
+        "matchField": "Email",
+        "matchValue": "={{ $('Webhook: Smartlead Reply').first().json.from_email }}",
+        "updateFields": {
+          "Lead_Status": "Unsubscribed",
+          "Email_Opt_Out": true
+        }
+      },
+      "name": "Zoho CRM: Suppress Lead",
+      "type": "n8n-nodes-base.zohoCrm",
+      "typeVersion": 1,
+      "position": [1360, 540]
+    }
+  ],
+  "connections": {
+    "Webhook: Smartlead Reply": { "main": [[{ "node": "Normalize Reply Shape", "type": "main", "index": 0 }]] },
+    "Normalize Reply Shape": { "main": [[{ "node": "Claude: Classify Reply", "type": "main", "index": 0 }]] },
+    "Claude: Classify Reply": { "main": [[{ "node": "Parse & Guardrail Output", "type": "main", "index": 0 }]] },
+    "Parse & Guardrail Output": { "main": [[{ "node": "Route by Action", "type": "main", "index": 0 }]] },
+    "Route by Action": {
+      "main": [
+        [{ "node": "Draft Email (AE Approval)", "type": "main", "index": 0 }],
+        [{ "node": "Slack: Human Review Queue", "type": "main", "index": 0 }],
+        [{ "node": "Zoho CRM: Update Lead", "type": "main", "index": 0 }],
+        [{ "node": "Zoho CRM: Suppress Lead", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true
+  },
+  "active": false,
+  "versionId": "demo-v1"
+}

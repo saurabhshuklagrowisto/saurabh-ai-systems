@@ -1,0 +1,63 @@
+{
+  "meeting": {
+    "scheduled_at": "2026-06-24T14:30:00+05:30",
+    "duration_minutes": 30,
+    "title": "Discovery call — agentic systems for UK utilities CX",
+    "attendees": [
+      {
+        "name": "Priya Menon",
+        "email": "priya.menon@examplebpm.com",
+        "external": true,
+        "crm_match_confidence": 0.92
+      },
+      {
+        "name": "Saurabh Shukla",
+        "email": "saurabh@growisto.com",
+        "external": false,
+        "crm_match_confidence": 1.0
+      }
+    ]
+  },
+  "crm_record": {
+    "account": "ExampleBPM Solutions",
+    "account_domain": "examplebpm.com",
+    "industry": "BPM / CX outsourcing",
+    "size_band": "5000+",
+    "stage": "engaged",
+    "owner": "Saurabh Shukla",
+    "prior_touches": [
+      { "date": "2026-06-19", "channel": "email", "summary": "Saurabh sent cold email referencing Priya's LinkedIn post on eval-debt" },
+      { "date": "2026-06-20", "channel": "email", "summary": "Priya replied positively, requested 1-pager, open to call next week" },
+      { "date": "2026-06-21", "channel": "email", "summary": "Saurabh sent the 1-pager and proposed Tue/Wed times" }
+    ],
+    "notes": "Priya is the Director of Marketing Technology. ExampleBPM is hiring a Marketing Engineering Lead — Priya is likely the hiring manager. She is technically deep and has shipped Claude in production."
+  },
+  "persona": {
+    "title": "Director Marketing Technology",
+    "pain_themes": [
+      "Eval debt and regression on agent quality",
+      "HubSpot/Salesforce data fabric and identity resolution",
+      "Build vs buy on the agentic layer"
+    ]
+  },
+  "recent_signals": [
+    {
+      "date": "2026-06-18",
+      "type": "linkedin_post",
+      "source_url": "https://linkedin.com/posts/examplebpm-mtech",
+      "summary": "Priya posted about Claude eval-debt accruing silently for 6 weeks. Wired a regression harness."
+    },
+    {
+      "date": "2026-06-15",
+      "type": "hiring",
+      "source_url": "https://examplebpm.com/careers/marketing-engineering-lead",
+      "summary": "Open req for Marketing Engineering Lead, Agentic Systems"
+    },
+    {
+      "date": "2026-05-22",
+      "type": "press",
+      "source_url": "https://examplebpm.com/news/utilities-uk-expansion",
+      "summary": "Expanded UK utilities BPM contract — customer experience transformation"
+    }
+  ]
+}

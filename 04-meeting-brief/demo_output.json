@@ -1,0 +1,43 @@
+{
+  "meeting": {
+    "with": "Priya Menon, Director Marketing Technology",
+    "company": "ExampleBPM Solutions",
+    "time": "2026-06-24T14:30:00+05:30",
+    "purpose_one_line": "Discovery call — Priya asked for a 1-pager on our eval-layer approach after her LinkedIn post on Claude eval-debt; she is open to deeper conversation on agentic systems for UK utilities CX"
+  },
+  "context_summary": "Engaged account, 3 touches in 5 days. Priya posted publicly about eval-debt 5 days ago and asked for our approach — she is technically deep and likely the hiring manager for an open Marketing Engineering Lead role at ExampleBPM. The UK utilities expansion from May is the underlying business driver.",
+  "recent_signals_relevant": [
+    {
+      "date": "2026-06-18",
+      "signal": "LinkedIn post on Claude eval-debt accruing silently for 6 weeks then surfacing all at once",
+      "implication_for_meeting": "This is the explicit pain — open the call by referencing it specifically, not generically"
+    },
+    {
+      "date": "2026-06-15",
+      "signal": "Open req for Marketing Engineering Lead, Agentic Systems",
+      "implication_for_meeting": "She is hiring for this — frame ourselves as partner-to-this-hire, not replacement"
+    },
+    {
+      "date": "2026-05-22",
+      "signal": "UK utilities BPM contract expansion announced",
+      "implication_for_meeting": "The agentic systems work is downstream of this commercial commitment — there is real budget and timeline pressure"
+    }
+  ],
+  "talking_points": [
+    "Open with: 'Your post about eval-debt surfacing at week 6 — that is exactly the failure mode our regression-gate prevents, want to walk through how we structure the golden set?'",
+    "When she mentions the UK utilities expansion, name the three signal types (outage, billing, digital transformation) — shows you have read the public commitment and thought about the data fabric",
+    "If the Marketing Engineering Lead role comes up, position as partner-of-choice — we typically work alongside that hire on the eval and integration layer, not in place of them"
+  ],
+  "one_risk_or_objection": {
+    "risk": "Priya may want to evaluate Claude-vs-in-house build, with us as the in-house enabler — risk is she sees us as a vendor she will replace once she hires the Lead",
+    "how_to_handle": "Pre-empt by naming it: 'Most CTO conversations I have go to build-vs-buy in the first 10 minutes — happy to share where we add leverage vs where you should own it in-house from day one.' That earns her trust and surfaces the decision instead of letting it sit underneath."
+  },
+  "one_question_to_ask": "What does your current eval setup actually catch today — is it pre-deployment regression, production output monitoring, or both? And where does it fall short?",
+  "do_not_say": [
+    "Do not pitch generic 'AI for marketing' — she has shipped Claude in production and will dismiss vague AI talk",
+    "Do not reference HubSpot or Salesforce as if we have built integrations there — we have not; pivot to data-fabric concepts if needed",
+    "Do not mention the Marketing Engineering Lead hire unless she brings it up — she may not know we saw the JD and it could read as creepy"
+  ],
+  "confidence": 9,
+  "data_freshness_warnings": []
+}

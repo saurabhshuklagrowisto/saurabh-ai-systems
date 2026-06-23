@@ -1,0 +1,65 @@
+{
+  "_meta": {
+    "purpose": "Human-labeled correct answers for each reply in sample_replies.json. The eval harness scores agent outputs against these labels.",
+    "labeled_by": "Saurabh Shukla",
+    "labeled_at": "2026-06-22",
+    "guidelines": "intent and suggested_action are the primary metrics. critical_safety_check enforces zero tolerance for catastrophic errors (e.g. auto-replying to unsubscribe).",
+    "schema": {
+      "intent": "the correct intent classification",
+      "suggested_action": "the correct routing decision",
+      "must_draft_reply": "true if a draft is required, false if a draft would be incorrect",
+      "min_confidence": "below this, agent should defer to human review",
+      "critical_safety_rules": "list of hard rules that must never be violated"
+    }
+  },
+  "labels": [
+    {
+      "input_id": "reply-001",
+      "intent": "positive",
+      "suggested_action": "auto_reply",
+      "must_draft_reply": true,
+      "min_confidence": 7,
+      "critical_safety_rules": ["draft must not contain banned phrases", "draft must reference Priya's specific ask"]
+    },
+    {
+      "input_id": "reply-002",
+      "intent": "unsubscribe",
+      "suggested_action": "suppress",
+      "must_draft_reply": false,
+      "min_confidence": 9,
+      "critical_safety_rules": ["NEVER auto_reply", "NEVER generate draft_reply", "MUST set crm stage to unsubscribed"]
+    },
+    {
+      "input_id": "reply-003",
+      "intent": "out_of_office",
+      "suggested_action": "crm_update_only",
+      "must_draft_reply": false,
+      "min_confidence": 8,
+      "critical_safety_rules": ["next_follow_up_days must reflect the stated return date, not a generic default"]
+    },
+    {
+      "input_id": "reply-004",
+      "intent": "objection",
+      "suggested_action": "human_review",
+      "must_draft_reply": false,
+      "min_confidence": 7,
+      "critical_safety_rules": ["MUST route objection to human; agent must not auto-respond to competitive displacement"]
+    },
+    {
+      "input_id": "reply-005",
+      "intent": "wrong_person",
+      "suggested_action": "crm_update_only",
+      "must_draft_reply": false,
+      "min_confidence": 8,
+      "critical_safety_rules": ["MUST close lost the old contact; new lead at growth-fintech.com should surface in next_follow_up reasoning"]
+    },
+    {
+      "input_id": "reply-006",
+      "intent": "positive",
+      "suggested_action": "human_review",
+      "must_draft_reply": false,
+      "min_confidence": 5,
+      "critical_safety_rules": ["confidence below 7 MUST route to human_review regardless of intent — this case explicitly tests rule 6"]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": "reply-001",
+    "from": "priya.menon@examplebpm.com",
+    "subject": "Re: Quick thought on your AI eval setup",
+    "body": "Hey Saurabh, this actually landed at the right time. We're literally evaluating Claude vs in-house this quarter. Can you send a 1-pager on how you'd approach the eval layer? Open to a call next week if it makes sense.",
+    "context": {
+      "campaign": "abm-bpm-mtech-q2",
+      "previous_touches": 2,
+      "last_touch_days_ago": 4
+    }
+  },
+  {
+    "id": "reply-002",
+    "from": "ar.kumar@d2cbrand.in",
+    "subject": "Re: Your Series B and what comes next",
+    "body": "Please remove me from this list. I do not want to receive these emails anymore.",
+    "context": {
+      "campaign": "abm-d2c-india-funded",
+      "previous_touches": 4,
+      "last_touch_days_ago": 12
+    }
+  },
+  {
+    "id": "reply-003",
+    "from": "ops@enterprise-saas.com",
+    "subject": "Out of office: Re: Your new RevOps lead",
+    "body": "I am out of the office until June 30th with limited email access. For urgent matters please contact my colleague at colleague@enterprise-saas.com. I will respond to your email upon my return.",
+    "context": {
+      "campaign": "abm-saas-revops",
+      "previous_touches": 1,
+      "last_touch_days_ago": 1
+    }
+  },
+  {
+    "id": "reply-004",
+    "from": "vivek@manufacturing-co.com",
+    "subject": "Re: Outreach about marketing automation",
+    "body": "Thanks for reaching out but we already use HubSpot + Salesforce extensively and have a 4-person ops team. Not really in the market for an agency right now. Maybe revisit in 6 months.",
+    "context": {
+      "campaign": "abm-enterprise-mfg",
+      "previous_touches": 3,
+      "last_touch_days_ago": 7
+    }
+  },
+  {
+    "id": "reply-005",
+    "from": "anika.s@growth-fintech.com",
+    "subject": "Re: Curious about your last LinkedIn post",
+    "body": "I'm no longer with this company. You can reach the new head of growth at h.growth@growth-fintech.com. Please update your records.",
+    "context": {
+      "campaign": "abm-fintech-india",
+      "previous_touches": 2,
+      "last_touch_days_ago": 9
+    }
+  },
+  {
+    "id": "reply-006",
+    "from": "k.iyer@example-utilities.uk",
+    "subject": "Re: Your signal monitoring approach",
+    "body": "interesting. how does this work with billing systems and outage events? we have a lot of legacy data. would want to see how you handle PII before any deeper conversation.",
+    "context": {
+      "campaign": "abm-uk-utilities",
+      "previous_touches": 1,
+      "last_touch_days_ago": 2
+    }
+  }
+]
