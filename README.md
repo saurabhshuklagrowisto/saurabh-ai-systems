@@ -52,6 +52,19 @@ Real systems running live for real teams. Click into any folder for the full arc
 | [**Fireflies Summary Pipeline**](./production-systems/fireflies-pipeline) | n8n automation that runs every external meeting through a Claude brand-disambiguation step and files the transcript plus an English summary to the right Drive folder. Multi-language friendly. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Upwork Proposal Automation**](./production-systems/upwork-proposals) | Claude plugin with two live skills (`upwork-scan` + `upwork-proposal`) that scans Upwork, scores jobs on a 16-dimension rubric, runs a brand-permission audit, and generates expertise-first PDF proposals. Architecture and patterns documented. Code is employer IP. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 
+## Marketing workflows
+
+The marketing programs I have shipped for B2B SaaS and services clients. Where `production-systems/` documents the AI agents and infrastructure, `marketing-workflows/` documents the marketing motions those tools support. Different level of abstraction, same standard of proof.
+
+| Workflow | Outcome | Cost or speed |
+|---|---|---|
+| [US CTO Outbound Stack](./marketing-workflows/us-cto-outbound-stack) | 25+ qualified meetings/month, ~$1.2M influenced pipeline | Under $2/mo all-in |
+| [ABM Playbook · 100 Named US Accounts](./marketing-workflows/abm-100-named-accounts) | 32/100 first meetings in 90 days, 3x engagement lift on tier-1 | 4 US conferences activated |
+| [Email and Newsletter Overhaul](./marketing-workflows/email-newsletter-overhaul) | Open rate 14% → 29%, CTR 1.4% → 3.8% | 12K contacts, 6 sends/mo |
+| [Webinar and Podcast Demand Engine](./marketing-workflows/webinar-podcast-demand) | 12 webinars, 8 podcasts, 10% registrant → qualified meeting | Closed-loop content engine |
+| [Upwork CTO Account · End-to-End Motion](./marketing-workflows/upwork-cto-account) | 22 qualified inbound leads, ~$380K pipeline | Built from zero |
+| [Marketing Ops Automation Layer](./marketing-workflows/marketing-ops-automation) | ~12 hrs/week saved, 14 workflows in production, 0 routing errors/quarter | Self-hosted n8n on Railway |
+
 ## Claude skills and evals
 
 Standalone runnable Claude skills with golden-set eval harnesses. Each runs in `--demo` mode without an API key. The eval harness ships with both a passing fixture and a deliberately broken fixture, so you can watch the regression gate fire on a real failure.
