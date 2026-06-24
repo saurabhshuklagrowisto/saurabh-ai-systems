@@ -1,0 +1,107 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "description": "Sanitised example ICP criteria for the ABM Automation Pipeline. The production file used at Growisto has the same shape with internal threshold values tuned to the ecommerce services business.",
+    "schema": "Each market has a list of categories. The system walks them top-down. An account qualifies for the highest category whose ALL criteria it meets. Cat 1 = highest priority."
+  },
+  "india": {
+    "cat_1": {
+      "label": "Highest priority — premium metro D2C with scale",
+      "criteria": {
+        "is_ecommerce": true,
+        "min_traffic_ahrefs_k": 43,
+        "min_employees": 200,
+        "tech_stack_any_of": ["Magento", "Node.js", "React"],
+        "in_house_dev_required": false,
+        "locations_in": ["Mumbai", "Delhi", "Bengaluru", "Pune"]
+      }
+    },
+    "cat_2": {
+      "label": "Strong leads — mid-large D2C with approved stack",
+      "criteria": {
+        "is_ecommerce": true,
+        "min_traffic_ahrefs_k": 32,
+        "min_employees": 100,
+        "tech_stack_any_of": ["Shopify", "Magento", "Node.js", "React"],
+        "in_house_dev_required": false,
+        "locations_in": ["all_india"]
+      }
+    },
+    "cat_3": {
+      "label": "Solid leads — mid D2C",
+      "criteria": {
+        "is_ecommerce": true,
+        "min_traffic_ahrefs_k": 22,
+        "min_employees": 100,
+        "tech_stack_any_of": ["Shopify", "Magento", "Node.js", "React"],
+        "locations_in": ["all_india"]
+      }
+    },
+    "cat_4": {
+      "label": "Workable D2C with Shopify or WooCommerce",
+      "criteria": {
+        "is_ecommerce": true,
+        "min_traffic_ahrefs_k": 20,
+        "min_employees": 50,
+        "tech_stack_any_of": ["Shopify", "Magento", "WooCommerce", "Node.js", "React"],
+        "locations_in": ["all_india"]
+      }
+    }
+  },
+  "usa": {
+    "cat_1": {
+      "label": "Highest priority — large D2C with strong Amazon presence in top metros",
+      "criteria": {
+        "is_ecommerce": true,
+        "min_traffic_ahrefs_k": 43,
+        "min_employees": 100,
+        "amazon_required": true,
+        "amazon_sold_by_any_of": ["Brand", "Amazon"],
+        "locations_in": ["NYC", "SF", "LA"]
+      }
+    },
+    "cat_2": {
+      "label": "Mid D2C with Amazon in top metros",
+      "criteria": {
+        "is_ecommerce": true,
+        "min_traffic_ahrefs_k": 43,
+        "min_employees": 50,
+        "amazon_required": true,
+        "amazon_sold_by_any_of": ["Brand", "Amazon"],
+        "locations_in": ["NYC", "SF", "LA"]
+      }
+    },
+    "cat_3": {
+      "label": "Smaller D2C with Amazon in top metros",
+      "criteria": {
+        "is_ecommerce": true,
+        "min_traffic_ahrefs_k": 11,
+        "min_employees": 20,
+        "amazon_required": true,
+        "amazon_sold_by_any_of": ["Brand", "Amazon"],
+        "locations_in": ["NYC", "SF", "LA"]
+      }
+    },
+    "cat_4": {
+      "label": "D2C with Amazon, anywhere in USA",
+      "criteria": {
+        "is_ecommerce": true,
+        "min_traffic_ahrefs_k": 11,
+        "min_employees": 20,
+        "amazon_required": true,
+        "amazon_sold_by_any_of": ["Brand", "Amazon"],
+        "locations_in": ["any_usa"]
+      }
+    },
+    "cat_5": {
+      "label": "Workable D2C, Amazon optional",
+      "criteria": {
+        "is_ecommerce": true,
+        "min_traffic_ahrefs_k": 11,
+        "min_employees": 20,
+        "amazon_required": false,
+        "locations_in": ["any_usa"]
+      }
+    }
+  }
+}

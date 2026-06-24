@@ -1,137 +1,116 @@
-# AI Sales & Marketing Systems
+# Saurabh Shukla · AI Marketing Engineer
 
-Production-shaped Claude agents and the eval, guardrail, and orchestration patterns behind them. Each system in this repo runs end-to-end without an API key — clone, `python <agent>.py --demo`, see real output in under a second.
+GTM engineer and ABM operator at [Growisto](https://growisto.com). I build the AI systems my marketing team uses every day. CRM enrichment agents, WhatsApp opportunity scanners, ABM scoring pipelines, eval-gated Claude skills, the boring guardrail layer that keeps it all from breaking.
 
-I architect and ship Claude systems for sales and marketing at [Growisto](https://growisto.com). The full production system — a multi-MCP fabric over Zoho CRM, Google Drive, our internal Wiki, Fireflies, Apollo, and n8n, wired by a canonical account ID and a per-account Claude project pattern — lives in a separate plan repo. **This repo is the standalone, runnable proof of the patterns inside that system.**
-
----
-
-## What's here
-
-| # | System | What it proves | One-line demo |
-|---|---|---|---|
-| [01](./01-abm-account-brief-skill) | **ABM Account Brief Skill** | Reusable Claude Skill, ICP gate, evidence grounding, prompt versioning | `python 01-abm-account-brief-skill/scripts/score_output.py` |
-| [02](./02-reply-triage-agent) | **Reply Triage Agent** | Smartlead → Claude → CRM. Schema-first, regression-gated, n8n-deployable | `python 02-reply-triage-agent/reply_triage.py --demo` |
-| [03](./03-signal-monitor) | **Signal Monitor** | Daily ABM digest. The Sales Copilot pattern — signal capture, persona match, recency cliff | `python 03-signal-monitor/signal_rater.py --demo` |
-| [04](./04-meeting-brief) | **Pre-Meeting Brief Generator** | Identity resolution + CRM context + signals → one-page brief 30 min before the call | `python 04-meeting-brief/meeting_brief.py --demo` |
-| — | **[Eval & Guardrail Harness](./02-reply-triage-agent/eval.py)** | Threshold-gated CI eval that BLOCKS promote when critical safety rules are violated | `python 02-reply-triage-agent/eval.py` |
+Portfolio site: **[shivsaurabh.netlify.app](https://shivsaurabh.netlify.app)** · Based in Mumbai · Open to remote roles
 
 ---
 
-## Why this repo exists
+## What this repo is
 
-Most "AI demos" are screenshots and prompts. Real production systems need five things this repo demonstrates concretely:
+Production systems and patterns I've built for sales and marketing teams. Each project here is either running live in production right now, or is a scoped down packaging of a pattern I run in production. Everything is documented honestly. Where code is open, you can clone it and run it. Where I cannot share code because of client or employer IP, the README describes the architecture so you can rebuild the pattern yourself.
 
-1. **A schema** — every output is JSON, every field has a contract, malformed = dead-letter
-2. **Guardrails as code** — PII scrub, banned phrases, confidence thresholds enforced before output reaches a human or a CRM
-3. **An eval harness** — golden set + critical-safety rules + thresholds; CI blocks promote if any metric regresses
-4. **Prompt versioning** — v1 deprecated with documented reason, v2 in production, v3 must pass the eval before promote
-5. **Orchestration thinking** — every agent is one node in a routing graph; demos include n8n workflow exports
+Most of what is here was built at [Growisto](https://growisto.com) where I run demand generation, ABM and outbound for B2B teams. The portfolio website has the marketing-side case studies with numbers. This repo has the systems behind those numbers.
 
-If your system has these, you ship. If it doesn't, every change becomes an incident.
+## What is inside
 
----
+### Production systems
 
-## 30-second quickstart
+Real systems running live for real teams. Each folder has a README that explains what it does, the architecture, what's open, what's described.
+
+| System | What it does | Status |
+|---|---|---|
+| [MAYA · CRM Enrichment Agent](./production-systems/maya-crm-agent) | Autonomous daily agent that links new CRM leads to the right Target Account by resolving the brand's real D2C domain. Self-running playbook, DRY_RUN safety, email digest. | Live in production |
+| [WhatsApp AI Agent on VPS](./production-systems/whatsapp-ai-agent) | A WhatsApp Claude agent on a Contabo VPS that scans group messages on a cron, filters by rules, alerts the user, and drafts replies on approval. Cost cut from $15 to under $2 a month through careful tuning. | Live in production |
+| [ABM Automation Pipeline](./production-systems/abm-automation) | Three-workflow ABM system: ICP scoring on inbound brand lists, POC extraction via Apollo, and a real-time Cliq bot that returns verified contacts on demand. 92 brands scored, codified ICP rules for India and USA. | Live in production |
+| [Fireflies Summary Pipeline](./production-systems/fireflies-pipeline) | n8n automation that catches meetings, runs Claude through a brand disambiguation step, files the transcript and an English summary to the right Drive folder, and emails the team. Multi-language friendly. | Live in production |
+| [Upwork Proposal Automation](./production-systems/upwork-proposals) | Claude plugin that scans Upwork for fit jobs, scores them on a 16-dimension rubric, runs a brand-permission gate, and generates expertise-first PDF proposals. Code is employer IP. Architecture and patterns documented. | Live in production |
+
+### Claude skills and evals
+
+Standalone runnable Claude skills with golden-set eval harnesses. Each runs in `--demo` mode without an API key. The eval gates a deliberate broken output to prove the regression check fires.
+
+| Skill | What it proves | Run it |
+|---|---|---|
+| [ABM Account Brief Skill](./claude-skills/abm-account-brief-skill) | Skill packaging, ICP gate, evidence grounding, prompt versioning, eval as a CI gate | `python claude-skills/abm-account-brief-skill/scripts/score_output.py` |
+| [Reply Triage Agent](./claude-skills/reply-triage-agent) | Schema-first agent design, critical-safety rules, regression-gated eval harness, n8n deployable | `python claude-skills/reply-triage-agent/reply_triage.py --demo` |
+| [Signal Monitor](./claude-skills/signal-monitor) | Sales Copilot pattern: signal capture, persona match, recency cliff, ranked digest for SDRs | `python claude-skills/signal-monitor/signal_rater.py --demo` |
+| [Pre-Meeting Brief Generator](./claude-skills/meeting-brief) | Identity resolution with confidence, data-freshness warnings, no-fabrication rule | `python claude-skills/meeting-brief/meeting_brief.py --demo` |
+
+### Systems thinking
+
+How I think about building agentic systems, distilled into the patterns I reuse across projects.
+
+| Doc | The idea |
+|---|---|
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | The 5-stage shape every workflow in this repo follows: input guardrail → Claude call → output guardrail → routing → eval feedback loop |
+| [docs/eval-pattern.md](./docs/eval-pattern.md) | Golden set, zero-tolerance safety rules, threshold gates that block promote on regression |
+| [docs/stack.md](./docs/stack.md) | What I use weekly, what I deliberately do not use, what I would add at scale |
+
+## The mental model
+
+Most teams ship AI demos. Production AI needs five things this repo demonstrates concretely.
+
+1. **A schema.** Every output is JSON, every field has a contract, malformed equals dead letter queue.
+2. **Guardrails as code.** PII scrub, banned phrases, confidence thresholds enforced before output reaches a human or a CRM. Same module reused across every agent.
+3. **An eval harness.** Hand-labeled golden set, critical safety rules, threshold gates. CI exit code blocks promote when anything regresses.
+4. **Prompt versioning.** v1 deprecated with a documented reason. v2 in production. v3 must pass the golden set before promote.
+5. **Brain and hands separated.** The reasoning layer (Claude) is one component. The action layer (Python, n8n, SQL) is another. The brain calls the hands through clean contracts. This is how you keep the system reliable and the agent honest.
+
+The four Claude skills in this repo demonstrate each of these in isolation. The five production systems show what they look like once they are wired together for a real team.
+
+## What I am claiming, and what I am not
+
+I am a marketer who treats GTM like an engineering problem. I architect the systems, write the routing and the guardrails, and ship production workflows in Claude, n8n and Python orchestration. I work with sales and marketing teams in B2B SaaS and services.
+
+I am not a CS-trained full-stack web engineer. I do not build React frontends or backend services at production scale. I write Python for orchestration and automation. The frontend and the heavier backend services are something I would partner with engineers on.
+
+If you need a builder who can hold the architecture, write the prompts, write the evals, build production workflows on top of Claude and the modern marketing stack, and partner cleanly with engineers when the work needs them, that is the role I fit. If the role you have needs the React plus Python backend generalist, that is not me, and I would rather we both know that early.
+
+## How to run any of the standalone demos
 
 ```bash
-git clone <this-repo-url>
+git clone https://github.com/saurabhshuklagrowisto/saurabh-ai-systems.git
 cd saurabh-ai-systems
-python --version              # 3.10+ required
 
-# Run any demo (no API key needed — replays recorded outputs)
-python 02-reply-triage-agent/reply_triage.py --demo
-python 03-signal-monitor/signal_rater.py --demo
-python 04-meeting-brief/meeting_brief.py --demo
+# All skills run in --demo mode without an API key — they replay recorded Claude outputs
+python claude-skills/reply-triage-agent/reply_triage.py --demo
+python claude-skills/signal-monitor/signal_rater.py --demo
+python claude-skills/meeting-brief/meeting_brief.py --demo
 
-# Run the eval (proves the regression gate works)
-python 02-reply-triage-agent/eval.py
-python 02-reply-triage-agent/eval.py --outputs 02-reply-triage-agent/broken_output.json
-# ^ exits 1; shows you exactly which critical safety rules were violated
+# Run the eval harness — first the passing fixture, then the deliberately broken one
+python claude-skills/reply-triage-agent/eval.py
+python claude-skills/reply-triage-agent/eval.py --outputs claude-skills/reply-triage-agent/broken_output.json
+# Second one exits with code 1. That is the regression gate firing on a real failure.
 
-# Run live against Claude API
+# To run any skill live against the Claude API
 pip install anthropic
-export ANTHROPIC_API_KEY="sk-ant-..."          # macOS/Linux
-$env:ANTHROPIC_API_KEY = "sk-ant-..."          # PowerShell
-python 02-reply-triage-agent/reply_triage.py --live
+$env:ANTHROPIC_API_KEY = "sk-ant-..."
+python claude-skills/reply-triage-agent/reply_triage.py --live
 ```
 
-If you're on Windows and see encoding warnings, set `$env:PYTHONIOENCODING = "utf-8"` once per session.
+Python 3.10 or newer. Windows users may need `$env:PYTHONIOENCODING = "utf-8"` once per session.
 
----
+## The portfolio website
 
-## The patterns this repo demonstrates
+For the marketing-side case studies with numbers, the thesis on where AI agents fit inside the B2B GTM stack, and the contact form, see **[shivsaurabh.netlify.app](https://shivsaurabh.netlify.app)**.
 
-### Schema-first agents
-Every prompt declares an output schema. The agent code validates against `REQUIRED_OUTPUT_KEYS` before passing anything downstream. Malformed JSON goes to a dead-letter queue, not into a customer's inbox.
-
-### Critical-safety rules (zero-tolerance gates)
-The reply-triage eval enforces hard rules that override threshold-based scoring:
-- Never auto-reply to an unsubscribe (compliance incident)
-- Never auto-reply on a competitive objection (relationship incident)
-- Never auto-reply when confidence < 7 (the explicit prompt rule)
-- Never generate a draft when the label says "no draft required"
-
-Any single violation in any single case fails the entire promote gate. Try it: `python 02-reply-triage-agent/eval.py --outputs 02-reply-triage-agent/broken_output.json`.
-
-### Golden-set evals + regression gates
-Each workflow ships with a hand-labeled golden set. The eval harness scores:
-- Schema validity (binary)
-- Intent / classification accuracy (exact match)
-- Action routing accuracy
-- Critical safety (zero-tolerance, see above)
-- Confidence calibration (high-confidence cases must be correct ≥ 95%)
-
-Below threshold → exit 1 → prompt change cannot be promoted. Same pattern that lets engineering teams ship to production without paging someone every night.
-
-### Prompt versioning
-`prompts/v1.md` exists alongside `prompts/v2.md` with a documented reason for deprecation. v2 was promoted only after passing the golden set. v3 (in development) must pass the same gate.
-
-### Shared guardrail layer
-`shared/guardrails.py` is consumed by every workflow. Same module enforces PII scrubbing, banned-phrase detection, schema validation, and prompt-injection detection. Centralizing this is what makes scale possible — change the rule once, every agent gets the update.
-
-### n8n-deployable
-The Python script and the n8n workflow are two surfaces over the same logic. See `02-reply-triage-agent/n8n-workflow.json` — importable into any n8n instance, wires Smartlead webhook → Claude → router → Zoho update + Slack review queue.
-
----
+Six case studies covering the $1 per month US CTO outbound stack, the 100-account ABM playbook, the email and newsletter overhaul, the webinar and podcast demand engine, the Upwork account, and the marketing ops automation layer. Each one has the tools used, the outcomes and what I learned.
 
 ## Stack
 
-- **Models:** Claude (Sonnet 4.6) via Anthropic SDK
-- **Languages:** Python 3.10+ (agents, evals), JavaScript (n8n nodes), Markdown / YAML (prompts, configs)
-- **Orchestration:** n8n (in production), Anthropic SDK direct, Zoho Flow
-- **Data plane:** Zoho CRM, Google Drive, Smartlead, Apollo, Clay, LinkedIn Sales Navigator
-- **Eval / Quality:** Custom harness in this repo, BigQuery for production logs, LLM-as-judge for subjective quality
+Models · Claude (Sonnet 4.6 and Haiku 4.5) via Anthropic and via OpenRouter
+Languages · Python 3.10 plus, JavaScript in n8n, Markdown and YAML for prompts and configs
+Orchestration · n8n in production, Anthropic SDK directly, Zoho Flow, Make
+CRM and data · Zoho CRM, Zoho Cliq, Google Drive, BigQuery for logs
+Outbound · Smartlead, Lemlist, Apollo, Clay, LinkedIn Sales Navigator
+Eval and quality · Custom harness in this repo, golden sets per workflow, LLM as judge for subjective quality
+Hosting · Contabo VPS for the WhatsApp agent, Railway for the older CRO audit tool, n8n cloud for the marketing automations
 
----
+## About me
 
-## How this maps to a Marketing Engineering Lead role
+Three plus years at Growisto running demand generation, ABM and lifecycle marketing for B2B teams in SaaS and services. Most of my work lives at the intersection of marketing operations and AI automation. The thesis is on the website. The systems are in this repo.
 
-| JD-shape ask | Where in this repo |
-|---|---|
-| "Library of reusable Claude skills" | [01-abm-account-brief-skill](./01-abm-account-brief-skill) |
-| "Agentic layer over CRM data fabric" | [02-reply-triage-agent](./02-reply-triage-agent) — Smartlead ↔ Claude ↔ Zoho |
-| "Sales Copilot — signal capture across operational systems" | [03-signal-monitor](./03-signal-monitor) + [04-meeting-brief](./04-meeting-brief) |
-| "Eval and guardrail layer under everything" | [02-reply-triage-agent/eval.py](./02-reply-triage-agent/eval.py) + [shared/guardrails.py](./shared/guardrails.py) |
-| "Low-code agent platforms (n8n, Zapier AI)" | [n8n-workflow.json](./02-reply-triage-agent/n8n-workflow.json) |
-| "Internal tooling — prototypes that become production tools" | Whole repo. Every workflow has a `--live` mode. |
+License is MIT. Fork it, study it, adapt it. Attribution is appreciated, not required.
 
----
-
-## Honest scope
-
-This repo is **scoped-down packaging** of patterns that run in production via n8n + Zoho + Smartlead at Growisto. The standalone scripts let you see the reasoning, guardrails, and eval shape cleanly — without the full production wiring. The bigger system architecture (canonical Account ID + multi-MCP fabric + per-account Claude project pattern) is documented in a separate plan repo.
-
-**What's real:** the prompts, the guardrails, the schema design, the eval rubric, the routing logic.
-**What's scoped:** the integrations (mock outputs replace live Smartlead/Apollo/Zoho calls in `--demo` mode).
-**What's next:** wiring this same harness into the production system's CI so prompt changes are gated automatically.
-
----
-
-## License
-
-MIT — fork it, study it, adapt it. Attribution appreciated, not required.
-
-## About
-
-**Saurabh Shukla** — AI systems architect, sales & marketing | Mumbai | [LinkedIn](https://linkedin.com/in/shivsaurabh) | officialsaurabhshukla@gmail.com
+**Saurabh Shukla** · Mumbai, India · [shivsaurabh.netlify.app](https://shivsaurabh.netlify.app) · [LinkedIn](https://linkedin.com/in/shivsaurabh) · [GitHub](https://github.com/saurabhshuklagrowisto)
