@@ -23,6 +23,7 @@ This system replaces all three manual passes with three automated workflows, wit
 | [README.md](./README.md) | This doc. Architecture and patterns. |
 | [methodology.md](./methodology.md) | How ICP scoring works, the title priority ladder, the Zoho field mapping, data sources, manual judgment calls |
 | [icp-criteria-example.json](./icp-criteria-example.json) | Sample ICP criteria structure for India and USA (sanitised, generic categories) |
+| [**code-samples/cliq-bot-parsing.py**](./code-samples/cliq-bot-parsing.py) | Sanitised Python showing the four parsing patterns (LinkedIn profile, LinkedIn company, domain, plain name), the skip-domain list, the title priority ladder, and how each parsed input routes to Apollo. Runnable example included at the bottom. |
 
 The Python source files that talk to Apollo, Zoho and Cliq are internal to Growisto and not redistributed. The architecture and the methodology are open.
 

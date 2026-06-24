@@ -13,7 +13,7 @@ MAYA does the matching, every night, for every new lead, without supervision. Wi
 | File | What it shows |
 |---|---|
 | [PLAYBOOK.md](./PLAYBOOK.md) | The actual instructions Claude reads every night. The agent is built on top of this. Sanitised of internal emails and live brand examples. |
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | The brain and hands split. Why scheduled Claude Code calls a Python CLI rather than running its own writes. |
+| [**examples/sample-digest.md**](./examples/sample-digest.md) | A realistic example of the email MAYA sends after a run. Real format, sanitised data. Shows confidence-based routing, flag/skip handling, and the run metadata footer. |
 
 Source code for the Python helper that talks to Zoho is internal to Growisto and not redistributed here. The architecture, the playbook structure and the patterns are all open.
 

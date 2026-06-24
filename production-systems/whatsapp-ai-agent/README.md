@@ -16,7 +16,7 @@ This system reads the groups for you, twice a day, filters by your rules, and al
 |---|---|
 | [README.md](./README.md) | This doc. Architecture and patterns. |
 | [cost-optimization-case-study.md](./cost-optimization-case-study.md) | How the monthly run cost dropped from $15 to under $2 through five small changes. Useful if you are running any Claude agent at sustained volume. |
-| [scan-script-walkthrough.md](./scan-script-walkthrough.md) | The bash plus Python script that turns WhatsApp logs into a Claude-callable input. Sanitised. |
+| [**scripts/analyse-groups.sh**](./scripts/analyse-groups.sh) | The actual bash script running on the VPS, sanitised. Real control flow, real cron entry, real Python parsing inline. Phone numbers, IP, and persona-specific filter rules replaced with placeholders. |
 
 The full system is on a private VPS. Phone numbers and the specific filter rules for the user's domain are not in the public repo. The architecture, the scripts and the cost story are.
 
