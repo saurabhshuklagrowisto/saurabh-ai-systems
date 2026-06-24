@@ -2,7 +2,7 @@
 
 # Saurabh Shukla
 
-### AI Marketing Engineer · Mumbai · Open to remote roles
+### AI-Powered Marketing Specialist · Mumbai · Open to remote roles
 
 **Production AI systems for sales and marketing teams. Built at [Growisto](https://growisto.com).**
 
@@ -50,7 +50,7 @@ Real systems running live for real teams. Click into any folder for the full arc
 | [**WhatsApp AI Agent on VPS**](./production-systems/whatsapp-ai-agent) | A WhatsApp Claude agent on a Contabo VPS that scans group messages on a cron, filters opportunities, alerts the user. Includes the case study of cutting cost from $15 to under $2 a month. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**ABM Automation Pipeline**](./production-systems/abm-automation) | Three-workflow ABM system: ICP scoring on inbound brand lists, POC extraction via Apollo, and a real-time Cliq bot that returns verified contacts on demand. 92 brands scored, codified ICP rules for India and USA. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Fireflies Summary Pipeline**](./production-systems/fireflies-pipeline) | n8n automation that runs every external meeting through a Claude brand-disambiguation step and files the transcript plus an English summary to the right Drive folder. Multi-language friendly. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
-| [**Upwork Proposal Automation**](./production-systems/upwork-proposals) | Claude plugin that scans Upwork, scores jobs on a 16-dimension rubric, runs a brand-permission audit, and generates expertise-first PDF proposals. Code is employer IP. Architecture and patterns documented. | ![Architecture](https://img.shields.io/badge/status-architecture--only-blue?style=flat-square) |
+| [**Upwork Proposal Automation**](./production-systems/upwork-proposals) | Claude plugin with two live skills (`upwork-scan` + `upwork-proposal`) that scans Upwork, scores jobs on a 16-dimension rubric, runs a brand-permission audit, and generates expertise-first PDF proposals. Architecture and patterns documented. Code is employer IP. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 
 ## Claude skills and evals
 
@@ -126,7 +126,7 @@ The four Claude skills demonstrate each of these in isolation. The five producti
 
 ## What I claim, what I am not
 
-I am a marketer who treats GTM like an engineering problem. I architect the systems, write the routing and the guardrails, and ship production workflows in Claude, n8n and Python orchestration. I work with sales and marketing teams in B2B SaaS and services.
+I am a marketing specialist running an AI-powered GTM stack, who treats marketing operations as an engineering problem. I architect the systems, write the routing and the guardrails, and ship production workflows in Claude, n8n and Python orchestration. I work with sales and marketing teams in B2B SaaS and services.
 
 I am not a CS-trained full-stack web engineer. I do not build React frontends or backend services at production scale. I write Python for orchestration and automation. Heavier engineering is something I would partner with engineers on.
 
@@ -182,7 +182,7 @@ Things I am actively building or extending right now.
 
 ## Open to
 
-- **Remote roles** in B2B marketing engineering, GTM systems, agentic AI for sales and marketing
+- **Remote AI-powered marketing roles** in GTM systems, agentic AI for sales and marketing, marketing engineering
 - **Consulting engagements** for teams ramping a Claude-driven GTM motion from zero
 - **Conversations** with founders and operators thinking about the next layer of AI in sales and marketing
 

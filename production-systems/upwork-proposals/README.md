@@ -1,6 +1,15 @@
 # Upwork Proposal Automation
 
+![Status](https://img.shields.io/badge/status-live-success?style=flat-square)
+![Skills](https://img.shields.io/badge/Claude_skills-2-cc785c?style=flat-square)
+![Version](https://img.shields.io/badge/version-v2.2-blue?style=flat-square)
+
 A Claude plugin built at [Growisto](https://growisto.com) that scans Upwork for Shopify and ecommerce jobs, scores them on a 16-dimension rubric, runs a brand-permission audit before any client name is cited, and generates expertise-first PDF proposals with industry-matched portfolio examples.
+
+The plugin ships **two live slash commands** that the team uses every day:
+
+- `/growisto-upwork:upwork-scan` · scan + score + post to Cliq
+- `/growisto-upwork:upwork-proposal [job URL]` · generate cover letter + PDF proposal
 
 **Note on what is open here.** The plugin source code is internal to Growisto. This README describes the architecture and the patterns that are reusable. The actual prompts, the portfolio database, and the permission audit content are not redistributed.
 
