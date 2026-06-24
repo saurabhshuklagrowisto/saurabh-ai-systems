@@ -26,7 +26,7 @@ A top-of-funnel demand generation engine built around a closed-loop content moti
    │       │                               │
    │       v                               │
    │  Personalised invite sequence         │
-   │  (HubSpot + Smartlead)                │
+   │  (Zoho CRM + Sendy + Lemlist)         │
    │       │                               │
    │       v                               │
    │  Topic relevance scoring per account  │
@@ -34,7 +34,7 @@ A top-of-funnel demand generation engine built around a closed-loop content moti
    │   recent signals)                     │
    │       │                               │
    │       v                               │
-   │  Registration page (HubSpot)          │
+   │  Registration page (Zoho Forms)       │
    └───────────────┬───────────────────────┘
                    │
                    v
@@ -83,7 +83,7 @@ A top-of-funnel demand generation engine built around a closed-loop content moti
 ## The workflow
 
 1. **Pre-event ABM activation (T-14 days).** A target account list is enriched with topic relevance. Claude reads each account's recent signals and history, and rates topic relevance. High-relevance accounts get personalized invite sequences.
-2. **Registration landing page.** HubSpot forms capture registrants. Confirmation email lands. Calendar invite sent.
+2. **Registration landing page.** Zoho Forms captures registrants. Sendy fires the confirmation email. Calendar invite sent.
 3. **Live event.** Hosted via Riverside (high-quality recording). During the session, engagement signals (Q&A activity, poll responses, session duration) feed an n8n workflow that scores attendees in real time.
 4. **Hot attendees flagged.** Anyone hitting an engagement threshold gets flagged to the AE within an hour of session end.
 5. **Branched post-event nurture.** Three branches based on what the attendee did:
@@ -109,7 +109,7 @@ This engine treats every webinar as a 4-week motion, not a 1-hour event. The 10%
 
 ## The stack
 
-`Riverside` for recording · `HubSpot` for registration, landing pages, and nurture sequences · `n8n` for live engagement scoring and branching · `Canva` for design assets · `Claude` for topic relevance scoring and nurture copy
+`Riverside` for recording · `Zoho CRM` + `Zoho Forms` for registration and lifecycle tracking · `Sendy` for confirmation and nurture sends · `Lemlist` for warm pre-event invites to tier-1 accounts · `n8n` for live engagement scoring and branching · `Canva` for design assets · `Claude` for topic relevance scoring and nurture copy
 
 ## Read more
 

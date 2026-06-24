@@ -89,7 +89,7 @@ A schema or banned-phrase violation is fatal. A confidence violation triggers re
 
 ## Stage 4 · Routing and side effects
 
-This is where the agent talks to the rest of the world: writes to Zoho CRM, sends via Smartlead, posts to Slack/Cliq, schedules follow-ups. The routing decision is data, not code — `suggested_action` from the model output drives the path through a switch node.
+This is where the agent talks to the rest of the world: writes to Zoho CRM, sends via Sendy or Lemlist, posts to Cliq, schedules follow-ups. The routing decision is data, not code — `suggested_action` from the model output drives the path through a switch node.
 
 In the demos, this stage is collapsed (we print to stdout). In production via n8n, see [claude-skills/reply-triage-agent/n8n-workflow.json](./claude-skills/reply-triage-agent/n8n-workflow.json) for the full switch graph.
 

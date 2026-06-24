@@ -5,10 +5,10 @@
 | Layer | Tool | Why this one |
 |---|---|---|
 | **Model** | Claude (Sonnet 4.6) | Best-in-class on long-context reasoning + structured output reliability. Native MCP support for the production system. |
-| **Orchestration (prod)** | n8n | Self-hostable, low-code-but-not-no-code (you can drop into JS when needed), good Claude + Zoho + Smartlead nodes. |
+| **Orchestration (prod)** | n8n | Self-hostable, low-code-but-not-no-code (you can drop into JS when needed), good Claude + Zoho + Apollo + custom webhook nodes. |
 | **Orchestration (dev)** | Python + Anthropic SDK | Lets me iterate on prompts and guardrails outside the n8n canvas. Same Python becomes a service when needed. |
 | **CRM** | Zoho CRM | What Growisto runs. Concepts (lifecycle stages, custom modules, workflows) map cleanly to HubSpot/Salesforce. |
-| **Outbound** | Smartlead, Lemlist, Apollo | Smartlead for cold-email volume + replies, Lemlist for personalized sequences, Apollo for enrichment. |
+| **Outbound** | Sendy, Lemlist, Apollo, Clay, Prospectoo | Sendy (self-hosted, Amazon SES backend) for high-volume cold sends; Lemlist for warm personalized sequences; Apollo + Prospectoo + Clay for enrichment. |
 | **Enrichment** | Clay + Apollo + LinkedIn Sales Nav | Clay for waterfall enrichment, Apollo for contact data, LiSN for signals. |
 | **Knowledge** | Markdown wiki, git-backed, MCP-served | Source of truth in git. CI validates schema. MCP serves into Claude. Anyone with a clone can contribute. |
 | **Eval / Quality** | Custom Python harness in this repo | Standard harness needs felt premature; rolled my own. Replaces with a framework once requirements stabilize. |

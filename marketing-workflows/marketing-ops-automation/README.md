@@ -22,7 +22,7 @@ Replaced 12 hours per week of manual marketing operations work with an automatio
    ┌──────────────────────────────────────────────────────┐
    │                  TRIGGERS                            │
    │                                                      │
-   │  HubSpot webhooks · GA4 events · Form submissions   │
+   │  Zoho CRM webhooks · GA4 events · Form submissions  │
    │  Cron schedules · Manual triggers (Cliq commands)   │
    └────────────────────┬─────────────────────────────────┘
                         │
@@ -44,7 +44,7 @@ Replaced 12 hours per week of manual marketing operations work with an automatio
         │               │                │
         v               v                v
    ┌──────────────────────────────────────────────────────┐
-   │                 HUBSPOT                              │
+   │                 ZOHO CRM                             │
    │  (system of record, all writes flow back here)       │
    └────────────────────┬─────────────────────────────────┘
                         │
@@ -64,7 +64,7 @@ Replaced 12 hours per week of manual marketing operations work with an automatio
 | **CRM hygiene** | Dedup new contacts against existing records · Normalise phone numbers and email formats · Sync unsubscribes across systems · Auto-tag based on inferred attributes |
 | **Lead routing** | Round-robin by territory · Route by vertical to specialist AEs · Escalate hot leads to senior AEs · SLA-based reassignment if no touch in 24h |
 | **Lead scoring** | Engagement score (email + site + content) · Firmographic fit score · Buying-intent score from external signals · Composite tier (A/B/C) |
-| **Campaign attribution** | UTM normalisation · First/last/multi-touch attribution write-back to HubSpot · Influenced pipeline calculation per campaign |
+| **Campaign attribution** | UTM normalisation · First/last/multi-touch attribution write-back to Zoho CRM · Influenced pipeline calculation per campaign |
 | **Reporting** | Weekly automation digest email · Looker Studio dashboard refresh · Anomaly alerts (sudden score changes, broken workflows) |
 
 ## The workflow philosophy
@@ -73,7 +73,7 @@ Every workflow follows the same shape:
 
 1. **One trigger** — webhook, schedule, or manual command
 2. **One responsibility** — workflow does exactly one thing, no spaghetti
-3. **One write target** — workflow writes back to HubSpot or sends an alert, not both
+3. **One write target** — workflow writes back to Zoho CRM or sends an alert, not both
 4. **Idempotent** — re-running the same workflow on the same input produces the same output
 5. **Observable** — every run logs to a central location for audit and debugging
 
@@ -102,7 +102,7 @@ Zero is the goal because lead routing errors compound. One bad assignment damage
 
 ## The stack
 
-`n8n` self-hosted on `Railway` · `Make.com` for a few cross-app workflows where n8n nodes don't exist · `HubSpot` as system of record · `Google Sheets` for ops staging and weekly review tables · `Looker Studio` for dashboards · `Claude` for anomaly detection and the weekly digest
+`n8n` self-hosted on `Railway` · `Make.com` for a few cross-app workflows where n8n nodes don't exist · `Zoho CRM` as system of record · `Google Sheets` for ops staging and weekly review tables · `Looker Studio` for dashboards · `Claude` for anomaly detection and the weekly digest
 
 ## Read more
 

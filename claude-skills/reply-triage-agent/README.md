@@ -4,7 +4,7 @@ Classifies inbound replies to cold outreach and decides routing: auto-draft plus
 
 ## What it does
 
-Trigger: a reply lands in Smartlead.
+Trigger: a reply lands in your cold-email tool (in production: Sendy webhook; sample payloads here use the common Smartlead/Lemlist shape so the agent is portable).
 Action: Claude classifies the reply (intent, sentiment, confidence) and decides one of four routes:
 - `auto_reply` · draft for AE one-click send
 - `human_review` · escalate to AE, no draft
@@ -61,9 +61,9 @@ reply-triage-agent/
 ├── sample_replies.json       6 realistic input cases
 ├── demo_output.json          recorded agent outputs (replays in --demo mode)
 ├── broken_output.json        deliberately broken outputs to prove the eval works
-└── n8n-workflow.json         importable n8n workflow (Smartlead to Claude to Zoho)
+└── n8n-workflow.json         importable n8n workflow (webhook to Claude to Zoho)
 ```
 
 ## The production version
 
-In production at Growisto, this runs in n8n with Smartlead webhooks to Claude classifier to switch node to Zoho CRM update plus Slack review queue. The Python script in this repo is the same logic, runnable standalone, so the prompts and guardrails can be developed and tested without the full integration stack.
+In production at Growisto, this runs in n8n with Sendy reply webhooks to Claude classifier to switch node to Zoho CRM update plus Cliq review queue. The Python script in this repo is the same logic, runnable standalone, so the prompts and guardrails can be developed and tested without the full integration stack.

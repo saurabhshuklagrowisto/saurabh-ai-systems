@@ -59,7 +59,7 @@ This is the end-to-end **business motion**. The [Upwork plugin](../../production
    │  Direct DM on Upwork (within platform)                     │
    │       │                                                    │
    │       v                                                    │
-   │  HubSpot tracking                                          │
+   │  Zoho CRM tracking                                         │
    └────────────────────────────────────────────────────────────┘
 
    ┌────────────────────────────────────────────────────────────┐
@@ -87,10 +87,10 @@ This is two motions running in parallel, plus an always-on positioning layer.
 
 ### Outbound motion (different positioning than off-platform)
 
-1. **Apollo** pulls US CTO contact data filtered by ICP.
+1. **Apollo** + **Prospectoo** pull US CTO contact data filtered by ICP.
 2. **Claude generates per-account hooks** — different angle than off-platform outbound because Upwork DMs have a different feel and TOS.
 3. **Direct DM within Upwork** to the prospect.
-4. **HubSpot tracks** the touch and any reply.
+4. **Zoho CRM tracks** the touch and any reply.
 
 ### Always-on positioning layer
 
@@ -110,7 +110,7 @@ The 22 inbound leads and ~$380K pipeline came from running all four layers in th
 
 ## The stack
 
-`Upwork` (the platform) · `Apollo` for US CTO contact data · `Claude` for both the plugin (scan + proposal) and outbound hooks · `HubSpot` for tracking · `Zoho Cliq` for ranked job notifications
+`Upwork` (the platform) · `Apollo` + `Prospectoo` for US CTO contact data · `Claude` for both the plugin (scan + proposal) and outbound hooks · `Zoho CRM` for tracking · `Zoho Cliq` for ranked job notifications
 
 ## Read more
 

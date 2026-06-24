@@ -33,15 +33,16 @@ A multi-touch Account-Based Marketing motion combining LinkedIn paid, outbound s
    │            Parallel multi-channel touch      │
    │                                              │
    │  ┌──────────────┐ ┌──────────────┐ ┌──────┐  │
-   │  │ LinkedIn Ads │ │  Smartlead   │ │ Field│  │
-   │  │ (paid retarg)│ │  (outbound)  │ │ event│  │
+   │  │ LinkedIn Ads │ │  Sendy +     │ │ Field│  │
+   │  │ (paid retarg)│ │  Lemlist     │ │ event│  │
+   │  │              │ │  (outbound)  │ │      │  │
    │  └──────┬───────┘ └──────┬───────┘ └──┬───┘  │
    │         │                 │            │     │
    └─────────┼─────────────────┼────────────┼─────┘
              │                 │            │
              v                 v            v
    ┌──────────────────────────────────────────────┐
-   │  HubSpot · account-level engagement scoring  │
+   │  Zoho CRM · account-level engagement scoring │
    │  Each account scored on combined activity    │
    │  across all 3 channels                       │
    └────────────────────┬─────────────────────────┘
@@ -56,10 +57,10 @@ A multi-touch Account-Based Marketing motion combining LinkedIn paid, outbound s
 
 ## The workflow
 
-1. **Build the 100-account list.** Sales and marketing agreed on the named accounts. Clay enrichment pulled firmographic data (size, tech stack, recent funding), and Apollo enriched buying-committee personas (typically 3-5 contacts per account: CMO, VP Marketing, Head of Growth, plus a CXO sponsor).
+1. **Build the 100-account list.** Sales and marketing agreed on the named accounts. Clay orchestrated the enrichment workflow with Apollo and Prospectoo providing firmographic data (size, tech stack, recent funding) and buying-committee personas (typically 3-5 contacts per account: CMO, VP Marketing, Head of Growth, plus a CXO sponsor).
 2. **Persona mapping.** For each account, the buying committee was mapped explicitly. Outreach varied by persona role.
-3. **Coordinated multi-channel.** LinkedIn Ads ran retargeting against the account list. Smartlead delivered an outbound sequence per persona. Field event activation happened at 4 US conferences across the year.
-4. **Engagement scoring.** HubSpot scored each account based on combined activity across paid, outbound, and event touchpoints. The score is account-level, not contact-level, which is the right unit for ABM.
+3. **Coordinated multi-channel.** LinkedIn Ads ran retargeting against the account list. Sendy delivered the cold sequence (high volume, low per-send cost) and Lemlist handled the warm personalized follow-ups for tier-1 accounts. Field event activation happened at 4 US conferences across the year.
+4. **Engagement scoring.** Zoho CRM scored each account based on combined activity across paid, outbound, and event touchpoints. The score is account-level, not contact-level, which is the right unit for ABM.
 5. **Tier promotion.** When an account crossed the engagement threshold, it was promoted to an AE for warm follow-up. The promotion was the gate that triggered manual outreach by sales.
 6. **Post-event nurture.** Attendees from the 4 conferences entered a tailored nurture sequence based on which session they attended and which booth they engaged with.
 
@@ -75,7 +76,7 @@ Outbound at the contact level treats every person as their own funnel. ABM at 10
 
 ## The stack
 
-`Clay` for firmographic and people enrichment · `LinkedIn Ads` for paid retargeting · `Smartlead` for outbound sequences · `Apollo` for buying-committee data · `HubSpot` for account-level scoring and tracking · `Claude` for persona-specific copy and account scoring
+`Clay` orchestrates enrichment · `Apollo` + `Prospectoo` for buying-committee data · `LinkedIn Ads` for paid retargeting · `Sendy` for high-volume outbound, `Lemlist` for warm follow-ups · `Zoho CRM` for account-level scoring and tracking · `Claude` for persona-specific copy and account scoring
 
 ## Read more
 

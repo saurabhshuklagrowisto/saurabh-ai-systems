@@ -4,7 +4,7 @@
 ![Open rate](https://img.shields.io/badge/open_rate-14%25_to_29%25-22c55e?style=flat-square)
 ![CTR](https://img.shields.io/badge/CTR-1.4%25_to_3.8%25-22c55e?style=flat-square)
 
-Took over and rebuilt the full lifecycle email and newsletter motion for a B2B client at [Growisto](https://growisto.com). Work spanned list hygiene, advanced segmentation, deliverability tuning, A/B testing, and AI-assisted copy generation across a high-cadence send schedule.
+Took over and rebuilt the full lifecycle email and newsletter motion for a B2B client at [Growisto](https://growisto.com). Work spanned list hygiene, advanced segmentation, deliverability tuning, A/B testing, and AI-assisted copy generation across a high-cadence send schedule. Sends ran through Sendy (self-hosted on Amazon SES), which kept the per-send cost near zero at the 12,000-contact list size.
 
 ## The outcome
 
@@ -31,7 +31,7 @@ Took over and rebuilt the full lifecycle email and newsletter motion for a B2B c
                 v
    ┌─────────────────────────────┐
    │  Phase 2: Segmentation      │  Engagement tier, lifecycle
-   │  rebuild (HubSpot)          │  stage, industry, role
+   │  rebuild (Zoho CRM)         │  stage, industry, role
    └────────────┬────────────────┘
                 │
                 v
@@ -55,7 +55,8 @@ Took over and rebuilt the full lifecycle email and newsletter motion for a B2B c
                 │
                 v
    ┌─────────────────────────────┐
-   │  Send · HubSpot             │  6 sends/month cadence
+   │  Send · Sendy + SES         │  6 sends/month cadence
+   │                             │  Self-hosted, ~zero per-send
    └────────────┬────────────────┘
                 │
                 v
@@ -68,7 +69,7 @@ Took over and rebuilt the full lifecycle email and newsletter motion for a B2B c
 ## The workflow
 
 1. **List hygiene first.** Before any send improvement, the list was cleaned: bounces removed, unsubscribes resynced, format errors fixed. This alone often recovers 2-5 points of open rate.
-2. **Rebuild segmentation.** Instead of one list, the 12K contacts were split into segments by engagement tier (hot/warm/cold), lifecycle stage (subscriber → MQL → customer), industry, and role. Each segment can receive different content cadence and tone.
+2. **Rebuild segmentation.** Instead of one list, the 12K contacts were split into segments inside Zoho CRM by engagement tier (hot/warm/cold), lifecycle stage (subscriber → MQL → customer), industry, and role. Each segment can receive different content cadence and tone.
 3. **Deliverability tuning.** SPF, DKIM, DMARC records verified. IP warmup re-run after a period of inconsistent sending. Content scored against spam triggers before send.
 4. **A/B testing framework.** Every send tests one variable: subject line, send time, or CTA placement. Wins compound. The framework keeps tests honest by setting minimum sample size before declaring a winner.
 5. **AI-assisted copy.** Claude generates a first-draft from a content brief. A human edits the final version. This is the "brain and hands" pattern: Claude does the heavy lifting on draft 1, the human owns voice and final approval.
@@ -88,11 +89,11 @@ Three reasons compounded:
 2. **Segmentation** meant content matched the segment's interest, so engagement (open + click) rose on every send. Engagement signals to the inbox provider that the sender is wanted, which improves placement further.
 3. **AI-assisted subject lines** plus systematic A/B testing surfaced winning patterns quickly. The team learned what worked across 60+ sends, applied learnings forward.
 
-The fix was not "find a better email tool." It was discipline applied to the existing tool (HubSpot) with Claude doing the copy lift that used to take a full-time writer.
+The fix was not "find a better email tool." It was discipline applied to the existing stack (Sendy for delivery, Zoho CRM for segmentation) with Claude doing the copy lift that used to take a full-time writer.
 
 ## The stack
 
-`HubSpot` for sends, lifecycle automation, and segmentation · `Claude` for first-draft copy and subject line variants · `Looker Studio` for dashboards · `GA4` for downstream tracking
+`Sendy` (self-hosted on Amazon SES) for the actual sends · `Zoho CRM` for lifecycle automation and segmentation · `Claude` for first-draft copy and subject line variants · `Looker Studio` for dashboards · `GA4` for downstream tracking
 
 ## Read more
 

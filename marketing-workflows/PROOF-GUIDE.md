@@ -7,8 +7,8 @@ This guide explains what kind of proof works for each of the 6 marketing workflo
 ## The four levels of proof, from weakest to strongest
 
 1. **The number alone** ("25+ meetings/month") · believable, but unverifiable. Floor of credibility.
-2. **The number plus the methodology** ("25+ meetings via the Clay + Apollo + Smartlead + Claude flow described above") · stronger. Shows you know how the number was made.
-3. **The number plus the artifact** ("25+ meetings — here is the HubSpot deals dashboard screenshot, the Smartlead campaign summary, the n8n workflow JSON") · much stronger. The reader can see evidence.
+2. **The number plus the methodology** ("25+ meetings via the Clay + Apollo + Sendy + Claude flow described above") · stronger. Shows you know how the number was made.
+3. **The number plus the artifact** ("25+ meetings — here is the Zoho CRM deals dashboard screenshot, the Sendy campaign summary, the n8n workflow JSON") · much stronger. The reader can see evidence.
 4. **The number plus the artifact plus a third party** ("25+ meetings — here is the dashboard, plus a one-line testimonial from the AE who ran the calls") · strongest. Independent confirmation.
 
 Top portfolios mix all four levels. Numbers alone signal nothing. Numbers plus the artifact and one third-party reference signal everything.
@@ -23,11 +23,12 @@ Top portfolios mix all four levels. Numbers alone signal nothing. Numbers plus t
 - A redacted screenshot of a real cold email sent (mask the recipient name + company)
 
 **Worth asking for:**
-- HubSpot Deals dashboard screenshot showing the influenced pipeline number (with names blurred)
-- Smartlead campaign summary screenshot showing the 6%+ reply rate
+- Zoho CRM Deals dashboard screenshot showing the influenced pipeline number (with names blurred)
+- Sendy campaign summary screenshot showing the 6%+ reply rate
+- Apollo enrichment workflow screenshot showing the targeting depth
 - A single line from the client or AE saying the system delivered: "the outbound stack at under $2/mo gave us [X] meetings"
 
-**Highest-impact artifact:** the Smartlead reply rate screenshot. 6% on cold outbound is industry-leading; the screenshot is the credibility multiplier.
+**Highest-impact artifact:** the Sendy reply rate screenshot. 6% on cold outbound is industry-leading; the screenshot is the credibility multiplier.
 
 ### 02 · ABM Playbook · 100 Named US Accounts
 
@@ -37,26 +38,26 @@ Top portfolios mix all four levels. Numbers alone signal nothing. Numbers plus t
 - A diagram of the multi-channel cadence (LinkedIn paid + outbound + event)
 
 **Worth asking for:**
-- HubSpot ABM dashboard screenshot (account engagement scores, names blurred)
+- Zoho CRM ABM dashboard screenshot (account engagement scores, names blurred)
 - LinkedIn Ads dashboard showing the retargeting performance
 - A photo or screenshot from one of the 4 US conferences
 
-**Highest-impact artifact:** the HubSpot account-engagement dashboard. ABM is account-level, so the dashboard that shows account-level scores (not lead-level) is the proof that the program was actually run as ABM.
+**Highest-impact artifact:** the Zoho account-engagement dashboard. ABM is account-level, so the dashboard that shows account-level scores (not lead-level) is the proof that the program was actually run as ABM.
 
 ### 03 · Email and Newsletter Overhaul
 
 **You can add yourself:**
-- A before/after screenshot pair from HubSpot showing the open-rate timeline
+- A before/after screenshot pair from Sendy showing the open-rate timeline
 - A sanitised A/B testing framework doc (your own SOP)
 - An example Claude prompt for first-draft email copy generation
 - A sample subject-line variant set (5-10 variants Claude generated, no client name)
 
 **Worth asking for:**
-- A direct screenshot from HubSpot Performance showing the 14% → 29% open-rate jump on the timeline
+- A direct screenshot from Sendy or Looker Studio showing the 14% → 29% open-rate jump on the timeline
 - The Looker Studio dashboard URL or screenshot showing the lifecycle metrics
 - A client quote: "Our email engagement doubled after Saurabh took over the program"
 
-**Highest-impact artifact:** the HubSpot timeline screenshot showing the open-rate jump. A clear "before" and "after" with dates is the strongest possible proof — a hiring manager can see the inflection point.
+**Highest-impact artifact:** the Sendy timeline screenshot showing the open-rate jump. A clear "before" and "after" with dates is the strongest possible proof — a hiring manager can see the inflection point.
 
 ### 04 · Webinar and Podcast Demand Engine
 
@@ -67,7 +68,7 @@ Top portfolios mix all four levels. Numbers alone signal nothing. Numbers plus t
 
 **Worth asking for:**
 - Riverside dashboard screenshot showing audience engagement on one session
-- HubSpot registration page conversion data
+- Zoho Forms registration page conversion data
 - A link to one of the public podcast episodes (if any are public-shareable)
 - A client quote about the 10% conversion rate
 

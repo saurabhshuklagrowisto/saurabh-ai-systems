@@ -124,11 +124,12 @@ The four Claude skills demonstrate each of these in isolation. The five producti
 ![BigQuery](https://img.shields.io/badge/BigQuery-logs-669df6?style=flat-square)
 
 **Outbound and enrichment**
-![Smartlead](https://img.shields.io/badge/Smartlead-cold_email-3b82f6?style=flat-square)
-![Lemlist](https://img.shields.io/badge/Lemlist-sequences-22c55e?style=flat-square)
 ![Apollo](https://img.shields.io/badge/Apollo-people_data-1e40af?style=flat-square)
 ![Clay](https://img.shields.io/badge/Clay-enrichment-000000?style=flat-square)
+![Prospectoo](https://img.shields.io/badge/Prospectoo-contact_data-7c3aed?style=flat-square)
+![Sendy](https://img.shields.io/badge/Sendy-self--hosted_email-f59e0b?style=flat-square)
 ![LinkedIn Sales Nav](https://img.shields.io/badge/LinkedIn_Sales_Nav-prospecting-0a66c2?style=flat-square)
+![Lemlist](https://img.shields.io/badge/Lemlist-sequences-22c55e?style=flat-square)
 
 **Hosting**
 ![Contabo](https://img.shields.io/badge/Contabo-VPS-1c4e80?style=flat-square)
