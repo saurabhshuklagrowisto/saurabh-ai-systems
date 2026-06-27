@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>From Clicks to Customers — Webinar Landing Page (Sample)</title>
+<!--
+  REAL PRODUCTION LANDING PAGE · sanitised for portfolio.
+
+  Built for a live Growisto webinar ("From Clicks to Customers: AI-Powered
+  eCommerce Growth Playbook") and shipped on WordPress + Elementor with a
+  Contact Form 7 registration form. This is Path A in the Landing Page &
+  Collateral Engine (site-resident page).
+
+  Generated from a one-paragraph brief + brand kit via the landing-page
+  generator skill, then pasted into Elementor as a custom-HTML block.
+
+  Sanitisation for this repo:
+    - Embedded base64 speaker photos and brand logos removed (they bloated
+      the file and embedded real faces); replaced with the page's own
+      initial-avatar fallbacks and text pills.
+    - The Contact Form 7 shortcode is left in place to show the WP integration
+      point (it renders the live registration form on the real site).
+  Everything else — structure, CSS, copy, countdown, agenda — is the real page.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito+Sans:opsz,wght@6..12,300;6..12,400;6..12,500;6..12,600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink:      #0B1120;
+  --ink-2:    #1C2B4A;
+  --blue:     #2563EB;
+  --red:      #DC2626;
+  --red-bg:   rgba(220,38,38,0.12);
+  --amber:    #F59E0B;
+  --amber-dk: #D97706;
+  --surface:  #F5F7FB;
+  --white:    #FFFFFF;
+  --muted:    #64748B;
+  --subtle:   #94A3B8;
+  --border:   #E2E8F0;
+  --tag-bg:   rgba(37,99,235,0.10);
+  --tag-fg:   #2563EB;
+  --r-sm:     8px;
+  --r-md:     14px;
+  --r-lg:     22px;
+  --shadow:   0 2px 40px rgba(11,17,32,0.10),0 1px 4px rgba(11,17,32,0.06);
+  --shadow-cta: 0 8px 28px rgba(245,158,11,0.32);
+  --fh: 'Plus Jakarta Sans', sans-serif;
+  --fb: 'Nunito Sans', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--fb);font-size:16px;line-height:1.7;color:var(--ink);background:var(--white);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}
+.container{max-width:1080px;margin:0 auto;padding:0 32px;}
+
+/* ─── BADGES ─── */
+.badge-live{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(220,38,38,0.18);border:1.5px solid rgba(220,38,38,0.55);
+  color:#FF4545;font-family:var(--fh);font-size:13px;font-weight:700;
+  letter-spacing:0.06em;text-transform:uppercase;padding:7px 18px;border-radius:100px;
+  box-shadow:0 0 14px rgba(220,38,38,0.22);
+}
+.badge-live .live-dot{
+  width:9px;height:9px;background:#FF4545;border-radius:50%;flex-shrink:0;
+  animation:livepulse 1.8s ease-in-out infinite;
+}
+@keyframes livepulse{
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(220,38,38,0.4);}
+  50%{opacity:0.7;box-shadow:0 0 0 5px rgba(220,38,38,0);}
+}
+.tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--tag-bg);color:var(--tag-fg);
+  font-family:var(--fh);font-size:11px;font-weight:600;
+  letter-spacing:0.05em;text-transform:uppercase;
+  padding:5px 14px;border-radius:100px;margin-bottom:14px;
+}
+.tag .dot{width:6px;height:6px;background:var(--blue);border-radius:50%;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.45;transform:scale(0.8);}}
+
+/* ─── HERO ─── */
+.hero{background:var(--ink);padding:56px 0 64px;position:relative;overflow:hidden;}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 55% at 15% 70%,rgba(37,99,235,0.16) 0%,transparent 68%),
+    radial-gradient(ellipse 40% 45% at 85% 15%,rgba(37,99,235,0.08) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-inner{position:relative;z-index:1;}
+.hero-top-row{display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap;}
+.hero-date-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(255,255,255,0.10);border:1.5px solid rgba(255,255,255,0.22);
+  border-radius:100px;padding:7px 18px;
+  font-family:var(--fb);font-size:14px;font-weight:500;color:rgba(255,255,255,0.85);
+}
+.hero-main-grid{display:grid;grid-template-columns:400px 1fr;gap:44px;align-items:start;}
+.form-card{background:var(--white);border-radius:var(--r-lg);padding:28px 26px 24px;box-shadow:var(--shadow);}
+.form-card-heading{font-family:var(--fh);font-size:18px;font-weight:800;color:var(--ink);margin-bottom:4px;line-height:1.25;letter-spacing:-0.01em;}
+.form-card-sub{font-family:var(--fb);font-size:13px;font-weight:400;color:var(--subtle);margin-bottom:14px;line-height:1.5;}
+.spots-pill{
+  display:inline-flex;align-items:center;gap:7px;background:#FEF3C7;border:1px solid #FDE68A;
+  border-radius:100px;padding:5px 14px;margin-bottom:16px;width:100%;justify-content:center;
+}
+.spots-dot{width:7px;height:7px;background:#D97706;border-radius:50%;flex-shrink:0;animation:spotpulse 1.5s ease-in-out infinite;}
+@keyframes spotpulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.6;transform:scale(0.85);}}
+.spots-text{font-family:var(--fh);font-size:12px;font-weight:700;color:#92400E;}
+
+/* The live site renders Contact Form 7 here; these styles target the CF7 markup */
+.form-card .wpcf7 label{display:block;font-family:var(--fh);font-size:10.5px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.form-card .wpcf7 input[type="text"],
+.form-card .wpcf7 input[type="email"]{
+  width:100%;border:1.5px solid var(--border);border-radius:var(--r-sm);padding:11px 14px;
+  font-family:var(--fb);font-size:14.5px;color:var(--ink);background:var(--white);outline:none;margin-bottom:12px;
+}
+.form-card .wpcf7 input[type="submit"]{
+  display:block;width:100%;background:var(--amber);color:var(--ink);
+  font-family:var(--fh);font-size:15px;font-weight:800;border:none;border-radius:var(--r-sm);
+  padding:14px 20px;cursor:pointer;box-shadow:var(--shadow-cta);margin-top:4px;
+}
+.demo-form label{display:block;font-family:var(--fh);font-size:10.5px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.demo-form input{width:100%;border:1.5px solid var(--border);border-radius:var(--r-sm);padding:11px 14px;font-family:var(--fb);font-size:14.5px;color:var(--ink);margin-bottom:12px;}
+.demo-form button{display:block;width:100%;background:var(--amber);color:var(--ink);font-family:var(--fh);font-size:15px;font-weight:800;border:none;border-radius:var(--r-sm);padding:14px 20px;cursor:pointer;box-shadow:var(--shadow-cta);}
+.audit-box{margin-top:14px;border-radius:var(--r-sm);overflow:hidden;border:1.5px solid #A16207;}
+.audit-box-header{background:#1C1400;padding:7px 14px;display:flex;align-items:center;gap:7px;}
+.audit-box-header-text{font-family:var(--fh);font-size:10.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#FDE68A;}
+.audit-box-body{background:#FFFBEB;padding:11px 14px;font-family:var(--fb);font-size:12.5px;color:#78350F;line-height:1.58;}
+.audit-box-body strong{color:#1C1400;font-weight:700;}
+.form-scarcity{text-align:center;font-family:var(--fb);font-size:11.5px;color:#B0BAC8;margin-top:11px;line-height:1.4;}
+
+.hero-right{display:flex;flex-direction:column;}
+.hero-headline-block{margin-bottom:36px;}
+.hero-headline{font-family:var(--fh);font-size:clamp(28px,3.6vw,50px);font-weight:800;color:var(--white);line-height:1.10;letter-spacing:-0.026em;margin-bottom:16px;}
+.hero-headline .accent{color:#60A5FA;}
+.hosted-by-label{font-family:var(--fh);font-size:10.5px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;color:rgba(255,255,255,0.30);margin-bottom:12px;}
+.hosted-by-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.host-card{display:flex;align-items:flex-start;gap:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:12px;padding:22px 20px;min-height:160px;}
+.host-photo-fb{width:82px;height:82px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:24px;font-weight:800;color:var(--white);flex-shrink:0;margin-top:2px;}
+.host-photo-fb.kp{background:linear-gradient(135deg,#1E3A7A,#2563EB);}
+.host-photo-fb.mf{background:linear-gradient(135deg,#3B2E7A,#7C3AED);}
+.host-info{display:flex;flex-direction:column;padding-top:1px;}
+.host-name{font-family:var(--fh);font-size:16px;font-weight:700;color:var(--white);line-height:1.2;margin-bottom:2px;}
+.host-role{font-family:var(--fb);font-size:13px;color:rgba(255,255,255,0.40);line-height:1.35;margin-bottom:3px;}
+.host-company{font-family:var(--fh);font-size:13px;font-weight:600;color:#60A5FA;margin-bottom:6px;display:inline-block;}
+.host-linkedin{display:inline-flex;align-items:center;gap:4px;font-family:var(--fh);font-size:11.5px;font-weight:600;color:rgba(255,255,255,0.28);border:1px solid rgba(255,255,255,0.10);border-radius:100px;padding:5px 12px;width:fit-content;margin-top:6px;}
+
+.hero-stats{display:flex;gap:0;margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.07);margin-bottom:20px;}
+.hero-stat{flex:1;padding-right:18px;border-right:1px solid rgba(255,255,255,0.07);margin-right:18px;}
+.hero-stat:last-child{border-right:none;margin-right:0;}
+.hero-stat-num{font-family:var(--fh);font-size:20px;font-weight:800;color:var(--white);line-height:1;margin-bottom:4px;}
+.hero-stat-lbl{font-family:var(--fb);font-size:11.5px;color:rgba(255,255,255,0.34);line-height:1.4;}
+
+.cta-bullets{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:18px 20px;}
+.cta-bullets-label{font-family:var(--fh);font-size:10px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:rgba(255,255,255,0.26);margin-bottom:13px;}
+.cta-bullet-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.cta-bullet-item{display:flex;align-items:flex-start;gap:10px;}
+.cta-bullet-icon{width:18px;height:18px;border-radius:50%;background:rgba(37,99,235,0.20);border:1px solid rgba(37,99,235,0.30);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-size:9px;color:#60A5FA;}
+.cta-bullet-text{font-family:var(--fb);font-size:13px;color:rgba(255,255,255,0.58);line-height:1.58;}
+.cta-bullet-text strong{color:rgba(255,255,255,0.85);font-weight:600;}
+
+/* ─── COUNTDOWN ─── */
+.countdown-wrap{background:#0F172A;padding:22px 0;border-top:1px solid rgba(255,255,255,0.05);}
+.countdown-inner{max-width:1080px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:center;gap:12px;}
+.countdown-units{display:flex;align-items:center;gap:10px;justify-content:center;width:100%;}
+.countdown-unit{display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,0.07);border-radius:10px;padding:14px 0;flex:1;}
+.countdown-num{font-family:var(--fh);font-size:32px;font-weight:800;color:var(--white);line-height:1;}
+.countdown-unit-lbl{font-family:var(--fb);font-size:11px;font-weight:500;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.07em;margin-top:5px;}
+.countdown-sep{font-size:18px;font-weight:700;color:rgba(255,255,255,0.18);padding-bottom:8px;}
+
+/* ─── LOGOS ─── */
+.logos-bar{background:#F1F5FB;padding:20px 0;border-top:1px solid #E4EAF4;border-bottom:1px solid #E4EAF4;}
+.logos-inner{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0;}
+.logos-label{font-family:var(--fh);font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.09em;color:#94A3B8;margin-right:20px;}
+.brand-pill{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 14px;margin:4px 14px;font-family:var(--fh);font-weight:700;font-size:15px;color:#475569;}
+
+/* ─── SECTIONS ─── */
+.section{padding:72px 0;}
+.section-light{background:var(--white);}
+.section-surface{background:var(--surface);}
+.section-dark{background:var(--ink);}
+.section-header{margin-bottom:42px;}
+.section-header h2{font-family:var(--fh);font-size:clamp(22px,2.6vw,32px);font-weight:800;color:var(--ink);line-height:1.18;letter-spacing:-0.022em;margin-bottom:11px;}
+.section-dark .section-header h2{color:var(--white);}
+.section-header p{font-family:var(--fb);font-size:15px;font-weight:300;color:var(--muted);line-height:1.72;max-width:520px;}
+.section-dark .section-header p{color:rgba(255,255,255,0.42);}
+
+.learn-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.learn-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-md);padding:22px 20px;position:relative;overflow:hidden;transition:box-shadow 0.22s,transform 0.22s;}
+.learn-card:hover{box-shadow:0 8px 32px rgba(37,99,235,0.07);transform:translateY(-2px);}
+.learn-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),rgba(37,99,235,0.12));opacity:0;transition:opacity 0.22s;}
+.learn-card:hover::before{opacity:1;}
+.learn-icon{width:38px;height:38px;border-radius:9px;background:var(--tag-bg);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:12px;}
+.learn-title{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--ink);margin-bottom:7px;line-height:1.3;letter-spacing:-0.01em;}
+.learn-desc{font-family:var(--fb);font-size:13.5px;color:var(--muted);line-height:1.65;}
+
+.agenda-list{display:flex;flex-direction:column;max-width:640px;}
+.agenda-item{display:flex;gap:18px;align-items:flex-start;padding:20px 0;border-bottom:1px solid #EDF1F7;}
+.agenda-item:last-child{border-bottom:none;}
+.agenda-num-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.agenda-num{width:34px;height:34px;border-radius:50%;background:var(--blue);color:var(--white);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:13px;font-weight:700;}
+.agenda-line{width:1px;flex:1;min-height:22px;background:linear-gradient(to bottom,var(--blue),transparent);margin-top:5px;opacity:0.18;}
+.agenda-item:last-child .agenda-line{display:none;}
+.agenda-duration{font-family:var(--fh);font-size:10.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--blue);margin-bottom:3px;}
+.agenda-title{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.3;}
+.agenda-desc{font-family:var(--fb);font-size:13.5px;color:var(--muted);line-height:1.62;}
+
+.speakers-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.speaker-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r-lg);padding:26px 22px;}
+.spkr-head{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+.spkr-photo-wrap{position:relative;flex-shrink:0;}
+.spkr-photo-fb{width:66px;height:66px;border-radius:50%;border:2.5px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:19px;font-weight:800;color:var(--white);flex-shrink:0;}
+.spkr-photo-fb.kp{background:linear-gradient(135deg,#1E3A7A,#2563EB);}
+.spkr-photo-fb.mf{background:linear-gradient(135deg,#3B2E7A,#7C3AED);}
+.spkr-badge-co{position:absolute;bottom:-2px;right:-2px;width:19px;height:19px;border-radius:50%;background:#1C2B4A;border:2px solid rgba(255,255,255,0.10);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--amber);}
+.spkr-name{font-family:var(--fh);font-size:17px;font-weight:800;color:var(--white);line-height:1.2;margin-bottom:2px;}
+.spkr-designation{font-family:var(--fb);font-size:12px;color:rgba(255,255,255,0.44);line-height:1.35;}
+.spkr-company{font-family:var(--fh);font-size:11.5px;font-weight:600;color:#60A5FA;margin-top:2px;display:inline-block;}
+.spkr-bio{font-family:var(--fb);font-size:13.5px;font-weight:300;color:rgba(255,255,255,0.46);line-height:1.70;margin-bottom:14px;}
+.spkr-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.spkr-tag{font-family:var(--fb);font-size:11px;font-weight:500;color:rgba(255,255,255,0.40);background:rgba(255,255,255,0.06);border-radius:100px;padding:4px 11px;}
+
+.logistics-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:860px;}
+.logistics-card{display:flex;align-items:center;gap:20px;background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:28px 26px;position:relative;overflow:hidden;}
+.logistics-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),rgba(37,99,235,0.15));opacity:0;transition:opacity 0.22s;}
+.logistics-card:hover::before{opacity:1;}
+.logistics-icon-wrap{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#EEF4FF,#DBEAFE);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px;}
+.logistics-label{font-family:var(--fh);font-size:10.5px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:#94A3B8;margin-bottom:6px;}
+.logistics-value{font-family:var(--fh);font-size:17px;font-weight:800;color:var(--ink);line-height:1.2;margin-bottom:3px;}
+.logistics-sub{font-family:var(--fb);font-size:12.5px;color:var(--subtle);line-height:1.45;}
+.logistics-audit-note{font-family:var(--fb);font-size:12px;font-weight:600;color:#B45309;margin-top:5px;display:flex;align-items:center;gap:5px;}
+
+.cta-section{background:var(--ink);padding:72px 0;position:relative;overflow:hidden;}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 50% 50%,rgba(37,99,235,0.10) 0%,transparent 70%);pointer-events:none;}
+.cta-inner{position:relative;z-index:1;text-align:center;max-width:540px;margin:0 auto;}
+.cta-inner h2{font-family:var(--fh);font-size:clamp(22px,2.8vw,36px);font-weight:800;color:var(--white);letter-spacing:-0.022em;line-height:1.15;margin-bottom:13px;}
+.cta-inner p{font-family:var(--fb);font-size:15px;font-weight:300;color:rgba(255,255,255,0.40);line-height:1.70;margin-bottom:28px;}
+.cta-audit-nudge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.30);border-radius:100px;padding:9px 20px;margin-top:16px;margin-bottom:4px;font-family:var(--fb);font-size:13px;color:rgba(255,255,255,0.65);line-height:1;}
+.cta-audit-nudge strong{color:#FCD34D;font-weight:700;}
+.cta-btn-large{display:inline-flex;align-items:center;gap:8px;background:var(--amber);color:var(--ink);font-family:var(--fh);font-size:15px;font-weight:800;border-radius:var(--r-sm);padding:15px 36px;box-shadow:var(--shadow-cta);cursor:pointer;border:none;letter-spacing:-0.01em;}
+.cta-detail-row{margin-top:16px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;}
+.cta-detail-row span{font-family:var(--fb);font-size:12.5px;color:rgba(255,255,255,0.25);display:flex;align-items:center;gap:5px;}
+
+@media(max-width:900px){.hero-main-grid{grid-template-columns:1fr;gap:36px;}.hero-headline{font-size:28px;}}
+@media(max-width:640px){
+  .container{padding:0 20px;}
+  .hosted-by-row{grid-template-columns:1fr;}
+  .learn-grid{grid-template-columns:1fr;}
+  .speakers-grid{grid-template-columns:1fr;}
+  .logistics-grid{grid-template-columns:1fr;}
+  .hero-stats{flex-direction:column;gap:14px;}
+  .hero-stat{border-right:none;margin-right:0;padding-right:0;border-bottom:1px solid rgba(255,255,255,0.07);padding-bottom:14px;}
+  .hero-stat:last-child{border-bottom:none;}
+  .countdown-inner{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-top-row">
+        <span class="badge-live"><span class="live-dot"></span>Live Webinar</span>
+        <div class="hero-date-chip">&#128197; Thursday, 9th April 2026 &nbsp;·&nbsp; 11:00 AM PST</div>
+      </div>
+
+      <div class="hero-headline-block">
+        <h1 class="hero-headline">
+          From <span class="accent">Clicks</span> to Customers<br/>
+          AI-Powered eCommerce Growth Playbook
+        </h1>
+      </div>
+
+      <div class="hero-main-grid">
+        <!-- LEFT: registration form (Contact Form 7 on the live WordPress site) -->
+        <div class="form-card" id="register">
+          <div class="form-card-heading">Secure your spot</div>
+          <p class="form-card-sub">9 April 2026 &nbsp;·&nbsp; 11:00 AM – 12:00 PM PST &nbsp;·&nbsp; Zoom</p>
+          <div class="spots-pill"><span class="spots-dot"></span><span class="spots-text">Only 17 spots remaining</span></div>
+
+          <!--
+            On the live site this is where the WordPress Contact Form 7 form renders:
+            [contact-form-7 id="..." title="From Clicks to Customers"]
+            A working demo form is shown below so the sample is openable standalone.
+          -->
+          <form class="demo-form" onsubmit="event.preventDefault(); this.innerHTML='<h3 style=&quot;font-family:var(--fh);&quot;>You are registered 🎉</h3><p class=&quot;form-card-sub&quot;>Check your inbox for the Zoom link.</p>';">
+            <label for="name">Full name</label>
+            <input id="name" type="text" required placeholder="Jane Doe"/>
+            <label for="email">Work email</label>
+            <input id="email" type="email" required placeholder="jane@company.com"/>
+            <label for="company">Company</label>
+            <input id="company" type="text" placeholder="Company Inc."/>
+            <button type="submit">Register now</button>
+          </form>
+
+          <div class="audit-box">
+            <div class="audit-box-header"><span>&#9733;</span><span class="audit-box-header-text">Exclusive for early registrants</span></div>
+            <div class="audit-box-body"><strong>Complimentary eCommerce Growth Audit</strong>: a personal review of your website. We identify where spend is leaking and what to fix first.</div>
+          </div>
+          <p class="form-scarcity">Thursday 9 April 2026 &nbsp;·&nbsp; Zoom</p>
+        </div>
+
+        <!-- RIGHT: hosts + stats + bullets -->
+        <div class="hero-right">
+          <div class="hosted-by-label">Hosted by</div>
+          <div class="hosted-by-row">
+            <div class="host-card">
+              <div class="host-photo-fb mf">MF</div>
+              <div class="host-info">
+                <div class="host-name">Marina Fomina</div>
+                <div class="host-role">Co-Founder</div>
+                <span class="host-company">Marketing Works ↗</span>
+                <span class="host-linkedin">in · LinkedIn</span>
+              </div>
+            </div>
+            <div class="host-card">
+              <div class="host-photo-fb kp">KP</div>
+              <div class="host-info">
+                <div class="host-name">Kiran Patil</div>
+                <div class="host-role">Founder &amp; CEO</div>
+                <span class="host-company">Growisto ↗</span>
+                <span class="host-linkedin">in · LinkedIn</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-stats">
+            <div class="hero-stat"><div class="hero-stat-num">20 yrs</div><div class="hero-stat-lbl">eCommerce<br/>growth</div></div>
+            <div class="hero-stat"><div class="hero-stat-num">200+</div><div class="hero-stat-lbl">Brands<br/>helped</div></div>
+            <div class="hero-stat"><div class="hero-stat-num">60 min</div><div class="hero-stat-lbl">Session<br/>+ live Q&amp;A</div></div>
+          </div>
+
+          <div class="cta-bullets">
+            <div class="cta-bullets-label">What you'll get from this session</div>
+            <ul class="cta-bullet-list">
+              <li class="cta-bullet-item"><span class="cta-bullet-icon">✓</span><span class="cta-bullet-text"><strong>Google Ads clarity for 2026.</strong> Know exactly which campaigns to run and how to measure what's actually working.</span></li>
+              <li class="cta-bullet-item"><span class="cta-bullet-icon">✓</span><span class="cta-bullet-text"><strong>Fix your conversion drop-off.</strong> Identify where paid traffic leaks and the specific changes that move revenue.</span></li>
+              <li class="cta-bullet-item"><span class="cta-bullet-icon">✓</span><span class="cta-bullet-text"><strong>Repeat revenue playbook.</strong> Build systems that compound paid investment into loyal, repeat customers.</span></li>
+              <li class="cta-bullet-item"><span class="cta-bullet-icon">✓</span><span class="cta-bullet-text"><strong>Real AI tactics, no hype.</strong> The exact AI tools delivering measurable ROI in eCommerce right now.</span></li>
+              <li class="cta-bullet-item"><span class="cta-bullet-icon">&#9733;</span><span class="cta-bullet-text"><strong>Complimentary eCommerce growth audit.</strong> A personal review of your store by our experts, exclusively for early registrants.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTDOWN -->
+<div class="countdown-wrap">
+  <div class="container">
+    <div class="countdown-inner">
+      <div class="countdown-units">
+        <div class="countdown-unit"><span class="countdown-num" id="cd-days">--</span><span class="countdown-unit-lbl">Days</span></div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-unit"><span class="countdown-num" id="cd-hours">--</span><span class="countdown-unit-lbl">Hrs</span></div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-unit"><span class="countdown-num" id="cd-mins">--</span><span class="countdown-unit-lbl">Min</span></div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-unit"><span class="countdown-num" id="cd-secs">--</span><span class="countdown-unit-lbl">Sec</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGOS -->
+<div class="logos-bar">
+  <div class="container">
+    <div class="logos-inner">
+      <span class="logos-label">Brands our speakers have grown</span>
+      <span class="brand-pill">Puma</span>
+      <span class="brand-pill">Unilever</span>
+      <span class="brand-pill">Wella</span>
+      <span class="brand-pill">GuruNanda</span>
+      <span class="brand-pill">Tata Cliq</span>
+      <span class="brand-pill">Nykaa</span>
+    </div>
+  </div>
+</div>
+
+<!-- AGENDA -->
+<section class="section section-surface">
+  <div class="container">
+    <div class="section-header"><div class="tag"><span class="dot"></span> Session Layout</div><h2>60 minutes, structured for action</h2></div>
+    <div class="agenda-list">
+      <div class="agenda-item"><div class="agenda-num-wrap"><div class="agenda-num">1</div><div class="agenda-line"></div></div><div><div class="agenda-duration">0 – 15 min</div><div class="agenda-title">Google Ads in 2026: Search, Shopping &amp; PMax</div><div class="agenda-desc">When each campaign type wins and how to know your spend is working.</div></div></div>
+      <div class="agenda-item"><div class="agenda-num-wrap"><div class="agenda-num">2</div><div class="agenda-line"></div></div><div><div class="agenda-duration">15 – 30 min</div><div class="agenda-title">From paid click to repeat customer</div><div class="agenda-desc">Conversion systems and retention playbooks that compound paid investment into sustainable growth.</div></div></div>
+      <div class="agenda-item"><div class="agenda-num-wrap"><div class="agenda-num">3</div><div class="agenda-line"></div></div><div><div class="agenda-duration">30 – 45 min</div><div class="agenda-title">AI in eCommerce — the real version</div><div class="agenda-desc">Practical AI applications delivering measurable ROI today, with specific tools and use cases. No hype.</div></div></div>
+      <div class="agenda-item"><div class="agenda-num-wrap"><div class="agenda-num">Q</div><div class="agenda-line"></div></div><div><div class="agenda-duration">45 – 60 min</div><div class="agenda-title">Live Q&amp;A</div><div class="agenda-desc">Both speakers take questions live, usually the most useful part of every session.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU'LL LEARN -->
+<section class="section section-light">
+  <div class="container">
+    <div class="section-header"><div class="tag"><span class="dot"></span> Session content</div><h2>What you'll walk away with</h2><p>Practical frameworks from real campaigns. No filler, no theory.</p></div>
+    <div class="learn-grid">
+      <div class="learn-card"><div class="learn-icon">&#127919;</div><div class="learn-title">Google Ads strategy for 2026</div><div class="learn-desc">Search vs Shopping vs PMax: when to use each, how to structure campaigns that scale, and how to read what's actually working.</div></div>
+      <div class="learn-card"><div class="learn-icon">&#128200;</div><div class="learn-title">Conversion drop-off diagnosis</div><div class="learn-desc">Where paid traffic leaks out of your funnel and the specific fixes across landing page structure and checkout friction that move conversion rates.</div></div>
+      <div class="learn-card"><div class="learn-icon">&#128260;</div><div class="learn-title">Paid-to-repeat customer flywheel</div><div class="learn-desc">When to stop scaling acquisition and start compounding on existing customers, with a playbook for building repeat revenue from paid investment.</div></div>
+      <div class="learn-card"><div class="learn-icon">&#9889;</div><div class="learn-title">AI in eCommerce — what actually works</div><div class="learn-desc">Specific AI use cases in targeting, personalisation and creative testing that are delivering measurable ROI right now. No hype.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPEAKERS -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="section-header"><div class="tag" style="background:rgba(37,99,235,0.18);color:#93C5FD;"><span class="dot" style="background:#93C5FD;"></span> Your hosts</div><h2>The speakers</h2><p>20 years of combined eCommerce growth experience across globally recognised retail brands.</p></div>
+    <div class="speakers-grid">
+      <div class="speaker-card">
+        <div class="spkr-head"><div class="spkr-photo-wrap"><div class="spkr-photo-fb mf">MF</div><div class="spkr-badge-co">★</div></div><div><div class="spkr-name">Marina Fomina</div><div class="spkr-designation">Co-Founder</div><span class="spkr-company">Marketing Works ↗</span></div></div>
+        <p class="spkr-bio">Google Ads specialist with 10+ years across Search, YouTube, Performance Max and Shopping. Delivered 40%+ YoY growth for brands ranging from fast-scaling startups to established global retailers.</p>
+        <div class="spkr-tags"><span class="spkr-tag">Google Ads</span><span class="spkr-tag">PMax</span><span class="spkr-tag">Shopping</span><span class="spkr-tag">YouTube Ads</span></div>
+      </div>
+      <div class="speaker-card">
+        <div class="spkr-head"><div class="spkr-photo-wrap"><div class="spkr-photo-fb kp">KP</div><div class="spkr-badge-co">★</div></div><div><div class="spkr-name">Kiran Patil</div><div class="spkr-designation">Founder &amp; CEO</div><span class="spkr-company">Growisto ↗</span></div></div>
+        <p class="spkr-bio">IIT Bombay alumnus with 20+ years building eCommerce growth engines. Helped 200+ brands including Puma, Unilever, Wella and Tata Cliq scale digital revenue across performance marketing, SEO and Amazon.</p>
+        <div class="spkr-tags"><span class="spkr-tag">eCommerce Strategy</span><span class="spkr-tag">Performance Marketing</span><span class="spkr-tag">Amazon</span><span class="spkr-tag">SEO</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGISTICS -->
+<section class="section section-surface">
+  <div class="container">
+    <div class="section-header"><div class="tag"><span class="dot"></span> Logistics</div><h2>Session details</h2></div>
+    <div class="logistics-grid">
+      <div class="logistics-card"><div class="logistics-icon-wrap">&#128197;</div><div><div class="logistics-label">Date</div><div class="logistics-value">Thursday, 9th April 2026</div></div></div>
+      <div class="logistics-card"><div class="logistics-icon-wrap">&#128336;</div><div><div class="logistics-label">Time</div><div class="logistics-value">11:00 AM – 12:00 PM PST</div><div class="logistics-sub">2:00 – 3:00 PM EST</div></div></div>
+      <div class="logistics-card"><div class="logistics-icon-wrap">&#128205;</div><div><div class="logistics-label">Platform</div><div class="logistics-value">Zoom</div><div class="logistics-sub">Link sent on registration</div></div></div>
+      <div class="logistics-card"><div class="logistics-icon-wrap">&#127881;</div><div><div class="logistics-label">Access</div><div class="logistics-value">Complimentary</div><div class="logistics-audit-note">&#9733; Includes growth audit for early registrants</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-inner">
+      <h2>Ready to turn your ad spend into predictable growth?</h2>
+      <p>April 9th. One hour. Real frameworks. No vendor pitches.</p>
+      <a href="#register" class="cta-btn-large">Secure my spot &rarr;</a>
+      <div class="cta-audit-nudge"><span>&#9733;</span> Early registrants get a <strong>free Website Audit</strong>. Spots are limited.</div>
+      <div class="cta-detail-row"><span>Thursday 9 April 2026</span><span>11:00 AM PST · Zoom</span><span>Only 17 spots left</span></div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* Countdown to the event. Original event date: 9 Apr 2026 (archived sample — shows 00s after the date passes). */
+(function(){
+  var target=new Date('2026-04-09T19:00:00Z');
+  function pad(n){return String(n).padStart(2,'0');}
+  function tick(){
+    var diff=target-new Date();
+    if(diff<=0){['cd-days','cd-hours','cd-mins','cd-secs'].forEach(function(id){document.getElementById(id).textContent='00';});return;}
+    document.getElementById('cd-days').textContent=pad(Math.floor(diff/86400000));
+    document.getElementById('cd-hours').textContent=pad(Math.floor((diff%86400000)/3600000));
+    document.getElementById('cd-mins').textContent=pad(Math.floor((diff%3600000)/60000));
+    document.getElementById('cd-secs').textContent=pad(Math.floor((diff%60000)/1000));
+  }
+  tick();setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>

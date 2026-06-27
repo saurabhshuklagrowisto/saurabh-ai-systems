@@ -128,6 +128,9 @@ Zoho Forms · registration backend the pages connect to
 |---|---|
 | [README.md](./README.md) | This doc. Architecture and workflow. |
 | [SKILL.md](./SKILL.md) | The skill contract — the inputs it takes, the two output paths, the brand-kit dependency, and the review gate. Sanitised of the actual brand kit. |
-| [examples/sample-webinar-landing.html](./examples/sample-webinar-landing.html) | A real, self-contained example of a Path B custom-HTML landing page. Open it in any browser. Generic brand, no client data. |
+| [examples/webinar-landing-page.html](./examples/webinar-landing-page.html) | A **real production landing page** for a live Growisto webinar, shipped on WordPress + Elementor with a Contact Form 7 registration form (Path A). Open it in any browser. Sanitised: embedded photos removed, the CF7 shortcode point left in place. |
+| [examples/sendy-invite-email.html](./examples/sendy-invite-email.html) | A **real production HTML email**, built for Sendy (self-hosted on Amazon SES) — the kind of collateral that drives registrations into the landing page above. Email-client-safe, mobile-responsive, bulletproof CTA buttons. |
 
-The actual brand kit, the production skill source, and the real event pages are internal to Growisto. The skill contract, the architecture, the workflow, and a representative HTML output are open.
+The actual brand kit, the production skill source, and the unedited live pages are internal to Growisto. The skill contract, the architecture, the workflow, and two representative sanitised outputs are open.
+
+> The two example files are genuine production artifacts (sanitised), not mockups — the landing page is the real WordPress/Elementor page that ran the webinar, and the email is the real Sendy newsletter that promoted it.

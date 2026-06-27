@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Growisto Newsletter — Urgency Tactics (Sendy email sample)</title>
+    <!--
+      REAL PRODUCTION EMAIL · used as a collateral in the Landing Page & Collateral Engine.
+
+      This is an HTML email built for Sendy (self-hosted on Amazon SES) — the kind of
+      send that drives registrations into the webinar landing page in this same folder,
+      and that runs as a standalone content newsletter in the email program.
+
+      Email-client-safe by design: table-free layout kept simple, inline-friendly CSS,
+      max 600px width, hosted images (CDN), bulletproof button styling, mobile media
+      queries. Built from a content brief + brand kit via the generator skill.
+
+      Personalisation token [Name,fallback=] is Sendy's merge-tag syntax.
+      Public marketing content; hosted image URLs are the original campaign CDN assets.
+    -->
+    <style type="text/css">
+      body { margin: 0; padding: 0; font-family: Arial, sans-serif; font-size: 14px; line-height: 1.4; color: #000; background-color: #ffffff; }
+      .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 0; }
+      .content-block { padding: 0 20px; margin-bottom: 20px; }
+      .image-block { width: 100%; margin-bottom: 20px; }
+      img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; max-width: 100%; height: auto; display: block; }
+      a { color: #007bff; text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      .btn { background-color: #e05e26; color: #fff !important; padding: 12px 22px; border-radius: 25px; font-weight: 600; font-size: 16px; text-align: center; display: inline-block; text-decoration: none; box-shadow: 0 4px 8px rgba(224, 94, 38, 0.5); width: 100%; box-sizing: border-box; }
+      .btn:hover { background-color: #c94d20; }
+      .spacer { height: 10px; }
+      h1 { font-size: 24px; font-weight: 700; margin-bottom: 10px; color: #000; }
+      p { font-size: 17px; margin-bottom: 15px; color: #000; }
+      .divider { border-top: 1px solid #000; margin: 15px 0; width: 100%; }
+      .signature { display: flex; align-items: center; gap: 20px; padding: 20px; width: 100%; box-sizing: border-box; }
+      .signature-text { font-size: 14px; line-height: 1.4; flex: 1; min-width: 200px; }
+      .signature-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+      .footer { background-color: #367588; color: #fff; font-size: 12px; text-align: center; padding: 20px; width: 100%; box-sizing: border-box; }
+      .form-block { background-color: #e7f1ee; padding: 30px 25px; border-radius: 8px; margin: 20px 0; }
+      .form-block h2 { font-weight: 700; margin-bottom: 12px; color: #222; font-size: 24px; }
+      .form-block p { font-weight: 400; margin-bottom: 20px; color: #333; font-size: 16px; line-height: 1.5; }
+      .form-block ul { list-style-type: disc; padding-left: 20px; margin-bottom: 25px; color: #222; }
+      .form-block li { margin-bottom: 6px; line-height: 1.4; }
+      .cta-form-container { background-color: #eaf9f1; padding: 30px 20px; border-radius: 8px; box-shadow: 0 0 6px rgba(0, 0, 0, 0.1); margin: 20px 0; }
+      .cta-form-container h2 { font-weight: 700; color: #1e293b; font-size: 24px; margin-bottom: 15px; }
+      .cta-form-container .description { font-size: 18px; color: #475569; margin-bottom: 20px; line-height: 1.5; }
+      .cta-form-container form { text-align: center; }
+      .cta-form-container button { background-color: #e05e26; color: #fff; border: none; font-weight: 600; padding: 12px 22px; border-radius: 25px; font-size: 16px; cursor: pointer; display: inline-block; text-decoration: none; box-shadow: 0 4px 8px rgba(224, 94, 38, 0.5); transition: background-color 0.3s ease; }
+      .cta-form-container button:hover { background-color: #c94d20; }
+      @media screen and (max-width: 768px) {
+        .container { width: 90%; }
+        h1 { font-size: 22px !important; }
+        p { font-size: 16px !important; }
+        .cta-form-container { padding: 25px 15px; }
+        .cta-form-container h2 { font-size: 22px; }
+        .cta-form-container .description { font-size: 16px; }
+      }
+      @media screen and (max-width: 480px) {
+        .container { width: 95%; }
+        h1 { font-size: 18px !important; }
+        p { font-size: 14px !important; }
+        .btn { padding: 10px 18px; font-size: 14px; }
+        .signature { flex-direction: column; align-items: flex-start; gap: 15px; }
+        .signature-text { flex: 1 1 100%; min-width: auto; }
+        .signature-img { width: 80px; height: 80px; }
+        .form-block { padding: 20px 15px; }
+        .cta-form-container { padding: 20px 15px; }
+        .cta-form-container h2 { font-size: 20px; }
+        .cta-form-container .description { font-size: 15px; }
+        .cta-form-container button { padding: 10px 18px; font-size: 14px; width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="image-block">
+        <img alt="Header" src="https://res.cloudinary.com/mailmodo/image/upload/v1746022579/editor/p/59eb42b4-e527-40e7-80e1-b2906cff9ee2/461cef2e715b2b84ebf66df090054939_hnarrj.png" width="600"/>
+      </div>
+      <div class="spacer"></div>
+
+      <div class="content-block">
+        <p>Hey [Name,fallback=],</p>
+        <p>When customers feel the pressure of a time-sensitive offer or the fear of missing out on a limited product, they are more likely to take immediate action. <strong>Conversion rates can increase by up to 20%</strong> when using time-limited offers. This is the magic behind creating urgency on your e-commerce site.</p>
+        <p>In this edition, we'll explore <strong>10 proven urgency tactics</strong> you can implement on your website to drive quicker decisions, reduce cart abandonment, and ultimately <strong>boost your conversion rates</strong>.</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="content-block">
+        <h1>Tactic 1: Set Time Limits on Your Offers</h1>
+        <p><strong>Why It Works:</strong> The time limit sets a clear deadline and pressures customers to act fast.</p>
+        <p><strong>Impact:</strong> It drives immediate purchases and boosts conversion rates by encouraging customers to secure the deal before it expires.</p>
+        <p>Amazon uses countdown timers and banners like "Sale ends tonight at midnight!" to create urgency; Lightning Deals also feature timers urging customers to act quickly during limited-time promotions like Prime Day.</p>
+      </div>
+      <div class="image-block"><img alt="Tactic 1 example" src="https://res.cloudinary.com/mailmodo/image/upload/v1745861130/editor/p/59eb42b4-e527-40e7-80e1-b2906cff9ee2/68bb9b1cbdab50f5f1d2d7b851494ae0_ddtgdk.png" width="600"/></div>
+
+      <div class="content-block">
+        <h1>Tactic 2: Display Low-Stock Alerts</h1>
+        <p><strong>Why It Works:</strong> The "Low-Stock" alert creates a sense of scarcity and exclusivity, prompting customers to buy before they miss out.</p>
+        <p><strong>Impact:</strong> The uncertainty of "What if this product sells out?" triggers urgency, pushing users to make an immediate purchase decision.</p>
+        <p>Nike displays low-stock indicators like "Only 2 left in stock!" to create urgency on high-demand items.</p>
+      </div>
+      <div class="image-block"><img alt="Tactic 2 example" src="https://res.cloudinary.com/mailmodo/image/upload/v1745861212/editor/p/59eb42b4-e527-40e7-80e1-b2906cff9ee2/42af3de69d5d396ca7922b8e5eaea564_krxmwh.png" width="600"/></div>
+
+      <div class="content-block">
+        <div class="cta-form-container">
+          <h2>What's Stopping Your Users from Buying?</h2>
+          <p class="description">We'll review your product &amp; cart pages to uncover missed urgency levers that can unlock 10-30% higher conversion.</p>
+          <form><button type="submit">Reach out to my team</button></form>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h1>Tactic 3: Limited Supply Urgency</h1>
+        <p><strong>Why It Works:</strong> Scarcity increases demand and encourages customers to act quickly to avoid missing out on a limited product.</p>
+        <p><strong>Impact:</strong> Limited supply urgency taps into the fear of missing out, prompting customers to act quickly, which reduces hesitation and boosts conversion rates.</p>
+        <p>A furniture brand shows "3 people have this in their carts right now"; an apparel brand shows "13 people have checked this out in the last few hours" and "1 purchase in the last hour".</p>
+      </div>
+      <div class="image-block"><img alt="Tactic 3 example" src="https://res.cloudinary.com/mailmodo/image/upload/v1745861226/editor/p/59eb42b4-e527-40e7-80e1-b2906cff9ee2/ab1360b2d0d84fa01a515f422c591230_xajee4.png" width="600"/></div>
+
+      <div class="content-block">
+        <h1>Tactic 4: Same-Day / Next-Day Delivery Cutoffs</h1>
+        <p><strong>Why It Works:</strong> A fast delivery option gives customers a strong incentive to purchase now.</p>
+        <p><strong>Impact:</strong> It drives faster decision-making and increases conversions, especially for time-sensitive purchases.</p>
+        <p>Amazon Prime's "Want it Friday? Order within 9 hrs 48 mins" creates urgency to complete the purchase immediately.</p>
+      </div>
+      <div class="image-block"><img alt="Tactic 4 example" src="https://res.cloudinary.com/mailmodo/image/upload/v1745861245/editor/p/59eb42b4-e527-40e7-80e1-b2906cff9ee2/c36b474245e2b788aad926e897ebaf99_ysq574.png" width="600"/></div>
+
+      <div class="content-block">
+        <h1>Tactic 5: Send Last-Chance Emails</h1>
+        <p><strong>Why It Works:</strong> These emails serve as a final nudge, reminding customers to act before the offer expires.</p>
+        <p><strong>Impact:</strong> It creates a sense of urgency, reducing cart abandonment.</p>
+        <p>Myntra uses last-chance reminders such as "Hurry! Grab 40-80% Off On Best Of Brands".</p>
+      </div>
+      <div class="image-block"><img alt="Tactic 5 example" src="https://res.cloudinary.com/mailmodo/image/upload/v1745998227/editor/p/59eb42b4-e527-40e7-80e1-b2906cff9ee2/be28f377cad482ebd490681dc23f3257_vzypki.png" width="600"/></div>
+
+      <div class="content-block">
+        <h1>Tactic 6: Show Countdown Timers</h1>
+        <p><strong>Why It Works:</strong> A visual countdown encourages customers to act before the deal expires.</p>
+        <p><strong>Impact:</strong> It increases conversion rates by pressing customers to act quickly.</p>
+        <p>A live countdown timer on the product or cart page reinforces the urgency of a time-sensitive offer.</p>
+      </div>
+      <div class="image-block"><img alt="Tactic 6 example" src="https://res.cloudinary.com/mailmodo/image/upload/v1745861292/editor/p/59eb42b4-e527-40e7-80e1-b2906cff9ee2/5c0ab558ddab52f162d6d8032f9bbe1c_g5rdnb.png" width="600"/></div>
+
+      <div class="content-block">
+        <h1>Tactic 7: Add a Shopping Cart Timeout</h1>
+        <p><strong>Why It Works:</strong> It creates urgency by reminding customers their selected items may no longer be available if they delay.</p>
+        <p><strong>Impact:</strong> It pushes quicker decision-making and reduces cart abandonment.</p>
+        <p>ASOS uses "Items are reserved for 60 minutes" / "we'll hold it for an hour!" timeouts.</p>
+      </div>
+      <div class="image-block"><img alt="Tactic 7 example" src="https://res.cloudinary.com/mailmodo/image/upload/v1745861325/editor/p/59eb42b4-e527-40e7-80e1-b2906cff9ee2/db654a4b509c570eb3de022176ce3315_iphngs.png" width="600"/></div>
+
+      <div class="content-block">
+        <h1>Tactic 8: Offer Discounts on Abandoned Cart Items</h1>
+        <p><strong>Why It Works:</strong> Discounts re-engage customers and motivate them to complete their purchase.</p>
+        <p><strong>Impact:</strong> It reduces cart abandonment by making customers feel they're securing a valuable, limited-time offer.</p>
+        <p>ASOS sends discount emails for items left in the cart, such as "Only a few left—don't miss out on this 20% off deal!".</p>
+      </div>
+      <div class="image-block"><img alt="Tactic 8 example" src="https://res.cloudinary.com/mailmodo/image/upload/v1745928161/editor/p/59eb42b4-e527-40e7-80e1-b2906cff9ee2/86410e7a29a4c0defd008be742949eef_g4qzbf.png" width="600"/></div>
+
+      <div class="content-block">
+        <h1>Tactic 9: Leverage the Holiday Season</h1>
+        <p><strong>Why It Works:</strong> Holidays create urgency as customers rush to buy before the season ends.</p>
+        <p><strong>Impact:</strong> Drives sales and significantly boosts conversion rates during peak shopping periods.</p>
+        <p>Walmart uses "Christmas Countdown" campaigns to drive seasonal urgency.</p>
+      </div>
+      <div class="image-block"><img alt="Tactic 9 example" src="https://res.cloudinary.com/mailmodo/image/upload/v1745927762/editor/p/59eb42b4-e527-40e7-80e1-b2906cff9ee2/30a2114d097c764c7542a3a93f926fc6_ftnbhj.png" width="600"/></div>
+
+      <div class="content-block">
+        <h1>Tactic 10: Pre-order for Popular Items</h1>
+        <p><strong>Why It Works:</strong> Customers want to be among the first to own a new, exclusive, in-demand product.</p>
+        <p><strong>Impact:</strong> The exclusivity and anticipation around a launch encourage immediate purchases.</p>
+        <p>Apple often uses pre-order campaigns for newly launched products, creating excitement and urgency.</p>
+      </div>
+      <div class="image-block"><img alt="Tactic 10 example" src="https://res.cloudinary.com/mailmodo/image/upload/v1745928132/editor/p/59eb42b4-e527-40e7-80e1-b2906cff9ee2/6b11df90c6e2ae7cbc65bdc0ee1a63c2_w7kodu.png" width="600"/></div>
+
+      <div class="content-block">
+        <div class="form-block">
+          <h2>Find Hidden Revenue in Your Funnel</h2>
+          <p>Let us audit your key journeys and show you exactly where urgency tactics (like timers or stock counters) can boost conversions in under 30 days.</p>
+          <p><strong>Our CRO audit will help you uncover:</strong></p>
+          <ul>
+            <li>Friction in User Experience</li>
+            <li>Cart Abandonment Issues</li>
+            <li>Missed Upselling &amp; Retargeting Opportunities</li>
+            <li>Slow Mobile Load Times &amp; Checkout Friction</li>
+            <li>Low Trust Signals &amp; Unoptimized CTAs</li>
+          </ul>
+          <a href="https://www.growisto.com/contact/" class="btn">Reach out to my team</a>
+        </div>
+      </div>
+
+      <div class="signature">
+        <div class="signature-text">
+          <p>To your success,<br/><a href="https://www.linkedin.com/in/priteshmittal" rel="noopener noreferrer" target="_blank">Pritesh Mittal</a>, CBO and Co-Founder,<br/>Growisto</p>
+        </div>
+        <img alt="Pritesh Mittal" class="signature-img" src="https://res.cloudinary.com/mailmodo/image/upload/v1745971263/editor/p/59eb42b4-e527-40e7-80e1-b2906cff9ee2/fce8f6118ff2ab84f07555c26a72e316_ygpfiw.png"/>
+      </div>
+
+      <div class="footer">
+        <p>© 2025 Growisto Inc. &amp; Zip Infosolutions Pvt Ltd</p>
+        <p>Wilmington, Delaware – 19806-3334, U.S.A</p>
+      </div>
+    </div>
+  </body>
+</html>
