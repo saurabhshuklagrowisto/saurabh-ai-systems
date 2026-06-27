@@ -15,20 +15,20 @@ Top portfolios mix all four levels. Numbers alone signal nothing. Numbers plus t
 
 ## Per-workflow proof checklist
 
-### 01 · US CTO Outbound Stack
+### 01 · ABM Outbound to US eCommerce Founders
 
 **You can add yourself:**
-- A sanitised n8n workflow JSON export (the reply triage workflow file in `claude-skills/reply-triage-agent/n8n-workflow.json` already serves)
-- A Claude prompt example for the per-account hook generation (already in `claude-skills/abm-account-brief-skill/prompts/v2.md`)
-- A redacted screenshot of a real cold email sent (mask the recipient name + company)
+- A sanitised Lemlist sequence screenshot showing the multichannel cadence (email + LinkedIn steps)
+- A Claude prompt example for the founder-level hook generation (the pattern in `claude-skills/abm-account-brief-skill/prompts/v2.md` serves)
+- A redacted screenshot of a real founder outreach message (mask the recipient name + brand)
 
 **Worth asking for:**
 - Zoho CRM Deals dashboard screenshot showing the influenced pipeline number (with names blurred)
-- Sendy campaign summary screenshot showing the 6%+ reply rate
-- Apollo enrichment workflow screenshot showing the targeting depth
-- A single line from the client or AE saying the system delivered: "the outbound stack at under $2/mo gave us [X] meetings"
+- Lemlist campaign summary screenshot showing the 6%+ reply rate
+- Apollo screenshot showing the founder-level targeting depth
+- A single line from the client or AE: "the ABM founder outbound booked us [X] meetings a month"
 
-**Highest-impact artifact:** the Sendy reply rate screenshot. 6% on cold outbound is industry-leading; the screenshot is the credibility multiplier.
+**Highest-impact artifact:** the Lemlist reply-rate screenshot. 6% on founder outbound is well above the 1 to 3% baseline; the screenshot is the credibility multiplier.
 
 ### 02 · ABM Playbook · 100 Named US Accounts
 
@@ -134,10 +134,10 @@ Build the architecture and numbers now (already done in the READMEs). Add proof 
 
 ## The 80/20
 
-If you only have time to gather 3 artifacts across the 6 workflows, prioritise:
+If you only have time to gather 3 artifacts across the workflows, prioritise:
 
-1. **The Smartlead reply-rate screenshot** (US CTO Outbound) — the 6%+ number is the most impressive single metric in the portfolio
-2. **The HubSpot open-rate timeline screenshot** (Email Overhaul) — the 14% → 29% jump has a visible inflection point a hiring manager can see
+1. **The Lemlist reply-rate screenshot** (ABM Founder Outbound) — the 6%+ number is the most impressive single metric in the portfolio
+2. **The Sendy or Looker open-rate timeline screenshot** (Email Overhaul) — the 14% → 29% jump has a visible inflection point a hiring manager can see
 3. **The n8n workflows screenshot showing 14 live** (Marketing Ops Automation) — the workflow count is directly verifiable
 
 Those three, gathered and sanitised, raise the credibility of the entire portfolio by another full step.

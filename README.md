@@ -17,7 +17,7 @@
 
 ## TL;DR
 
-I build the AI systems my marketing team uses every day. Autonomous CRM enrichment agents, WhatsApp opportunity scanners, ABM scoring pipelines, eval-gated Claude skills, and the boring guardrail layer that keeps it all from breaking. Most teams pay for the stack I run for under two dollars a month.
+I build the AI systems my marketing team uses every day. Autonomous CRM enrichment agents, WhatsApp opportunity scanners, ABM scoring pipelines, eval-gated Claude skills, and the boring guardrail layer that keeps it all from breaking. I work account-based: curated lists, real per-account research, and multichannel cadences that book meetings.
 
 This repo is the proof. Every system here is either running live in production for a real team right now, or is a scoped-down packaging of a pattern I run in production. Code where I can share it. Architecture where I can't.
 
@@ -29,12 +29,12 @@ This repo is the proof. Every system here is either running live in production f
 <tr>
 <td align="center"><b>6</b><br>production systems live</td>
 <td align="center"><b>4</b><br>standalone Claude skills with eval harness</td>
-<td align="center"><b>6</b><br>marketing case studies on portfolio</td>
+<td align="center"><b>7</b><br>marketing workflows documented</td>
 </tr>
 <tr>
-<td align="center"><b>~$1/mo</b><br>US CTO outbound stack</td>
+<td align="center"><b>~$1.2M</b><br>influenced pipeline, 6 mo</td>
 <td align="center"><b>25+</b><br>qualified meetings / month</td>
-<td align="center"><b>$15 → $2</b><br>monthly cost on the WhatsApp agent</td>
+<td align="center"><b>6%+</b><br>reply rate on cold outbound</td>
 </tr>
 </table>
 
@@ -59,7 +59,8 @@ The marketing programs I have shipped for B2B SaaS and services clients. Where `
 
 | Workflow | Outcome | Cost or speed |
 |---|---|---|
-| [US CTO Outbound Stack](./marketing-workflows/us-cto-outbound-stack) | 25+ qualified meetings/month, ~$1.2M influenced pipeline | Under $2/mo all-in |
+| [ABM Outbound to US eCommerce Founders](./marketing-workflows/us-ecom-founder-abm) | 25+ qualified meetings/month, ~$1.2M influenced pipeline, 6%+ reply rate | Apollo + Claude + Lemlist |
+| [Lemlist Multichannel Meeting Booking](./marketing-workflows/lemlist-meeting-booking) | In-person US founder meetings via a 6-touch email + LinkedIn cadence | Lemlist + Apollo + Claude |
 | [ABM Playbook · 100 Named US Accounts](./marketing-workflows/abm-100-named-accounts) | 32/100 first meetings in 90 days, 3x engagement lift on tier-1 | 4 US conferences activated |
 | [Email and Newsletter Overhaul](./marketing-workflows/email-newsletter-overhaul) | Open rate 14% → 29%, CTR 1.4% → 3.8% | 12K contacts, 6 sends/mo |
 | [Webinar and Podcast Demand Engine](./marketing-workflows/webinar-podcast-demand) | 12 webinars, 8 podcasts, 10% registrant → qualified meeting | Closed-loop content engine |
@@ -187,7 +188,7 @@ Python 3.10 or newer. Windows users may need `$env:PYTHONIOENCODING = "utf-8"` o
 
 For the marketing-side case studies with full numbers, the thesis on where AI agents fit inside the B2B GTM stack, and the contact form, see **[shivsaurabh.netlify.app](https://shivsaurabh.netlify.app)**.
 
-Six case studies covering the $1 per month US CTO outbound stack, the 100-account ABM playbook, the email and newsletter overhaul, the webinar and podcast demand engine, the Upwork account, and the marketing ops automation layer.
+Seven workflows covering ABM outbound to US eCommerce founders, the Lemlist multichannel meeting-booking cadence, the 100-account ABM playbook, the email and newsletter overhaul, the webinar and podcast demand engine, the Upwork account, and the marketing ops automation layer.
 
 ---
 
