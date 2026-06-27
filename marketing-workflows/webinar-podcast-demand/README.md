@@ -95,6 +95,7 @@ A top-of-funnel demand generation engine built around a closed-loop content moti
 ## Where AI plugs in
 
 - **Topic relevance scoring** · Claude reads target account histories and rates which topics are most relevant for which accounts. Drives the pre-event invite personalisation.
+- **Landing page + collateral generation** · the [Landing Page & Collateral Engine](../../production-systems/landing-page-engine) turns the event brief into a publish-ready registration page (WordPress/Elementor or custom HTML) plus the banners, social cards, and email headers — all from one brief, all on-brand.
 - **Live engagement scoring rules** · Claude assists in writing the n8n rules that score live signals into a hot/warm/cold tier.
 - **Branched nurture copy** · Claude generates the variant sequences for hot/engaged/no-show branches. Each variant references something specific from the session.
 

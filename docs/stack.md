@@ -10,6 +10,8 @@
 | **CRM** | Zoho CRM | What Growisto runs. Concepts (lifecycle stages, custom modules, workflows) map cleanly to HubSpot/Salesforce. |
 | **Outbound** | Sendy, Lemlist, Apollo, Clay, Prospectoo | Sendy (self-hosted, Amazon SES backend) for high-volume cold sends; Lemlist for warm personalized sequences; Apollo + Prospectoo + Clay for enrichment. |
 | **Enrichment** | Clay + Apollo + LinkedIn Sales Nav | Clay for waterfall enrichment, Apollo for contact data, LiSN for signals. |
+| **Landing pages** | WordPress + Elementor, custom HTML | Elementor for site-resident pages a non-technical teammate can edit later; custom HTML for fast standalone event microsites. A Claude skill generates both from one brief. |
+| **Creative / collateral** | Claude Design, Canva | Banners, social cards, email headers, speaker cards — generated from the same brief + brand kit as the landing page so the campaign is visually coherent. |
 | **Knowledge** | Markdown wiki, git-backed, MCP-served | Source of truth in git. CI validates schema. MCP serves into Claude. Anyone with a clone can contribute. |
 | **Eval / Quality** | Custom Python harness in this repo | Standard harness needs felt premature; rolled my own. Replaces with a framework once requirements stabilize. |
 | **Logging / Observability** | BigQuery (production), stdout (dev) | Production agent outputs land in BigQuery for replay + post-hoc analysis. |

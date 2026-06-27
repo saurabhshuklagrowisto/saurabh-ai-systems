@@ -27,7 +27,7 @@ This repo is the proof. Every system here is either running live in production f
 
 <table>
 <tr>
-<td align="center"><b>5</b><br>production systems live</td>
+<td align="center"><b>6</b><br>production systems live</td>
 <td align="center"><b>4</b><br>standalone Claude skills with eval harness</td>
 <td align="center"><b>6</b><br>marketing case studies on portfolio</td>
 </tr>
@@ -51,6 +51,7 @@ Real systems running live for real teams. Click into any folder for the full arc
 | [**ABM Automation Pipeline**](./production-systems/abm-automation) | Three-workflow ABM system: ICP scoring on inbound brand lists, POC extraction via Apollo, and a real-time Cliq bot that returns verified contacts on demand. 92 brands scored, codified ICP rules for India and USA. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Fireflies Summary Pipeline**](./production-systems/fireflies-pipeline) | n8n automation that runs every external meeting through a Claude brand-disambiguation step and files the transcript plus an English summary to the right Drive folder. Multi-language friendly. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Upwork Proposal Automation**](./production-systems/upwork-proposals) | Claude plugin with two live skills (`upwork-scan` + `upwork-proposal`) that scans Upwork, scores jobs on a 16-dimension rubric, runs a brand-permission audit, and generates expertise-first PDF proposals. Architecture and patterns documented. Code is employer IP. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
+| [**Landing Page & Collateral Engine**](./production-systems/landing-page-engine) | A Claude skill I built that turns a one-paragraph event brief into a publish-ready landing page — WordPress/Elementor layout or standalone custom HTML — plus a full collateral set (banners, social cards, email headers) designed in Claude Design. Powers the webinar and event demand engine. Includes a runnable sample page. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 
 ## Marketing workflows
 
@@ -97,7 +98,7 @@ Most teams ship AI demos. Production AI needs five things this repo demonstrates
 4. **Prompt versioning.** v1 deprecated with a documented reason. v2 in production. v3 must pass the golden set before promote.
 5. **Brain and hands separated.** The reasoning layer (Claude) is one component. The action layer (Python, n8n, SQL) is another. The brain calls the hands through clean contracts.
 
-The four Claude skills demonstrate each of these in isolation. The five production systems show what they look like once they are wired together for a real team.
+The four Claude skills demonstrate each of these in isolation. The six production systems show what they look like once they are wired together for a real team.
 
 ---
 
@@ -116,6 +117,13 @@ The four Claude skills demonstrate each of these in isolation. The five producti
 ![n8n](https://img.shields.io/badge/n8n-production-ea4b71?style=flat-square)
 ![Make.com](https://img.shields.io/badge/Make-scenarios-6d00cc?style=flat-square)
 ![Zoho Flow](https://img.shields.io/badge/Zoho_Flow-workflows-cf2e2e?style=flat-square)
+
+**Web and creative**
+![WordPress](https://img.shields.io/badge/WordPress-landing_pages-21759b?style=flat-square&logo=wordpress&logoColor=white)
+![Elementor](https://img.shields.io/badge/Elementor-page_builder-92003b?style=flat-square&logo=elementor&logoColor=white)
+![HTML](https://img.shields.io/badge/Custom_HTML-microsites-e34f26?style=flat-square&logo=html5&logoColor=white)
+![Claude Design](https://img.shields.io/badge/Claude_Design-collaterals-cc785c?style=flat-square)
+![Canva](https://img.shields.io/badge/Canva-design_assets-00c4cc?style=flat-square&logo=canva&logoColor=white)
 
 **CRM and data**
 ![Zoho CRM](https://img.shields.io/badge/Zoho_CRM-system_of_record-cf2e2e?style=flat-square)
