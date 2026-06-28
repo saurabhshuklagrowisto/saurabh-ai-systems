@@ -1,0 +1,11 @@
+{
+  "_note": "Export the live n8n Zoho Cliq bot workflow here.",
+  "_instructions": [
+    "1. Open n8n",
+    "2. Open the Cliq Bot / ABM Automation workflow",
+    "3. Click the three-dot menu (top right) → Download",
+    "4. Save the downloaded .json file as this file (n8n-cliq-bot-export.json)",
+    "5. Before committing: remove hardcoded credentials, API keys, Zoho tokens, or internal email addresses",
+    "6. Replace sensitive values with placeholder strings like '<ZOHO_CRM_TOKEN>', '<APOLLO_API_KEY>', '<CLIQ_WEBHOOK_URL>'"
+  ]
+}
