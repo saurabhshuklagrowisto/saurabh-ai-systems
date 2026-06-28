@@ -29,7 +29,6 @@ This repo is the proof. Every system here is either running live in production f
 <tr>
 <td align="center"><b>6</b><br>production systems live</td>
 <td align="center"><b>4</b><br>standalone Claude skills with eval harness</td>
-<td align="center"><b>3</b><br>live-recorded GTM workflow demos</td>
 <td align="center"><b>7</b><br>marketing workflow case studies</td>
 </tr>
 <tr>
