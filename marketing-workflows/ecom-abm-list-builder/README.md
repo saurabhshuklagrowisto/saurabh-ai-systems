@@ -3,15 +3,13 @@
 **Flow 01 of the GTM workflow demos.**  
 **Watch:** [loom.com/share/997c367778694035a9b237e48021178c](https://www.loom.com/share/997c367778694035a9b237e48021178c)
 
----
 
 ## What it does
 
 Takes a raw list of eCommerce brand domains, enriches each one through Clay, scores them across 5 ICP dimensions, and routes qualified accounts into personalised outbound sequences in Lemlist with AI-generated hooks.
 
-The output is not just a scored list — it is a list where every Tier 1 account has a ready-to-send personalised hook that references something specific to that company.
+The output is not just a scored list it is a list where every Tier 1 account has a ready-to-send personalised hook that references something specific to that company.
 
----
 
 ## Stack
 
@@ -24,7 +22,6 @@ The output is not just a scored list — it is a list where every Tier 1 account
 | Claude (via Clay AI Generate) | Personalised hook generation |
 | Lemlist | Outbound sequence, receives hook as variable |
 
----
 
 ## Architecture
 
@@ -64,7 +61,6 @@ Raw domain list (CSV or manual input)
 └────────────────────────────────────┘
 ```
 
----
 
 ## ICP scoring logic
 
@@ -85,7 +81,6 @@ See [`icp-scoring-formula.md`](./icp-scoring-formula.md) for the full formula br
 - 2–3 → Tier 2 (Nurture)  
 - 0–1 → Not a Fit
 
----
 
 ## Personalisation hook prompt (Clay AI Generate)
 
@@ -104,7 +99,6 @@ Sound curious, not salesy. Do not mention Growisto. Do not use generic phrases l
 Output only the sentence. No quotes, no punctuation at the end.
 ```
 
----
 
 ## Proof
 
@@ -112,7 +106,6 @@ Screenshot of the working Clay table with all columns visible in [`proof/clay-sc
 
 Company names blurred in the screenshot. Columns visible: Platform, Traffic, Employees, Replatform Signal, Industry, ICP Score, Tier, Hook.
 
----
 
 ## Related
 

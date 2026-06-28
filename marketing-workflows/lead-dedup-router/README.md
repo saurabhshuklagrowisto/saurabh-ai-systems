@@ -3,7 +3,6 @@
 **Flow 02 of the GTM workflow demos.**  
 **Watch:** [loom.com/share/fff500d822e14e109e9d4cffd9aeb960](https://www.loom.com/share/fff500d822e14e109e9d4cffd9aeb960)
 
----
 
 ## What it does
 
@@ -11,18 +10,16 @@ Merges leads arriving from 5 different sources (ABM, Cold Outreach, Events, Webi
 
 The output is a Clay table where every row has a `Route` column: **Enrich & Sequence**, **Skip (Cooling)**, or **Skip (Secondary)**. Only the primary contact for a unique company outside the cooling window moves forward.
 
----
 
 ## The core problem this solves
 
-When leads come from multiple sources, the same company appears multiple times — and often different contacts for the same company. Without dedup logic:
+When leads come from multiple sources, the same company appears multiple times and often different contacts for the same company. Without dedup logic:
 - The same company gets multiple outreach sequences running simultaneously
 - Low-priority sources (website lead) block high-priority contacts (ABM) from being surfaced
 - Recently contacted accounts (day 14 of a 28-day window) get hit again
 
 This workflow enforces the rules automatically.
 
----
 
 ## Stack
 
@@ -33,7 +30,6 @@ This workflow enforces the rules automatically.
 
 **Key architectural insight:** Clay formula columns process row by row. They cannot do COUNTIF-style cross-row comparisons. Complex dedup and priority logic must be pre-calculated before import. Clay handles the last mile (date math, routing output) reliably.
 
----
 
 ## Architecture
 
@@ -69,7 +65,6 @@ Raw leads from 5 sources (CSV)
         Skip (Secondary) → hold, primary contact handles
 ```
 
----
 
 ## Pre-calculated columns (done before Clay import)
 
@@ -82,7 +77,6 @@ These are computed in a script or spreadsheet before the CSV is imported into Cl
 | `Source Priority` | ABM=5, Cold Outreach=4, Event=3, Webinar=2, Website Lead=1 |
 | `Contact Role` | If `Duplicate Flag` is Unique → Primary. If Duplicate and Source is ABM or Cold Outreach → Primary. Otherwise → Secondary |
 
----
 
 ## Clay formula columns (single-row, added inside Clay)
 
@@ -99,9 +93,8 @@ ELSE IF Cooling Status = "In Cooling" → "Skip (Cooling)"
 ELSE → "Enrich & Sequence"
 ```
 
----
 
-## Source priority — why this order
+## Source priority why this order
 
 | Source | Priority | Reasoning |
 |---|---|---|
@@ -111,15 +104,13 @@ ELSE → "Enrich & Sequence"
 | Webinar | 2 | Passive interest, lower signal |
 | Website Lead | 1 | Earliest stage, lowest intent |
 
-When two contacts exist for the same company, the one from the higher-priority source is marked Primary and sequenced first. The Secondary contact is held — if the Primary doesn't reply, it can be promoted later.
+When two contacts exist for the same company, the one from the higher-priority source is marked Primary and sequenced first. The Secondary contact is held if the Primary doesn't reply, it can be promoted later.
 
----
 
 ## Demo data template
 
-[`../../gtm-workflow-demos/demo-data-template.csv`](../../gtm-workflow-demos/demo-data-template.csv) — 15 rows covering all routing scenarios: unique contacts, duplicate companies, cooling accounts, primary vs secondary contacts.
+[`../../gtm-workflow-demos/demo-data-template.csv`](../../gtm-workflow-demos/demo-data-template.csv) 15 rows covering all routing scenarios: unique contacts, duplicate companies, cooling accounts, primary vs secondary contacts.
 
----
 
 ## Related
 

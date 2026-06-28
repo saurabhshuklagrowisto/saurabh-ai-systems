@@ -1,4 +1,4 @@
-# Proof — Clay Table Screenshot
+# Proof Clay Table Screenshot
 
 Add the Clay table screenshot here as `clay-screenshot.png`.
 

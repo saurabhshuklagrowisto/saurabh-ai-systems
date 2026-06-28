@@ -2,7 +2,6 @@
 
 Three live-recorded workflow walkthroughs covering Clay enrichment, lead deduplication, and n8n automation. Each one is a pattern I run or have adapted from production at Growisto.
 
----
 
 ## Flow 01 · ICP Scoring & Personalized Hooks (Clay)
 
@@ -35,7 +34,6 @@ Claude reads platform tier + traffic + recent company signals and writes a one-s
 **Why this matters:**  
 Without scoring, SDRs reach out to every name on a list. With scoring, only accounts that pass all 5 dimensions move forward. The personalisation column means every email opens with a sentence that could only be written about that specific company.
 
----
 
 ## Flow 02 · Multi-Source Dedup & 28-Day Cooling (Clay)
 
@@ -56,23 +54,22 @@ Merge leads from 5 sources (ABM, Cold Outreach, Event, Webinar, Website), detect
 | Webinar | 2 |
 | Website Lead | 1 |
 
-**The key insight — what Clay can and cannot do:**  
-Clay formula columns process row by row. They cannot count across rows (no COUNTIF equivalent). Complex cross-row logic — duplicate detection, priority ranking — must be pre-calculated before import. Clay handles single-row math (date calculations, routing logic) reliably. This demo shows exactly where to split the work.
+**The key insight what Clay can and cannot do:**  
+Clay formula columns process row by row. They cannot count across rows (no COUNTIF equivalent). Complex cross-row logic duplicate detection, priority ranking must be pre-calculated before import. Clay handles single-row math (date calculations, routing logic) reliably. This demo shows exactly where to split the work.
 
 **Pre-calculated in CSV (before Clay):**
-- `Duplicate Flag` — Unique / Duplicate (count of domain in full list)
-- `Email Check` — OK / Duplicate (uniqueness of email address)
-- `Source Priority` — numeric score from source name
-- `Contact Role` — Primary / Secondary based on Duplicate Flag + Source Priority
+- `Duplicate Flag` Unique / Duplicate (count of domain in full list)
+- `Email Check` OK / Duplicate (uniqueness of email address)
+- `Source Priority` numeric score from source name
+- `Contact Role` Primary / Secondary based on Duplicate Flag + Source Priority
 
 **Clay formula columns (single-row, reliable):**
-- `Days Since Contact` — `TODAY() - Last Contacted Date` → numeric
-- `Cooling Status` — `IF Days Since Contact < 28 THEN "In Cooling" ELSE "OK"` (or blank if never contacted)
-- `Route` — final routing decision: Enrich & Sequence / Review / Skip (Cooling) / Skip (Secondary)
+- `Days Since Contact` `TODAY() - Last Contacted Date` → numeric
+- `Cooling Status` `IF Days Since Contact < 28 THEN "In Cooling" ELSE "OK"` (or blank if never contacted)
+- `Route` final routing decision: Enrich & Sequence / Review / Skip (Cooling) / Skip (Secondary)
 
 **Demo data template:** [`demo-data-template.csv`](./demo-data-template.csv)
 
----
 
 ## Flow 03 · AI Meeting Summary Pipeline (n8n)
 
@@ -98,14 +95,13 @@ Claude's output brand name becomes the key that links transcript filing, summary
 **Why context-aware summaries matter:**  
 A summary written with no knowledge of prior meetings lists facts. A summary written with the last summary as context identifies what changed, flags broken commitments, and surfaces the decision trajectory. This is the meaningful difference for account managers reviewing 8–10 client meetings a week.
 
----
 
 ## The pattern these three flows share
 
 All three are examples of the same underlying architecture:
 
-1. **Pre-process outside the tool** — put complex cross-row or cross-system logic in a script or CSV before it enters Clay or n8n. The tool handles the last mile.
-2. **Route, don't act** — every output is a routing decision (Enrich, Nurture, Skip, Flag). The action happens downstream once a human or system has reviewed the route.
-3. **Confidence gates** — ambiguous or low-confidence outputs get flagged to a human rather than silently filed or sequenced. Nothing reaches a customer without a clear-confidence result.
+1. **Pre-process outside the tool** put complex cross-row or cross-system logic in a script or CSV before it enters Clay or n8n. The tool handles the last mile.
+2. **Route, don't act** every output is a routing decision (Enrich, Nurture, Skip, Flag). The action happens downstream once a human or system has reviewed the route.
+3. **Confidence gates** ambiguous or low-confidence outputs get flagged to a human rather than silently filed or sequenced. Nothing reaches a customer without a clear-confidence result.
 
 These are the same principles documented in [ARCHITECTURE.md](../ARCHITECTURE.md) and across the production systems.
