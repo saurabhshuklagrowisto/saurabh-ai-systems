@@ -1,0 +1,16 @@
+Company Name,Domain,Contact Name,Source,Last Contacted Date,Duplicate Flag,Email Check,Source Priority,Contact Role,Days Since Contact,Cooling Status,Route
+Raycon,rayconglobal.com,Marcus Lee,ABM Outreach,,Duplicate,OK,5,Primary,,OK,Enrich & Sequence
+Raycon,rayconglobal.com,Anbang Teng,Cold Outreach,2026-06-15,Duplicate,OK,4,Secondary,14,In Cooling,Skip (Cooling)
+Banza,eatbanza.com,Zoe Lindquist,Cold Outreach,2025-08-28,Duplicate,OK,4,Primary,305,OK,Enrich & Sequence
+Banza,eatbanza.com,Lea Aclan,Event Lead,,Duplicate,OK,3,Secondary,,OK,Skip (Secondary)
+Brooklinen,brooklinen.com,Alieu Fye,Webinar,,Unique,OK,2,Primary,,OK,Enrich & Sequence
+Tweezerman,tweezerman.com,Lauren Keane,Website Lead,2026-06-22,Unique,OK,1,Primary,7,In Cooling,Skip (Cooling)
+Faherty Brand,fahertybrand.com,Alexandra Carmody,ABM Outreach,2026-01-09,Unique,OK,5,Primary,171,OK,Enrich & Sequence
+Adrianna Papell,adriannapapell.com,Vivien Ortiz,Event Lead,,Unique,OK,3,Primary,,OK,Enrich & Sequence
+Gerber Childrenswear,gerberchildrenswear.com,Todd Wilson,Website Lead,,Unique,OK,1,Primary,,OK,Enrich & Sequence
+Rao's,raofoods.com,Matt Harrison,ABM Outreach,,Duplicate,OK,5,Primary,,OK,Enrich & Sequence
+Rao's,raofoods.com,Anthony Sanzio,Cold Outreach,2025-08-22,Duplicate,OK,4,Secondary,311,OK,Skip (Secondary)
+Blueland,blueland.com,Sarah Moore,Event Lead,2026-06-10,Duplicate,OK,3,Primary,19,In Cooling,Skip (Cooling)
+Blueland,blueland.com,James Rivera,Webinar,,Duplicate,OK,2,Secondary,,OK,Skip (Secondary)
+Evolution of Smooth,evolutionofsmooth.com,Grace Smith,Cold Outreach,2025-08-26,Unique,OK,4,Primary,307,OK,Enrich & Sequence
+Delta Children,deltachildren.com,Carmella Bloom,Webinar,2025-08-21,Unique,OK,2,Primary,312,OK,Enrich & Sequence

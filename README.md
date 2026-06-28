@@ -29,7 +29,8 @@ This repo is the proof. Every system here is either running live in production f
 <tr>
 <td align="center"><b>6</b><br>production systems live</td>
 <td align="center"><b>4</b><br>standalone Claude skills with eval harness</td>
-<td align="center"><b>7</b><br>marketing workflows documented</td>
+<td align="center"><b>3</b><br>live-recorded GTM workflow demos</td>
+<td align="center"><b>7</b><br>marketing workflow case studies</td>
 </tr>
 <tr>
 <td align="center"><b>~$1.2M</b><br>influenced pipeline, 6 mo</td>
@@ -52,6 +53,20 @@ Real systems running live for real teams. Click into any folder for the full arc
 | [**Fireflies Summary Pipeline**](./production-systems/fireflies-pipeline) | n8n automation that runs every external meeting through a Claude brand-disambiguation step and files the transcript plus an English summary to the right Drive folder. Multi-language friendly. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Upwork Proposal Automation**](./production-systems/upwork-proposals) | Claude plugin with two live skills (`upwork-scan` + `upwork-proposal`) that scans Upwork, scores jobs on a 16-dimension rubric, runs a brand-permission audit, and generates expertise-first PDF proposals. Architecture and patterns documented. Code is employer IP. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Landing Page & Collateral Engine**](./production-systems/landing-page-engine) | A Claude skill I built that turns a one-paragraph event brief into a publish-ready landing page (WordPress/Elementor or standalone custom HTML) plus the matching collateral like banners, social cards and email headers designed in Claude Design. It powers the webinar and event demand engine, and ships two real production artifacts: a live webinar landing page and its Sendy invite email. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
+
+## GTM workflow demos — live-recorded
+
+Three Clay and n8n workflows recorded live, showing the actual tooling in action. Each video follows the same pattern documented in ARCHITECTURE.md: pre-process outside the tool, route before acting, confidence gate before any customer touch.
+
+| Flow | Video | Stack | What it shows |
+|---|---|---|---|
+| [**ICP Scoring & Personalized Hooks**](./gtm-workflow-demos#flow-01--icp-scoring--personalized-hooks-clay) | [▶ Watch on Loom](https://www.loom.com/share/997c367778694035a9b237e48021178c) | Clay · Apollo · Lemlist · Claude | Score eCommerce brands on 5 ICP dimensions, generate AI hooks, route to sequence |
+| [**Multi-Source Dedup & 28-Day Cooling**](./gtm-workflow-demos#flow-02--multi-source-dedup--28-day-cooling-clay) | [▶ Watch on Loom](https://www.loom.com/share/fff500d822e14e109e9d4cffd9aeb960) | Clay · Google Sheets | Merge 5 lead sources, detect duplicates, rank by source priority, suppress cooling accounts |
+| [**AI Meeting Summary Pipeline**](./gtm-workflow-demos#flow-03--ai-meeting-summary-pipeline-n8n) | [▶ Watch on Loom](https://www.loom.com/share/0b27759116c9460789147810a4391261) | n8n · Claude · Fireflies · Google Drive | Webhook-triggered transcript filing + context-aware Claude summary + email delivery |
+
+Full documentation and demo data template in [`gtm-workflow-demos/`](./gtm-workflow-demos).
+
+---
 
 ## Marketing workflows
 
@@ -188,7 +203,7 @@ Python 3.10 or newer. Windows users may need `$env:PYTHONIOENCODING = "utf-8"` o
 
 For the marketing-side case studies with full numbers, the thesis on where AI agents fit inside the B2B GTM stack, and the contact form, see **[shivsaurabh.netlify.app](https://shivsaurabh.netlify.app)**.
 
-Seven workflows covering ABM outbound to US eCommerce founders, the Lemlist multichannel meeting-booking cadence, the 100-account ABM playbook, the email and newsletter overhaul, the webinar and podcast demand engine, the Upwork account, and the marketing ops automation layer.
+The portfolio now includes a dedicated [Demos section](https://shivsaurabh.netlify.app#demos) with all three Loom walkthroughs embedded. Seven workflow case studies cover ABM outbound to US eCommerce founders, the Lemlist multichannel meeting-booking cadence, the 100-account ABM playbook, the email and newsletter overhaul, the webinar and podcast demand engine, the Upwork account, and the marketing ops automation layer.
 
 ---
 
