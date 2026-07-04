@@ -67,6 +67,21 @@ Full documentation and demo data template in [`gtm-workflow-demos/`](./gtm-workf
 
 ---
 
+## Pipeline automation flows — import-ready n8n
+
+Four n8n workflows that compose into a self-running B2B pipeline engine, plus an Emergent-built dashboard that visualizes the priority queue. Import the JSON, drop in credentials, run. Includes a zero-credential demo mode with real execution outputs documented.
+
+| Flow | Stack | What it does |
+|---|---|---|
+| [Speed to Lead Engine](./pipeline-automation) | n8n · Apollo · Claude · Instantly · Slack | Demo form submit to personalized calendar email in under 5 minutes: enrich, AI-score, tier-route, alert the AE, log to CRM |
+| [Visitor Identification Outreach](./pipeline-automation) | n8n · RB2B-style webhook · Clay · Claude | Anonymous website visitor to same-day outreach: ICP gate, suppression check, 28-day cooling window, page-aware opener |
+| [Intent Priority Engine](./pipeline-automation) | n8n · Clay · Claude · Sheets | Daily scoring of 3 signal streams with weights and 30-day time decay. T1 gets a human, T2 gets automation, T3 gets ads |
+| [Priority Dashboard](./pipeline-automation/priority-dashboard-emergent-prompt.md) | Emergent | A working tier-board app that visualizes the engine: live re-scoring, signal simulator, daily queue |
+
+Full documentation, import steps, test payloads and proof outputs in [`pipeline-automation/`](./pipeline-automation).
+
+---
+
 ## Marketing workflows
 
 The marketing programs I have shipped for B2B SaaS and services clients. Where `production-systems/` documents the AI agents and infrastructure, `marketing-workflows/` documents the marketing motions those tools support. Different level of abstraction, same standard of proof.

@@ -1,0 +1,307 @@
+{
+  "name": "Speed to Lead Engine (Demo Mode, No API Keys)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "speed-to-lead-demo",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "name": "Demo Form Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ],
+      "webhookId": "speed-to-lead-demo"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "lead_name",
+              "value": "={{ $json.body.name }}"
+            },
+            {
+              "name": "lead_email",
+              "value": "={{ $json.body.email }}"
+            },
+            {
+              "name": "lead_phone",
+              "value": "={{ $json.body.phone }}"
+            },
+            {
+              "name": "problem_statement",
+              "value": "={{ $json.body.problem }}"
+            },
+            {
+              "name": "email_domain",
+              "value": "={{ $json.body.email.split('@')[1] }}"
+            },
+            {
+              "name": "received_at",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Normalize Lead",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// MOCK ENRICHMENT (demo mode). Production version calls Apollo organizations/enrich with the same output shape.\nconst d = $json.email_domain || '';\nconst db = {\n  'northwesternmutual.com': { name: 'Northwestern Mutual', industry: 'insurance', estimated_num_employees: 7500, hq: 'Milwaukee, WI' },\n  'farmers.com':            { name: 'Farmers Insurance', industry: 'insurance', estimated_num_employees: 12000, hq: 'Los Angeles, CA' },\n  'regionsbank.com':        { name: 'Regions Bank', industry: 'banking', estimated_num_employees: 20000, hq: 'Birmingham, AL' },\n  'ameriprise.com':         { name: 'Ameriprise Financial', industry: 'wealth management', estimated_num_employees: 14000, hq: 'Minneapolis, MN' },\n  'chime.com':              { name: 'Chime', industry: 'fintech', estimated_num_employees: 1500, hq: 'San Francisco, CA' },\n  'gmail.com':              { name: 'Personal Email', industry: 'unknown', estimated_num_employees: 0, hq: '' }\n};\nconst org = db[d] || { name: d.split('.')[0], industry: 'unknown', estimated_num_employees: 200, hq: '' };\nreturn [{ json: { ...$json, organization: org } }];"
+      },
+      "name": "Enrich Company (Mock of Apollo)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        640,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// MOCK AI SCORING (demo mode). Production version sends this exact context to Claude and gets the same JSON shape back.\nconst org = $json.organization || {};\nconst problem = ($json.problem_statement || '').toLowerCase();\nlet score = 0;\nconst reasons = [];\n// Industry fit (0-3)\nconst icp = ['insurance', 'banking', 'wealth management', 'fintech', 'financial services'];\nif (icp.includes(org.industry)) { score += 3; reasons.push('industry match: ' + org.industry); }\n// Size fit (0-3)\nif (org.estimated_num_employees >= 5000) { score += 3; reasons.push('enterprise scale: ' + org.estimated_num_employees + ' employees'); }\nelse if (org.estimated_num_employees >= 500) { score += 2; reasons.push('mid-enterprise: ' + org.estimated_num_employees + ' employees'); }\n// Problem relevance (0-3)\nif (/ramp|onboard|train|coach|hire|new rep|advisor|agent/.test(problem)) { score += 3; reasons.push('problem is core use case: sales ramp/training'); }\nelse if (/sales|revenue|quota|pipeline/.test(problem)) { score += 2; reasons.push('sales performance problem'); }\n// Urgency signal (0-1)\nif (/\\d+/.test(problem)) { score += 1; reasons.push('quantified need stated'); }\nconst tier = score >= 7 ? 'T1' : 'T2';\nconst firstName = ($json.lead_name || '').split(' ')[0];\nconst reply_draft = `Hi ${firstName}, thanks for reaching out. ${org.industry === 'insurance' ? 'Insurance sales teams' : org.industry === 'banking' ? 'Banking sales teams' : 'Enterprise sales teams'} use AI roleplays to cut new hire ramp from 90 days to about 15, reps practice against AI buyers before real calls. Given what you shared about ${$json.problem_statement}, a 20 minute walkthrough would show you exactly how that works for a team your size. Grab a time here: https://cal.com/YOUR-TEAM/demo`;\nreturn [{ json: { ...$json, score, tier, reasoning: reasons.join('; '), reply_draft } }];"
+      },
+      "name": "AI Score + Draft Reply (Mock of Claude)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        860,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.score }}",
+              "operation": "largerEqual",
+              "value2": 7
+            }
+          ]
+        }
+      },
+      "name": "Tier 1?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "email_to",
+              "value": "={{ $json.lead_email }}"
+            },
+            {
+              "name": "email_subject",
+              "value": "={{ 'Your demo, ' + $json.organization.name }}"
+            },
+            {
+              "name": "email_body",
+              "value": "={{ $json.reply_draft }}"
+            },
+            {
+              "name": "sent_within",
+              "value": "under 5 minutes of form submit"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "T1 - Instant Calendar Email (Preview)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "slack_channel",
+              "value": "#us-pipeline"
+            },
+            {
+              "name": "slack_message",
+              "value": "={{ 'HOT LEAD (T1, score ' + $json.score + '/10): ' + $json.lead_name + ' at ' + $json.organization.name + ' (' + $json.organization.industry + ', ' + $json.organization.estimated_num_employees + ' emp)\\nProblem: ' + $json.problem_statement + '\\nWhy T1: ' + $json.reasoning + '\\nCalendar email already sent. Jump in: ' + $json.lead_email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "T1 - Slack Alert to AE (Preview)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "nurture_campaign",
+              "value": "Warm Nurture: case studies + webinar invites"
+            },
+            {
+              "name": "enrolled_email",
+              "value": "={{ $json.lead_email }}"
+            },
+            {
+              "name": "re_score",
+              "value": "monthly, promoted to T1 on any new signal"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "T2 - Nurture Sequence (Preview)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "crm_action",
+              "value": "Lead created"
+            },
+            {
+              "name": "crm_summary",
+              "value": "={{ $json.lead_name + ' | ' + $json.organization.name + ' | score ' + $json.score + ' (' + $json.tier + ') | source: Website Demo Form | ' + $json.reasoning }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Log to CRM (Preview)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Demo Form Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Lead": {
+      "main": [
+        [
+          {
+            "node": "Enrich Company (Mock of Apollo)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrich Company (Mock of Apollo)": {
+      "main": [
+        [
+          {
+            "node": "AI Score + Draft Reply (Mock of Claude)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Score + Draft Reply (Mock of Claude)": {
+      "main": [
+        [
+          {
+            "node": "Tier 1?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tier 1?": {
+      "main": [
+        [
+          {
+            "node": "T1 - Instant Calendar Email (Preview)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "T1 - Slack Alert to AE (Preview)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "T2 - Nurture Sequence (Preview)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "T1 - Instant Calendar Email (Preview)": {
+      "main": [
+        [
+          {
+            "node": "Log to CRM (Preview)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "T2 - Nurture Sequence (Preview)": {
+      "main": [
+        [
+          {
+            "node": "Log to CRM (Preview)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

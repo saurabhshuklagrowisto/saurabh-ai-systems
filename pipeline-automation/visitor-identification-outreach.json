@@ -1,0 +1,364 @@
+{
+  "name": "Anonymous Visitor to Same Day Outreach",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rb2b-visitor",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "name": "RB2B Visitor Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ],
+      "webhookId": "rb2b-visitor"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "visitor_name",
+              "value": "={{ $json.body.first_name }} {{ $json.body.last_name }}"
+            },
+            {
+              "name": "visitor_email",
+              "value": "={{ $json.body.email }}"
+            },
+            {
+              "name": "visitor_linkedin",
+              "value": "={{ $json.body.linkedin_url }}"
+            },
+            {
+              "name": "visitor_title",
+              "value": "={{ $json.body.title }}"
+            },
+            {
+              "name": "company_name",
+              "value": "={{ $json.body.company_name }}"
+            },
+            {
+              "name": "company_domain",
+              "value": "={{ $json.body.company_domain }}"
+            },
+            {
+              "name": "pages_viewed",
+              "value": "={{ $json.body.pages_viewed }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Normalize Visitor",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.apollo.io/v1/organizations/enrich",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"X-Api-Key\": \"YOUR_APOLLO_API_KEY\", \"Content-Type\": \"application/json\"}",
+        "queryParametersJson": "{\"domain\": \"={{ $json.company_domain }}\"}"
+      },
+      "name": "Apollo - Company Size + Industry",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        640,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const org = $json.organization || {};\nconst v = $node['Normalize Visitor'].json;\nconst size = org.estimated_num_employees || 0;\nconst industry = (org.industry || '').toLowerCase();\nconst icpIndustries = ['insurance', 'banking', 'financial services', 'investment management', 'venture capital', 'fintech', 'telecommunications', 'outsourcing'];\nconst industryFit = icpIndustries.some(i => industry.includes(i));\nconst sizeFit = size >= 500;\nconst seniorTitle = /vp|vice president|head|director|chief|cro|ceo|founder|leader/i.test(v.visitor_title || '');\nreturn [{ json: { ...v, company_size: size, company_industry: industry, icp_pass: (sizeFit && industryFit), senior_contact: seniorTitle } }];"
+      },
+      "name": "ICP Gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        860,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.icp_pass }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Passes ICP?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.zohoapis.com/crm/v2/Leads/search?email={{ $json.visitor_email }}",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"Authorization\": \"Zoho-oauthtoken YOUR_ZOHO_TOKEN\"}"
+      },
+      "name": "CRM Suppression Check",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const crm = $json.data || [];\nconst v = $node['ICP Gate'].json;\nconst inCrm = crm.length > 0;\nconst status = inCrm ? (crm[0].Lead_Status || '') : '';\nconst suppressed = inCrm && /customer|open deal|in sequence|do not contact/i.test(status);\nconst lastTouch = inCrm ? new Date(crm[0].Modified_Time || 0) : null;\nconst coolingDays = lastTouch ? (Date.now() - lastTouch.getTime()) / 86400000 : 999;\nreturn [{ json: { ...v, suppressed: suppressed || coolingDays < 28, cooling_days_since_touch: Math.round(coolingDays) } }];"
+      },
+      "name": "Apply 28-Day Cooling Window",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.suppressed }}",
+              "value2": false
+            }
+          ]
+        }
+      },
+      "name": "Clear to Contact?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.anthropic.com/v1/messages",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"x-api-key\": \"YOUR_ANTHROPIC_API_KEY\", \"anthropic-version\": \"2023-06-01\", \"content-type\": \"application/json\"}",
+        "bodyParametersJson": "{\"model\": \"claude-haiku-4-5-20251001\", \"max_tokens\": 300, \"system\": \"You write cold email openers for an AI sales roleplay and coaching platform for enterprise sales teams. Rules: ONE observation grounded in the page context provided, professional tone, no flattery, no exclamation marks, never mention tracking or that we saw them on the site. Reference their industry challenge instead. Example: a pricing page visitor from an insurance company gets an opener about ramping insurance agents faster. Respond ONLY with JSON: {\\\"first_line\\\": \\\"<text>\\\", \\\"angle\\\": \\\"<pricing|product|industry>\\\"}.\", \"messages\": [{\"role\": \"user\", \"content\": \"Visitor: {{ $json.visitor_title }} at {{ $json.company_name }} ({{ $json.company_industry }}, {{ $json.company_size }} employees). Pages viewed: {{ $json.pages_viewed }}\"}]}"
+      },
+      "name": "Claude - Page-Aware Opener",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.content?.[0]?.text || '{}';\nconst cleaned = raw.replace(/```json|```/g, '').trim();\nlet opener;\ntry { opener = JSON.parse(cleaned); } catch (e) { opener = { first_line: '', angle: 'industry' }; }\nreturn [{ json: { ...($node['Apply 28-Day Cooling Window'].json), ...opener } }];"
+      },
+      "name": "Parse Opener",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.instantly.ai/api/v2/leads",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"Authorization\": \"Bearer YOUR_INSTANTLY_API_KEY\", \"Content-Type\": \"application/json\"}",
+        "bodyParametersJson": "{\"campaign\": \"YOUR_VISITOR_SAMEDAY_CAMPAIGN_ID\", \"email\": \"={{ $json.visitor_email }}\", \"first_name\": \"={{ $json.visitor_name.split(' ')[0] }}\", \"company_name\": \"={{ $json.company_name }}\", \"custom_variables\": {\"first_line\": \"={{ $json.first_line }}\", \"linkedin_url\": \"={{ $json.visitor_linkedin }}\"}}"
+      },
+      "name": "Same-Day Instantly Sequence",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "url": "YOUR_SLACK_INCOMING_WEBHOOK_URL",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"text\": \"IDENTIFIED VISITOR (ICP pass): {{ $json.visitor_name }}, {{ $json.visitor_title }} at {{ $json.company_name }} ({{ $json.company_size }} emp)\\nViewed: {{ $json.pages_viewed }}\\nEnrolled same-day, opener: {{ $json.first_line }}\\nLinkedIn: {{ $json.visitor_linkedin }}\"}"
+      },
+      "name": "Slack - Visitor Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://graph.facebook.com/v19.0/act_YOUR_AD_ACCOUNT/customaudiences",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"note\": \"PLACEHOLDER - non-ICP visitors sync to Meta/LinkedIn retargeting audience instead of outbound. Swap for your audience sync endpoint or a Clay table push.\"}"
+      },
+      "name": "Non-ICP - Retargeting Audience",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        480
+      ]
+    }
+  ],
+  "connections": {
+    "RB2B Visitor Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Visitor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Visitor": {
+      "main": [
+        [
+          {
+            "node": "Apollo - Company Size + Industry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apollo - Company Size + Industry": {
+      "main": [
+        [
+          {
+            "node": "ICP Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ICP Gate": {
+      "main": [
+        [
+          {
+            "node": "Passes ICP?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Passes ICP?": {
+      "main": [
+        [
+          {
+            "node": "CRM Suppression Check",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Non-ICP - Retargeting Audience",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM Suppression Check": {
+      "main": [
+        [
+          {
+            "node": "Apply 28-Day Cooling Window",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apply 28-Day Cooling Window": {
+      "main": [
+        [
+          {
+            "node": "Clear to Contact?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear to Contact?": {
+      "main": [
+        [
+          {
+            "node": "Claude - Page-Aware Opener",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Claude - Page-Aware Opener": {
+      "main": [
+        [
+          {
+            "node": "Parse Opener",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Opener": {
+      "main": [
+        [
+          {
+            "node": "Same-Day Instantly Sequence",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Slack - Visitor Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

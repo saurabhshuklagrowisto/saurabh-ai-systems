@@ -1,0 +1,298 @@
+{
+  "name": "Speed to Lead Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "demo-request-intake",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "name": "Demo Form Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ],
+      "webhookId": "demo-request-intake"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "lead_name",
+              "value": "={{ $json.body.name }}"
+            },
+            {
+              "name": "lead_email",
+              "value": "={{ $json.body.email }}"
+            },
+            {
+              "name": "lead_phone",
+              "value": "={{ $json.body.phone }}"
+            },
+            {
+              "name": "problem_statement",
+              "value": "={{ $json.body.problem }}"
+            },
+            {
+              "name": "email_domain",
+              "value": "={{ $json.body.email.split('@')[1] }}"
+            },
+            {
+              "name": "received_at",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Normalize Lead",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.apollo.io/v1/organizations/enrich",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"X-Api-Key\": \"YOUR_APOLLO_API_KEY\", \"Content-Type\": \"application/json\"}",
+        "queryParametersJson": "{\"domain\": \"={{ $json.email_domain }}\"}"
+      },
+      "name": "Apollo - Enrich Company",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        640,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.anthropic.com/v1/messages",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"x-api-key\": \"YOUR_ANTHROPIC_API_KEY\", \"anthropic-version\": \"2023-06-01\", \"content-type\": \"application/json\"}",
+        "bodyParametersJson": "{\"model\": \"claude-haiku-4-5-20251001\", \"max_tokens\": 600, \"system\": \"You are the lead qualification engine for an AI sales enablement platform for enterprise sales teams (insurance, banking, wealth management, fintech, call centers). Score this inbound demo request 0-10 on ICP fit using: industry match (0-3), company size 500+ employees (0-3), problem relevance to sales training/ramp/coaching (0-2), seniority signals (0-2). Then draft a 3-sentence personalized reply referencing their industry and problem, offering a demo call. Respond ONLY with valid JSON: {\\\"score\\\": <number>, \\\"tier\\\": \\\"T1|T2\\\", \\\"reasoning\\\": \\\"<one line>\\\", \\\"reply_draft\\\": \\\"<text>\\\"}. T1 = score 7+.\", \"messages\": [{\"role\": \"user\", \"content\": \"Lead: {{ $node['Normalize Lead'].json.lead_name }} ({{ $node['Normalize Lead'].json.lead_email }})\\nCompany data: {{ JSON.stringify($json.organization || {}) }}\\nProblem stated: {{ $node['Normalize Lead'].json.problem_statement }}\"}]}"
+      },
+      "name": "Claude - ICP Score + Draft Reply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        860,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.content?.[0]?.text || '{}';\nconst cleaned = raw.replace(/```json|```/g, '').trim();\nlet verdict;\ntry { verdict = JSON.parse(cleaned); } catch (e) { verdict = { score: 0, tier: 'T2', reasoning: 'parse_failed', reply_draft: '' }; }\nreturn [{ json: { ...($node['Normalize Lead'].json), ...verdict } }];"
+      },
+      "name": "Parse Verdict",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.score }}",
+              "operation": "largerEqual",
+              "value2": 7
+            }
+          ]
+        }
+      },
+      "name": "Tier 1?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.instantly.ai/api/v2/leads",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"Authorization\": \"Bearer YOUR_INSTANTLY_API_KEY\", \"Content-Type\": \"application/json\"}",
+        "bodyParametersJson": "{\"campaign\": \"YOUR_T1_INSTANT_REPLY_CAMPAIGN_ID\", \"email\": \"={{ $json.lead_email }}\", \"first_name\": \"={{ $json.lead_name }}\", \"custom_variables\": {\"reply_draft\": \"={{ $json.reply_draft }}\", \"calendar_link\": \"https://cal.com/YOUR-TEAM/demo\"}}"
+      },
+      "name": "T1 - Instant Calendar Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "url": "YOUR_SLACK_INCOMING_WEBHOOK_URL",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"text\": \"HOT LEAD (T1, score {{ $json.score }}): {{ $json.lead_name }} - {{ $json.email_domain }}\\nProblem: {{ $json.problem_statement }}\\nWhy: {{ $json.reasoning }}\\nCalendar email sent automatically. Jump in: {{ $json.lead_email }}\"}"
+      },
+      "name": "T1 - Slack Alert to AE",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.instantly.ai/api/v2/leads",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"Authorization\": \"Bearer YOUR_INSTANTLY_API_KEY\", \"Content-Type\": \"application/json\"}",
+        "bodyParametersJson": "{\"campaign\": \"YOUR_T2_NURTURE_CAMPAIGN_ID\", \"email\": \"={{ $json.lead_email }}\", \"first_name\": \"={{ $json.lead_name }}\"}"
+      },
+      "name": "T2 - Nurture Sequence",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.zohoapis.com/crm/v2/Leads",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"Authorization\": \"Zoho-oauthtoken YOUR_ZOHO_TOKEN\", \"Content-Type\": \"application/json\"}",
+        "bodyParametersJson": "{\"data\": [{\"Last_Name\": \"={{ $json.lead_name }}\", \"Email\": \"={{ $json.lead_email }}\", \"Lead_Source\": \"Website Demo Form\", \"Description\": \"Score: {{ $json.score }} | {{ $json.reasoning }} | Problem: {{ $json.problem_statement }}\"}]}"
+      },
+      "name": "Log to CRM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Demo Form Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Lead": {
+      "main": [
+        [
+          {
+            "node": "Apollo - Enrich Company",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apollo - Enrich Company": {
+      "main": [
+        [
+          {
+            "node": "Claude - ICP Score + Draft Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - ICP Score + Draft Reply": {
+      "main": [
+        [
+          {
+            "node": "Parse Verdict",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Verdict": {
+      "main": [
+        [
+          {
+            "node": "Tier 1?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tier 1?": {
+      "main": [
+        [
+          {
+            "node": "T1 - Instant Calendar Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "T1 - Slack Alert to AE",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "T2 - Nurture Sequence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "T1 - Instant Calendar Email": {
+      "main": [
+        [
+          {
+            "node": "Log to CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "T2 - Nurture Sequence": {
+      "main": [
+        [
+          {
+            "node": "Log to CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

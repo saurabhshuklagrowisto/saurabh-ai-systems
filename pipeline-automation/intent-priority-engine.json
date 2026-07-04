@@ -1,0 +1,243 @@
+{
+  "name": "Intent Layered Account Priority Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * 1-5"
+            }
+          ]
+        }
+      },
+      "name": "Every Weekday 7am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/YOUR_SHEET_ID/values/signals!A2:F500",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"Authorization\": \"Bearer YOUR_GOOGLE_OAUTH_TOKEN\"}"
+      },
+      "name": "Pull Signal Log (Sheet)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "notesInFlow": true,
+      "notes": "Signal log columns: account, domain, signal_type (web_visit | job_change | content_download | webinar | pricing_view), detail, signal_date, source. RB2B, Apollo job-change alerts, and form fills all append rows here via their own small webhook flows."
+    },
+    {
+      "parameters": {
+        "jsCode": "// INTENT SCORING with weights and 30-day time decay\nconst rows = ($json.values || []).map(r => ({ account: r[0], domain: r[1], type: r[2], detail: r[3], date: new Date(r[4]), source: r[5] }));\nconst WEIGHTS = { pricing_view: 4, web_visit: 3, content_download: 3, webinar: 3, job_change: 2, funding: 2, hiring_surge: 2 };\nconst now = Date.now();\nconst accounts = {};\nfor (const s of rows) {\n  const ageDays = (now - s.date.getTime()) / 86400000;\n  if (ageDays > 30 || isNaN(ageDays)) continue; // TIME DECAY: signals expire\n  const decay = 1 - (ageDays / 30); // linear decay to zero at 30 days\n  const pts = (WEIGHTS[s.type] || 1) * decay;\n  if (!accounts[s.domain]) accounts[s.domain] = { account: s.account, domain: s.domain, score: 0, signals: [] };\n  accounts[s.domain].score += pts;\n  accounts[s.domain].signals.push(`${s.type}: ${s.detail} (${Math.round(ageDays)}d ago)`);\n}\nconst out = Object.values(accounts).map(a => ({\n  ...a,\n  score: Math.round(a.score * 10) / 10,\n  tier: a.score >= 8 ? 'T1' : a.score >= 4 ? 'T2' : 'T3'\n})).sort((x, y) => y.score - x.score);\nreturn out.map(a => ({ json: a }));"
+      },
+      "name": "Score + Decay + Tier",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.tier }}",
+              "operation": "equals",
+              "value2": "T1"
+            }
+          ]
+        }
+      },
+      "name": "Tier 1 Today?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        920,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.anthropic.com/v1/messages",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"x-api-key\": \"YOUR_ANTHROPIC_API_KEY\", \"anthropic-version\": \"2023-06-01\", \"content-type\": \"application/json\"}",
+        "bodyParametersJson": "{\"model\": \"claude-haiku-4-5-20251001\", \"max_tokens\": 200, \"system\": \"You summarize buying intent for a sales team. Given an account's intent signals, write ONE sentence starting with 'Why now:' that a rep can read in 5 seconds before reaching out. Be concrete, reference the strongest signal.\", \"messages\": [{\"role\": \"user\", \"content\": \"Account: {{ $json.account }} ({{ $json.domain }}), score {{ $json.score }}. Signals: {{ $json.signals.join(' | ') }}\"}]}"
+      },
+      "name": "Claude - Why Now Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const why = ($json.content?.[0]?.text || '').trim();\nreturn [{ json: { ...($node['Score + Decay + Tier'].json), why_now: why } }];"
+      },
+      "name": "Attach Why Now",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.zohoapis.com/crm/v2/Tasks",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"Authorization\": \"Zoho-oauthtoken YOUR_ZOHO_TOKEN\", \"Content-Type\": \"application/json\"}",
+        "bodyParametersJson": "{\"data\": [{\"Subject\": \"T1 INTENT: {{ $json.account }} (score {{ $json.score }})\", \"Description\": \"{{ $json.why_now }} Signals: {{ $json.signals.join(' | ') }}\", \"Priority\": \"High\", \"Due_Date\": \"={{ $now.toFormat('yyyy-MM-dd') }}\"}]}"
+      },
+      "name": "T1 - Create 1:1 Outreach Task",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.instantly.ai/api/v2/leads",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "{\"Authorization\": \"Bearer YOUR_INSTANTLY_API_KEY\", \"Content-Type\": \"application/json\"}",
+        "bodyParametersJson": "{\"campaign\": \"YOUR_T2_SEQUENCE_CAMPAIGN_ID\", \"company_name\": \"={{ $json.account }}\", \"email\": \"PENDING_CONTACT_LOOKUP@{{ $json.domain }}\", \"custom_variables\": {\"intent_score\": \"={{ $json.score }}\"}}"
+      },
+      "name": "T2 - Enroll in Sequence",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        420
+      ],
+      "notesInFlow": true,
+      "notes": "In production this first calls Apollo people search to find the right committee contact at the domain, then enrolls. Kept single-node here for clarity."
+    },
+    {
+      "parameters": {
+        "url": "YOUR_SLACK_INCOMING_WEBHOOK_URL",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\"text\": \"DAILY PRIORITY QUEUE\\nT1 today: {{ $json.account }} (score {{ $json.score }})\\n{{ $json.why_now }}\"}"
+      },
+      "name": "Slack - Morning Priority Queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "Every Weekday 7am": {
+      "main": [
+        [
+          {
+            "node": "Pull Signal Log (Sheet)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pull Signal Log (Sheet)": {
+      "main": [
+        [
+          {
+            "node": "Score + Decay + Tier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score + Decay + Tier": {
+      "main": [
+        [
+          {
+            "node": "Tier 1 Today?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tier 1 Today?": {
+      "main": [
+        [
+          {
+            "node": "Claude - Why Now Summary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "T2 - Enroll in Sequence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - Why Now Summary": {
+      "main": [
+        [
+          {
+            "node": "Attach Why Now",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attach Why Now": {
+      "main": [
+        [
+          {
+            "node": "T1 - Create 1:1 Outreach Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "T1 - Create 1:1 Outreach Task": {
+      "main": [
+        [
+          {
+            "node": "Slack - Morning Priority Queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
