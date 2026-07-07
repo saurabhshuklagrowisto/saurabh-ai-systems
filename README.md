@@ -99,6 +99,17 @@ The marketing programs I have shipped for B2B SaaS and services clients. Where `
 | [Upwork CTO Account · End-to-End Motion](./marketing-workflows/upwork-cto-account) | 22 qualified inbound leads, ~$380K pipeline | Built from zero |
 | [Marketing Ops Automation Layer](./marketing-workflows/marketing-ops-automation) | ~12 hrs/week saved, 14 workflows in production, 0 routing errors/quarter | Self-hosted n8n on Railway |
 
+---
+
+## Generative AI video sample
+
+A sample video produced with a generative AI video tool, shared as a demo of generative AI video output. Generated on a paid tier, so the tool's watermark is visible; the prompts, data and assets behind it can be recreated to regenerate and adjust the output accordingly.
+
+- [▶ Watch on Google Drive](https://drive.google.com/file/d/1VjmCcEbmgoFaIVpSrhFtzmsAb5mtMnu_/view?usp=sharing) (anyone with the link can view)
+- Folder and download: [`generative-ai-video-sample/`](./generative-ai-video-sample)
+
+---
+
 ## Claude skills and evals
 
 Standalone runnable Claude skills with golden-set eval harnesses. Each runs in `--demo` mode without an API key. The eval harness ships with both a passing fixture and a deliberately broken fixture, so you can watch the regression gate fire on a real failure.
@@ -242,15 +253,6 @@ Things I am actively building or extending right now.
 - **Conversations** with founders and operators thinking about the next layer of AI in sales and marketing
 
 If something here fits a problem you are working on, the [contact form on the portfolio site](https://shivsaurabh.netlify.app#contact) is the fastest path.
-
----
-
-## Generative AI video sample
-
-A sample video produced with a generative AI video tool, shared as a demo of generative AI video output. Generated on a paid tier, so the tool's watermark is visible; the prompts, data and assets behind it can be recreated to regenerate and adjust the output accordingly.
-
-- [▶ Watch on Google Drive](https://drive.google.com/file/d/1VjmCcEbmgoFaIVpSrhFtzmsAb5mtMnu_/view?usp=sharing) (anyone with the link can view)
-- Folder and download: [`generative-ai-video-sample/`](./generative-ai-video-sample)
 
 ---
 
