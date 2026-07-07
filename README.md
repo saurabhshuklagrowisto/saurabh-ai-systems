@@ -103,7 +103,9 @@ The marketing programs I have shipped for B2B SaaS and services clients. Where `
 
 ## Generative AI video sample
 
-A sample video produced with a generative AI video tool, shared as a demo of generative AI video output. Generated on a paid tier, so the tool's watermark is visible; the prompts, data and assets behind it can be recreated to regenerate and adjust the output accordingly.
+A sample video produced with a generative AI video stack, shared as a demo of generative AI video output. Generated on a paid tier, so the tool's watermark is visible; the prompts, data and assets behind it can be recreated to regenerate and adjust the output accordingly.
+
+**Stack:** Kling AI · Google Veo 3 (via Gemini) · ElevenLabs · Clipchamp
 
 - [▶ Watch on Google Drive](https://drive.google.com/file/d/1VjmCcEbmgoFaIVpSrhFtzmsAb5mtMnu_/view?usp=sharing) (anyone with the link can view)
 - Folder and download: [`generative-ai-video-sample/`](./generative-ai-video-sample)
