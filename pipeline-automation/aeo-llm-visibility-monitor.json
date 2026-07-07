@@ -1,0 +1,68 @@
+{
+  "name": "AEO / LLM Visibility Monitor (are we discoverable in AI answers?)",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [ { "field": "weeks" } ] } },
+      "name": "Weekly Monday 7am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [180, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============ EDIT THIS: the buyer questions you want to own in AI answers ============\n// These are the prompts your ICP actually types into ChatGPT / Perplexity / Gemini.\nconst QUESTIONS = [\n  'best AI platform for GTM and demand generation',\n  'how to automate outbound sales with AI',\n  'tools to make my brand discoverable in AI search',\n  'best marketing automation platforms 2026',\n  'AI tools to enrich and route leads automatically'\n];\nconst BRAND = 'YourBrand'; // EDIT: your brand name\n// =====================================================================================\nreturn QUESTIONS.map(q => ({ json: { question: q, brand: BRAND } }));"
+      },
+      "name": "Target Buyer Questions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// QUERY THE LLMs. Runs credential-free on a built-in sample of answers so this imports and runs.\n// To go live, swap for HTTP nodes calling the ChatGPT, Perplexity and Gemini APIs with each question,\n// then parse the brands named in each answer. Output shape stays the same.\nconst ENGINES = ['ChatGPT','Perplexity','Gemini'];\n// Sample of which brands each engine names for each question (this is what a real parse would return).\nfunction sampleBrandsFor(q) {\n  const pool = ['Clay','Instantly','HubSpot','Jasper','YourBrand','Copy.ai','Apollo','Writer'];\n  // deterministic pseudo-spread by question length so results are stable on re-run\n  const seed = q.length;\n  const picks = [];\n  for (let i = 0; i < 4; i++) picks.push(pool[(seed + i * 3) % pool.length]);\n  return picks;\n}\nconst out = [];\nfor (const item of $input.all()) {\n  const q = item.json.question, brand = item.json.brand;\n  for (const engine of ENGINES) {\n    const brands = sampleBrandsFor(q + engine);\n    out.push({ json: { question: q, engine, brands_named: brands, brand_mentioned: brands.includes(brand), brand } });\n  }\n}\nreturn out;"
+      },
+      "name": "Query ChatGPT / Perplexity / Gemini",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [620, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// SCORE SHARE OF VOICE. How often does the brand show up in AI answers, and who beats us?\nconst rows = $input.all().map(i => i.json);\nconst brand = rows[0].brand;\nconst total = rows.length;\nconst mentions = rows.filter(r => r.brand_mentioned).length;\nconst sov = Math.round((mentions / total) * 100);\n// competitor frequency\nconst freq = {};\nrows.forEach(r => r.brands_named.forEach(b => { if (b !== brand) freq[b] = (freq[b] || 0) + 1; }));\nconst topCompetitors = Object.entries(freq).sort((a,b) => b[1]-a[1]).slice(0,3).map(([b,c]) => b + ' (' + c + ')');\n// questions where the brand is named in ZERO engines = true content + AEO gaps\nconst byQ = {};\nrows.forEach(r => { byQ[r.question] = byQ[r.question] || 0; if (r.brand_mentioned) byQ[r.question]++; });\nconst gaps = Object.keys(byQ).filter(q => byQ[q] === 0);\nreturn [{ json: { brand, share_of_voice_pct: sov, answers_checked: total, mentions, top_competitors: topCompetitors, gap_questions: gaps } }];"
+      },
+      "name": "Score Share of Voice",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [840, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// BUILD THE REPORT.\nconst j = $json;\nconst lines = [\n  '*AEO / LLM Visibility - ' + j.brand + '*',\n  '',\n  'Share of voice in AI answers: ' + j.share_of_voice_pct + '%  (' + j.mentions + ' of ' + j.answers_checked + ' answers named us)',\n  'Top competitors winning the answers: ' + (j.top_competitors.join(', ') || 'none'),\n  '',\n  'Questions where we are INVISIBLE (content + AEO targets):',\n  ...j.gap_questions.map(q => '  - ' + q),\n  '',\n  j.share_of_voice_pct < 50 ? 'Action: prioritise content + structured answers for the gap questions above.' : 'Holding strong - keep defending the top answers.'\n];\nreturn [{ json: { report: lines.join('\\n') } }];"
+      },
+      "name": "Build AEO Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1060, 300]
+    },
+    {
+      "parameters": {
+        "values": { "string": [
+          { "name": "send_to", "value": "#growth (Slack) or a CRM note" },
+          { "name": "message", "value": "={{ $json.report }}" }
+        ] }, "options": {}
+      },
+      "name": "Send Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1280, 300]
+    }
+  ],
+  "connections": {
+    "Weekly Monday 7am": { "main": [[{ "node": "Target Buyer Questions", "type": "main", "index": 0 }]] },
+    "Target Buyer Questions": { "main": [[{ "node": "Query ChatGPT / Perplexity / Gemini", "type": "main", "index": 0 }]] },
+    "Query ChatGPT / Perplexity / Gemini": { "main": [[{ "node": "Score Share of Voice", "type": "main", "index": 0 }]] },
+    "Score Share of Voice": { "main": [[{ "node": "Build AEO Report", "type": "main", "index": 0 }]] },
+    "Build AEO Report": { "main": [[{ "node": "Send Report", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}

@@ -69,13 +69,16 @@ Full documentation and demo data template in [`gtm-workflow-demos/`](./gtm-workf
 
 ## Pipeline automation flows — import-ready n8n
 
-Four n8n workflows that compose into a self-running B2B pipeline engine, plus an Emergent-built dashboard that visualizes the priority queue. Import the JSON, drop in credentials, run. Includes a zero-credential demo mode with real execution outputs documented.
+Seven n8n workflows that compose into a self-running B2B pipeline engine, plus an Emergent-built dashboard that visualizes the priority queue. Import the JSON, drop in credentials, run. Includes a zero-credential demo mode with real execution outputs documented.
 
 | Flow | Stack | What it does |
 |---|---|---|
 | [Speed to Lead Engine](./pipeline-automation) | n8n · Apollo · Claude · Instantly · Slack | Demo form submit to personalized calendar email in under 5 minutes: enrich, AI-score, tier-route, alert the AE, log to CRM |
 | [Visitor Identification Outreach](./pipeline-automation) | n8n · RB2B-style webhook · Clay · Claude | Anonymous website visitor to same-day outreach: ICP gate, suppression check, 28-day cooling window, page-aware opener |
 | [Intent Priority Engine](./pipeline-automation) | n8n · Clay · Claude · Sheets | Daily scoring of 3 signal streams with weights and 30-day time decay. T1 gets a human, T2 gets automation, T3 gets ads |
+| [Lead Enrichment and Qualification](./pipeline-automation) | n8n · Clay · rule engine | Emails in, company plus email-provider enrichment, ICP qualification, and a switch-target flag for accounts on a rival platform |
+| [Weekly Report Bot](./pipeline-automation) | n8n · CRM · Slack | Scheduled weekly pipeline digest with week-over-week movement, posted to Slack or email, no manual reporting |
+| [AEO / LLM Visibility Monitor](./pipeline-automation) | n8n · ChatGPT · Perplexity · Gemini | Checks whether the brand shows up in AI answers, scores share of voice against competitors, flags the questions it loses |
 | [Priority Dashboard](./pipeline-automation/priority-dashboard-emergent-prompt.md) | Emergent | A working tier-board app that visualizes the engine: live re-scoring, signal simulator, daily queue |
 
 Full documentation, import steps, test payloads and proof outputs in [`pipeline-automation/`](./pipeline-automation).

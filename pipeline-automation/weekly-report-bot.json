@@ -1,0 +1,53 @@
+{
+  "name": "Weekly Pipeline Report",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": { "interval": [ { "field": "weeks" } ] }
+      },
+      "name": "Every Monday 8am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [180, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Metrics source. Runs on built-in sample numbers so it works out of the box.\n// To go live, swap this for a CRM node, a Google Sheets read, or an analytics API - the report below builds itself from whatever numbers land here.\nreturn [{ json: {\n  this_week:  { new_leads: 82, qualified: 31, meetings: 14, replies: 46, pipeline: 4200000 },\n  last_week:  { new_leads: 74, qualified: 27, meetings: 11, replies: 39, pipeline: 3600000 }\n} }];"
+      },
+      "name": "Pull This Week's Numbers",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build a clean report with week-over-week arrows. Currency shown in generic units - edit the symbol.\nconst t = $json.this_week, l = $json.last_week;\nconst CURRENCY = 'INR '; // EDIT: '$', 'INR ', etc.\nconst arrow = (now, prev) => { if (now > prev) return '⬆ +' + (now - prev); if (now < prev) return '⬇ ' + (now - prev); return '= 0'; };\nconst pct = (now, prev) => prev ? Math.round(((now - prev) / prev) * 100) : 0;\nconst money = n => CURRENCY + (n >= 100000 ? (n/100000).toFixed(1) + 'L' : n.toLocaleString());\n\nconst report = [\n  '*Weekly Pipeline Report*',\n  '',\n  `New leads:   ${t.new_leads}   (${arrow(t.new_leads, l.new_leads)}, ${pct(t.new_leads,l.new_leads)}%)`,\n  `Qualified:   ${t.qualified}   (${arrow(t.qualified, l.qualified)}, ${pct(t.qualified,l.qualified)}%)`,\n  `Replies:     ${t.replies}   (${arrow(t.replies, l.replies)}, ${pct(t.replies,l.replies)}%)`,\n  `Meetings:    ${t.meetings}   (${arrow(t.meetings, l.meetings)}, ${pct(t.meetings,l.meetings)}%)`,\n  `Pipeline:    ${money(t.pipeline)}   (${pct(t.pipeline,l.pipeline)}% WoW)`,\n  '',\n  t.meetings > l.meetings ? '✅ Meetings up week over week - keep the winning sequence running.' : '⚠ Meetings down - review list quality and top-performing angle.'\n].join('\\n');\n\nreturn [{ json: { report } }];"
+      },
+      "name": "Build The Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [620, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "send_to", "value": "#pipeline (Slack) or leadership email" },
+            { "name": "message", "value": "={{ $json.report }}" }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Send Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [860, 300]
+    }
+  ],
+  "connections": {
+    "Every Monday 8am": { "main": [[{ "node": "Pull This Week's Numbers", "type": "main", "index": 0 }]] },
+    "Pull This Week's Numbers": { "main": [[{ "node": "Build The Report", "type": "main", "index": 0 }]] },
+    "Build The Report": { "main": [[{ "node": "Send Report", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}

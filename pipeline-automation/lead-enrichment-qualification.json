@@ -1,0 +1,95 @@
+{
+  "name": "Lead Enrichment & Qualification",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Run Manually",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [180, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Sample input list. In production this comes from a webhook, a CRM, or a Google Sheet.\n// Each lead just needs an email; everything else gets enriched below.\nreturn [\n  { json: { email: 'priya@hdfcbank.com',   name: 'Priya Sharma' } },\n  { json: { email: 'raj@techstartup.io',    name: 'Raj Mehta' } },\n  { json: { email: 'someone@gmail.com',      name: 'Anon User' } },\n  { json: { email: 'director@cityhospital.org', name: 'Dr. Nair' } }\n];"
+      },
+      "name": "Sample Leads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Enrichment step. Runs on a built-in sample lookup so it works out of the box.\n// To go live, swap this for an Apollo/Clay HTTP node and/or a DNS MX lookup - the output shape stays identical.\n// Returns company info + which email/collaboration provider the domain runs on.\nconst FREE = ['gmail.com','yahoo.com','hotmail.com','outlook.com','icloud.com'];\nconst DB = {\n  'hdfcbank.com':     { company: 'HDFC Bank',     industry: 'banking',    employees: 120000, provider: 'Microsoft 365' },\n  'techstartup.io':   { company: 'Tech Startup',  industry: 'software',   employees: 40,     provider: 'Google Workspace' },\n  'cityhospital.org': { company: 'City Hospital',  industry: 'healthcare', employees: 3000,   provider: 'Legacy Exchange' }\n};\nconst out = [];\nfor (const item of $input.all()) {\n  const email = (item.json.email || '').toLowerCase();\n  const domain = email.split('@')[1] || '';\n  const isFree = FREE.includes(domain);\n  const info = DB[domain] || { company: domain.split('.')[0] || 'Unknown', industry: 'unknown', employees: 0, provider: isFree ? 'Personal email' : 'Unknown' };\n  out.push({ json: { ...item.json, domain, is_free_email: isFree, ...info } });\n}\nreturn out;"
+      },
+      "name": "Enrich + Detect Provider",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [620, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============ EDIT THIS: your qualification rules ============\nconst TARGET_INDUSTRIES = ['banking','healthcare','insurance','government','education','manufacturing'];\nconst MIN_EMPLOYEES     = 500;\n// A lead is a 'switch target' if they already run a rival provider we can displace:\nconst DISPLACE_PROVIDERS = ['Microsoft 365','Google Workspace','Legacy Exchange'];\n// =============================================================\n\nconst out = [];\nfor (const item of $input.all()) {\n  const j = item.json;\n  let score = 0; const reasons = [];\n  if (j.is_free_email) { reasons.push('personal email - disqualify'); out.push({ json: { ...j, fit_score: 0, qualified: false, reasons: reasons.join('; ') } }); continue; }\n  if (TARGET_INDUSTRIES.includes(j.industry)) { score += 4; reasons.push('target industry: ' + j.industry); }\n  if (j.employees >= MIN_EMPLOYEES) { score += 4; reasons.push(j.employees + ' employees (large seat count)'); }\n  else if (j.employees > 0) { reasons.push('too small (' + j.employees + ' emp)'); }\n  const switchTarget = DISPLACE_PROVIDERS.includes(j.provider);\n  if (switchTarget) { score += 2; reasons.push('switch target: currently on ' + j.provider); }\n  const qualified = score >= 6;\n  out.push({ json: { ...j, fit_score: score, qualified, switch_target: switchTarget, reasons: reasons.join('; ') } });\n}\nreturn out;"
+      },
+      "name": "Qualify Against ICP",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [840, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            { "value1": "={{ $json.qualified }}", "value2": true }
+          ]
+        }
+      },
+      "name": "Qualified?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1070, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "route", "value": "PUSH TO CRM + START SEQUENCE" },
+            { "name": "summary", "value": "={{ $json.name + ' | ' + $json.company + ' | fit ' + $json.fit_score + ' | ' + $json.reasons }}" }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Qualified - To Sales",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1300, 190]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "route", "value": "SKIP / retargeting only" },
+            { "name": "summary", "value": "={{ $json.name + ' | ' + $json.company + ' | fit ' + $json.fit_score + ' | ' + $json.reasons }}" }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Not A Fit - Skip",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1300, 410]
+    }
+  ],
+  "connections": {
+    "Run Manually": { "main": [[{ "node": "Sample Leads", "type": "main", "index": 0 }]] },
+    "Sample Leads": { "main": [[{ "node": "Enrich + Detect Provider", "type": "main", "index": 0 }]] },
+    "Enrich + Detect Provider": { "main": [[{ "node": "Qualify Against ICP", "type": "main", "index": 0 }]] },
+    "Qualify Against ICP": { "main": [[{ "node": "Qualified?", "type": "main", "index": 0 }]] },
+    "Qualified?": {
+      "main": [
+        [{ "node": "Qualified - To Sales", "type": "main", "index": 0 }],
+        [{ "node": "Not A Fit - Skip", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1" }
+}
