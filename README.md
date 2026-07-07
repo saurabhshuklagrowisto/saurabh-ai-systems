@@ -85,6 +85,15 @@ Full documentation, import steps, test payloads and proof outputs in [`pipeline-
 
 ---
 
+## Generative AI video sample
+
+A sample video produced with a generative AI video tool, shared as a demo of generative AI video output. Generated on a paid tier, so the tool's watermark is visible; the prompts, data and assets behind it can be recreated to regenerate and adjust the output accordingly.
+
+- [▶ Watch on Google Drive](https://drive.google.com/file/d/1VjmCcEbmgoFaIVpSrhFtzmsAb5mtMnu_/view?usp=sharing) (anyone with the link can view)
+- Folder and download: [`generative-ai-video-sample/`](./generative-ai-video-sample)
+
+---
+
 ## Marketing workflows
 
 The marketing programs I have shipped for B2B SaaS and services clients. Where `production-systems/` documents the AI agents and infrastructure, `marketing-workflows/` documents the marketing motions those tools support. Different level of abstraction, same standard of proof.
