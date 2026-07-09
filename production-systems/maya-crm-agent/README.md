@@ -14,6 +14,8 @@ MAYA does the matching, every night, for every new lead, without supervision. Wi
 |---|---|
 | [PLAYBOOK.md](./PLAYBOOK.md) | The actual instructions Claude reads every night. The agent is built on top of this. Sanitised of internal emails and live brand examples. |
 | [**examples/sample-digest.md**](./examples/sample-digest.md) | A realistic example of the email MAYA sends after a run. Real format, sanitised data. Shows confidence-based routing, flag/skip handling, and the run metadata footer. |
+| [**n8n_workflow_export.json**](./n8n_workflow_export.json) | The full workflow as an importable n8n export — Schedule trigger, Zoho COQL fetch, deterministic domain resolution, Claude web search with a confidence gate, dedupe + create/link in Zoho, and a Gmail digest. Credentials are referenced by name only; no secrets are included. Ships with DRY_RUN on by default. |
+| [**zoho_accounts_common_names.json**](./zoho_accounts_common_names.json) | Companion n8n workflow that resolves Zoho account records to their real brand common names (Claude-assisted). Credentials referenced by name only; no secrets or internal emails included. |
 
 Source code for the Python helper that talks to Zoho is internal to Growisto and not redistributed here. The architecture, the playbook structure and the patterns are all open.
 
