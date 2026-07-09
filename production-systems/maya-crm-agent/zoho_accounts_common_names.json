@@ -1,0 +1,430 @@
+{
+  "name": "Zoho Accounts to Common Names (Claude)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "e24ada30-fd2c-4b41-b621-8b83a322c0e4",
+      "name": "Manual Backfill / Test",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "15Eq1QouqVjgdfGRhcrripzz6K9RcOvE7vnkczWV7Jug",
+          "cachedResultName": "ZOHO_Target_Accounts"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "944740864",
+          "cachedResultName": "Final Sheet"
+        },
+        "options": {}
+      },
+      "id": "a6011be8-99d8-4109-b15a-0ac7e5c212a7",
+      "name": "Read Existing Output",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        912,
+        352
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const source = $('Read Source Rows').all();\nconst existing = $input.all();\nconst doneByName = new Map();\nfor (const e of existing) {\n  const j = (e && e.json) ? e.json : {};\n  const eid = (j['Zoho Account Id'] == null ? '' : j['Zoho Account Id']).toString().trim();\n  if (!eid) { continue; }\n  doneByName.set(eid, (j['Zoho Account Name'] == null ? '' : j['Zoho Account Name']).toString().trim());\n}\nconst out = [];\nfor (const s of source) {\n  const j = (s && s.json) ? s.json : {};\n  const nm = (j['Zoho Account Name'] == null ? '' : j['Zoho Account Name']).toString().trim();\n  const sid = (j['Zoho Account Id'] == null ? '' : j['Zoho Account Id']).toString().trim();\n  if (!nm || !sid) { continue; }\n  const prev = doneByName.get(sid);\n  if (prev === undefined || prev !== nm) {\n    out.push({ json: { 'Zoho Account Name': nm, 'Zoho Account Id': sid } });\n  }\n}\nreturn out;"
+      },
+      "id": "c70b142f-a6ba-45ab-86ec-61a3952e3515",
+      "name": "Compute Rows To Process",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const name = ($json['Zoho Account Name'] == null ? '' : $json['Zoho Account Name']).toString();\nconst id = ($json['Zoho Account Id'] == null ? '' : $json['Zoho Account Id']).toString();\nconst system = \"You are a brand-identification assistant for Growisto's sales/CRM data.\\n\\nYou are given a single Zoho CRM \\\"account name\\\". This string very often contains the brand PLUS internal project descriptors such as \\\"Website Unification\\\", \\\"Amazon Marketing\\\", \\\"Images work\\\", \\\"Amazon\\\", \\\"SEO\\\", \\\"- Marketing\\\", or trailing punctuation. Your job has two parts:\\n\\n1. Identify the real, consumer-facing BRAND behind the account name. Strip every project/service descriptor, platform name (amazon, website, seo, etc.), and internal qualifier. Keep a genuine sub-brand if it is itself the brand (e.g. \\\"Tata CLiQ Palette\\\" is a distinct brand from \\\"Tata CLiQ\\\").\\n2. List the COMMON NAMES - every way real customers, fans, and the public actually refer to that brand: the official name, casual/short forms, spaced AND unspaced variants, and well-known nicknames. Use your real-world knowledge of the brand, not just the literal string.\\n\\nRules:\\n- Output lowercase only.\\n- The brand's primary name MUST be the first item in common_names.\\n- Always include obvious spacing/spelling variants (e.g. both \\\"boat lifestyle\\\" and \\\"boatlifestyle\\\").\\n- NEVER include project descriptors, platform names (amazon, website, seo), or generic filler words.\\n- If you do not recognise the brand, return your best cleaned name plus only its obvious variants.\\n- Return ONLY valid JSON - no markdown fences, no commentary - in exactly this shape:\\n  {\\\"brand\\\": \\\"<clean brand name>\\\", \\\"common_names\\\": [\\\"name1\\\",\\\"name2\\\"]}\\n\\nExamples:\\n\\nAccount name: \\\"boAt Lifestyle - Amazon Marketing\\\"\\n{\\\"brand\\\": \\\"boAt\\\", \\\"common_names\\\": [\\\"boat\\\",\\\"boat lifestyle\\\",\\\"boatlifestyle\\\"]}\\n\\nAccount name: \\\"Kaya Website Unification\\\"\\n{\\\"brand\\\": \\\"Kaya\\\", \\\"common_names\\\": [\\\"kaya\\\",\\\"kaya clinic\\\",\\\"kaya skin clinic\\\"]}\\n\\nAccount name: \\\"Tata Cliq\\\"\\n{\\\"brand\\\": \\\"Tata CLiQ\\\", \\\"common_names\\\": [\\\"tata cliq\\\",\\\"tatacliq\\\",\\\"tatacliq.com\\\"]}\\n\\nAccount name: \\\"Tata CLiQ Palette\\\"\\n{\\\"brand\\\": \\\"Tata CLiQ Palette\\\", \\\"common_names\\\": [\\\"tata cliq palette\\\",\\\"tatacliq palette\\\",\\\"cliq palette\\\"]}\";\nreturn {\n  'Zoho Account Name': name,\n  'Zoho Account Id': id,\n  claudeRequestBody: {\n    model: 'claude-sonnet-4-6',\n    max_tokens: 400,\n    system: system,\n    messages: [{ role: 'user', content: 'Account name: \"' + name + '\"' }]\n  }\n};"
+      },
+      "id": "def3a205-f6db-403b-95f7-61763d54686e",
+      "name": "Build Claude Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.claudeRequestBody }}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 5,
+              "batchInterval": 1200
+            }
+          }
+        }
+      },
+      "id": "d59d40a1-6c88-4c5c-afef-4a98f7824229",
+      "name": "Call Claude (common names)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1568,
+        352
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Header Auth account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "let text = '';\ntry { text = $json.content[0].text; } catch (e) { text = ''; }\nlet names = '';\ntry {\n  const parsed = JSON.parse(text);\n  if (parsed && Array.isArray(parsed.common_names)) {\n    names = parsed.common_names.map(function (x) { return (x == null ? '' : x).toString().trim(); }).filter(function (x) { return x.length > 0; }).join(',');\n  }\n} catch (e) {\n  names = (text || '').replace(/\\s+/g, ' ').trim();\n}\nreturn {\n  'Zoho Account Name': $('Build Claude Request').item.json['Zoho Account Name'],\n  'Zoho Account Id': $('Build Claude Request').item.json['Zoho Account Id'],\n  'common names': names\n};"
+      },
+      "id": "a4c92aab-01e2-4725-9316-b9c320564683",
+      "name": "Parse Common Names",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1792,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "15Eq1QouqVjgdfGRhcrripzz6K9RcOvE7vnkczWV7Jug",
+          "cachedResultName": "ZOHO_Target_Accounts"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "944740864",
+          "cachedResultName": "Final Sheet"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Zoho Account Id"
+          ],
+          "value": {
+            "Zoho Account Name": "={{ $json['Zoho Account Name'] }}",
+            "Zoho Account Id": "={{ $json['Zoho Account Id'] }}",
+            "common names": "={{ $json['common names'] }}"
+          },
+          "schema": [
+            {
+              "id": "Zoho Account Name",
+              "displayName": "Zoho Account Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "Zoho Account Id",
+              "displayName": "Zoho Account Id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "common names",
+              "displayName": "common names",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9e26a93a-4de4-437c-99b0-7d5025f52c80",
+      "name": "Upsert To Output Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2000,
+        352
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFile",
+        "fileToWatch": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1CxiCiUMuW8ARGj-WM56gx_q2YvfcRNB8-A-rebAqoQk",
+          "cachedResultName": "Zoho Accounts source (1CxiC)"
+        }
+      },
+      "id": "cde8a4a5-61de-42df-8b61-03051993c882",
+      "name": "Watch Source File (on change)",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        464
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "id": "eeca2c87-d92c-494b-a610-f8f4eee8afd1",
+      "name": "Find Orphan Rows",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        560
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const source = $('Read Source Rows').all();\nconst existing = $('Read Existing Output').all();\nconst sourceIds = new Set();\nfor (const s of source) {\n  const j = (s && s.json) ? s.json : {};\n  const sid = (j['Zoho Account Id'] == null ? '' : j['Zoho Account Id']).toString().trim();\n  if (sid) { sourceIds.add(sid); }\n}\nif (sourceIds.size === 0) { return []; }\nconst orphans = [];\nfor (const e of existing) {\n  const j = (e && e.json) ? e.json : {};\n  const eid = (j['Zoho Account Id'] == null ? '' : j['Zoho Account Id']).toString().trim();\n  const rn = j['row_number'];\n  if (!eid) { continue; }\n  if (typeof rn !== 'number') { continue; }\n  if (!sourceIds.has(eid)) {\n    orphans.push({ rowNumber: rn, 'Zoho Account Name': (j['Zoho Account Name'] == null ? '' : j['Zoho Account Name']), 'Zoho Account Id': eid });\n  }\n}\norphans.sort(function (a, b) { return b.rowNumber - a.rowNumber; });\nreturn orphans.map(function (o) { return { json: o }; });"
+      }
+    },
+    {
+      "id": "2db07fa4-2529-4083-a5e4-c2cc206734e7",
+      "name": "Delete Orphan Rows",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1340,
+        560
+      ],
+      "parameters": {
+        "resource": "sheet",
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "15Eq1QouqVjgdfGRhcrripzz6K9RcOvE7vnkczWV7Jug",
+          "cachedResultName": "ZOHO_Target_Accounts"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "944740864",
+          "cachedResultName": "Final Sheet"
+        },
+        "toDelete": "rows",
+        "startIndex": "={{ $json.rowNumber }}",
+        "numberToDelete": 1
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "id": "711932b9-9539-4862-9ec8-7a691ab890d4",
+      "name": "Read Source Rows",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        352
+      ],
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1CxiCiUMuW8ARGj-WM56gx_q2YvfcRNB8-A-rebAqoQk",
+          "cachedResultName": "Zoho Accounts source (1CxiC)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "35244695",
+          "cachedResultName": "Input tab"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Read Existing Output": {
+      "main": [
+        [
+          {
+            "node": "Compute Rows To Process",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Find Orphan Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Rows To Process": {
+      "main": [
+        [
+          {
+            "node": "Build Claude Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Claude Request": {
+      "main": [
+        [
+          {
+            "node": "Call Claude (common names)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Claude (common names)": {
+      "main": [
+        [
+          {
+            "node": "Parse Common Names",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Common Names": {
+      "main": [
+        [
+          {
+            "node": "Upsert To Output Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Orphan Rows": {
+      "main": [
+        [
+          {
+            "node": "Delete Orphan Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Backfill / Test": {
+      "main": [
+        [
+          {
+            "node": "Read Source Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Watch Source File (on change)": {
+      "main": [
+        [
+          {
+            "node": "Read Source Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Source Rows": {
+      "main": [
+        [
+          {
+            "node": "Read Existing Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "binaryMode": "separate"
+  }
+}

@@ -1,0 +1,1482 @@
+{
+  "name": "Fireflies to Drive and Email (Unified)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fireflies-transcript",
+        "options": {}
+      },
+      "id": "204c4771-cd46-45e9-9c2f-a6cf563e6e95",
+      "name": "Fireflies Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "field-meetingId",
+              "name": "meetingId",
+              "value": "={{  $json.body?.meeting_id ?? $json.body?.meetingId ?? $json.meeting_id ?? $json.meetingId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "80e2b676-fb8d-4517-ba23-b90325a150dc",
+      "name": "Extract Meeting ID",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.fireflies.ai/graphql",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"query\": \"query Transcript($id: String!) { transcript(id: $id) { id title date duration organizer_email meeting_attendees { email displayName } sentences { speaker_name text } summary { overview shorthand_bullet action_items keywords } } }\", \"variables\": { \"id\": $json.meetingId } } }}",
+        "options": {}
+      },
+      "id": "61839d6f-8d16-4d06-b20c-ce9baa401697",
+      "name": "Fetch Transcript from Fireflies",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        448,
+        144
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Fireflies API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Clear stale subfolder cache at the start of each run\nconst store = $getWorkflowStaticData('global');\nstore.transcriptsFolderId = null;\nstore.summariesFolderId = null;\nstore.brandFolderIdForRun = null;\n\nconst transcript = $input.first().json.data.transcript;\nconst attendees = transcript.meeting_attendees || [];\n\n// Use meeting_attendees — clean individual objects\nconst participantEmails = [...new Set(\n  attendees.map(a => (a.email || '').trim().toLowerCase()).filter(e => e)\n)];\n\nconst allInternal = participantEmails.length > 0 &&\n  participantEmails.every(e => e.endsWith('@growisto.com'));\n\nreturn [{ json: {\n  meetingId: transcript.id,\n  meetingTitle: transcript.title,\n  meetingDate: transcript.date,\n  participantEmails,\n  sentences: transcript.sentences || [],\n  isInternalCall: allInternal\n} }];"
+      },
+      "id": "7228d8ea-8f35-4c79-8073-7bb8a8a6cab7",
+      "name": "Check If Internal Call",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.isInternalCall }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9892b0ce-5262-46c2-9ab2-bc9808a9dfda",
+      "name": "Internal Call?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        144
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "a0198053-baf4-4a10-ab84-179ae2d6e6e4",
+      "name": "Skip - Internal Call",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst title = data.meetingTitle || '';\nconst emails = data.participantEmails || [];\nconst personalDomains = ['gmail.com','yahoo.com','hotmail.com','outlook.com','icloud.com','yahoo.co.in','googlemail.com'];\n\nconst externalEmails = emails.filter(e => {\n  const lower = e.toLowerCase();\n  if (lower.endsWith('@growisto.com')) return false;\n  const domain = lower.split('@')[1] || '';\n  return !personalDomains.includes(domain);\n});\n\nconst rawDomain = externalEmails.length > 0 ? (externalEmails[0].split('@')[1] || '').split('.')[0] : '';\n\nlet brandHint = rawDomain;\nlet noSignal = false;\nif (!brandHint) {\n  if (title.includes('<>')) {\n    const parts = title.split('<>').map(p => p.trim());\n    const clientPart = parts.find(p => !p.toLowerCase().includes('growisto')) || parts[parts.length - 1];\n    brandHint = clientPart.trim();\n  } else {\n    brandHint = title;\n  }\n  noSignal = true;\n}\n\nreturn [{ json: { ...data, brandHint, rawDomain, noSignal } }];"
+      },
+      "id": "12cdcd81-2b39-4520-83ae-c3a9e05d70e8",
+      "name": "Extract Brand Hint",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const store = $getWorkflowStaticData('global');\nconst TTL = 24 * 60 * 60 * 1000;\nconst now = Date.now();\nconst data = $input.first().json;\nconst cacheHit = !!(store.folderCache && store.folderCacheTime && (now - store.folderCacheTime) < TTL);\nreturn [{ json: { ...data, folders: cacheHit ? store.folderCache : null, cacheHit } }];"
+      },
+      "id": "2c738a55-15bb-4ef8-85db-5f117ac30642",
+      "name": "Check Folder Cache",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.cacheHit }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9cd174dd-5846-4bbc-9e47-a7ee7da51df9",
+      "name": "Cache Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1568,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"model\": \"claude-sonnet-4-6\", \"max_tokens\": 500, \"system\": \"You are a brand folder matcher for Growisto, a B2B marketing agency. Match a meeting to the correct Google Drive brand folder using name similarity ONLY.\\n\\nRules:\\n1. The participant domain is the strongest signal. If a folder name closely matches the domain, use it.\\n2. The brand hint is secondary - use it only if the domain gives no clear match.\\n3. Only match if the folder name is clearly the same brand: exact match, common abbreviation, or well-known alias (e.g. boAt = boat).\\n4. Do NOT use category associations, industry knowledge, or infer connections between unrelated brands. A skincare brand is never the same as a haircare brand just because both are beauty brands.\\n5. If no folder name closely matches the domain or brand hint, you MUST return is_new_brand: true and matched_folder: null. Do not guess.\\n\\nReturn ONLY valid JSON with these exact keys: matched_folder (string or null), confidence (exactly 'high', 'low', or 'new_brand'), reasoning (string, max 2 sentences), is_new_brand (boolean).\", \"messages\": [{ \"role\": \"user\", \"content\": \"Meeting title: \" + ($json.meetingTitle || \"unknown\") + \"\\nBrand hint: \" + ($json.brandHint || \"unknown\") + \"\\nParticipant domain: \" + ($json.rawDomain || \"unknown\") + \"\\nExisting Drive folders: \" + JSON.stringify(($json.folders || []).map(f => f.name)) }] } }}",
+        "options": {}
+      },
+      "id": "608b6e85-2a89-43b5-b4c0-809df91d0315",
+      "name": "Claude - Brand Disambiguation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2240,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Header Auth account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "1f1zOMZHeZDikWyCnseuDmA92leZe6k-p",
+            "cachedResultName": "Fireflies Meetings"
+          },
+          "whatToSearch": "folders"
+        },
+        "options": {}
+      },
+      "id": "6e96bf8a-29c3-4060-b49a-0ebb8727c752",
+      "name": "List Brand Folders from Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1792,
+        528
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const store = $getWorkflowStaticData('global');\nconst driveItems = $input.all();\nconst folders = driveItems.map(item => ({ id: item.json.id, name: item.json.name }));\nstore.folderCache = folders;\nstore.folderCacheTime = Date.now();\nconst meetingData = $('Extract Brand Hint').first().json;\nreturn [{ json: { ...meetingData, folders, cacheHit: false } }];"
+      },
+      "id": "c60efc10-64e4-4cb0-84b8-1c4ba50e7465",
+      "name": "Write Cache & Format Folders",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2016,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let raw = $input.first().json.content?.[0]?.text || '{}';\nraw = raw.replace(/^```(?:json)?\\s*/i, '').replace(/\\s*```\\s*$/, '').trim();\nlet parsed;\ntry { parsed = JSON.parse(raw); } catch(e) { parsed = { matched_folder: null, confidence: 'low', reasoning: 'Failed to parse Claude response', is_new_brand: false }; }\nconst meetingData = $('Extract Brand Hint').first().json;\nconst store = $getWorkflowStaticData('global');\nconst folders = store.folderCache || [];\nconst matchedFolderObj = folders.find(f => f.name === parsed.matched_folder);\nreturn [{ json: { ...meetingData, folders, matchedFolder: parsed.matched_folder, matchedFolderId: matchedFolderObj?.id || null, confidence: parsed.confidence, reasoning: parsed.reasoning, isNewBrand: parsed.is_new_brand } }];"
+      },
+      "id": "38094678-a2b4-46de-8828-251101067ddb",
+      "name": "Parse Brand Disambiguation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1792,
+        336
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.isNewBrand }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "18618a50-8755-4423-9290-de059e5cb57c",
+      "name": "New Brand?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2016,
+        336
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $(\"Parse Brand Disambiguation\").first().json.brandHint }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1f1zOMZHeZDikWyCnseuDmA92leZe6k-p",
+          "cachedResultName": "Fireflies Meetings"
+        },
+        "options": {}
+      },
+      "id": "7a9f0d09-9e34-4bb2-953e-25355f0afab8",
+      "name": "Create Brand Folder",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2240,
+        192
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const claudioData = $('Parse Brand Disambiguation').first().json;\nconst item = $input.first().json;\nconst brandFolderId = item.id || claudioData.matchedFolderId;\nconst store = $getWorkflowStaticData('global');\nstore.brandFolderIdForRun = brandFolderId;\nif (claudioData.isNewBrand) { store.folderCacheTime = 0; }\nreturn [{ json: { ...claudioData, brandFolderId } }];"
+      },
+      "id": "10c0a08b-437d-4fa3-a6c7-7a64ca88e261",
+      "name": "Set Brand Folder ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2464,
+        336
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.confidence }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "low"
+            },
+            {
+              "leftValue": "={{ $json.noSignal }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "ce6d27ed-98c4-4eb0-93a5-ee96e7a24994",
+      "name": "Low Confidence?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2688,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "user1@example.com",
+        "subject": "={{ \"⚠️ Brand folder auto-routed — please verify: \" + $json.meetingTitle }}",
+        "message": "={{ \"<b>Meeting:</b> \" + $json.meetingTitle + \"<br><b>Participants:</b> \" + $json.participantEmails.join(\", \") + \"<br><br><b>Auto-routed to folder:</b> \" + ($json.matchedFolder || $json.brandHint || \"Unknown\") + \"<br><b>Drive Folder:</b> <a href='https://drive.google.com/drive/folders/\" + $json.brandFolderId + \"'>Open in Drive</a>\" + \"<br><b>Reason:</b> \" + ($json.noSignal ? \"No brand domain found in participant emails — folder auto-named from meeting title. Please verify and rename if needed.\" : \"Auto-matched to '\" + ($json.matchedFolder || \"unknown\") + \"' with low confidence. Please verify and move files if incorrect.\") + \"<br><br>\" + $json.reasoning + \"<br><br>If this is wrong, please move the files to the correct folder.\" }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "6393f343-8247-4a7c-a8ab-1eedb7ed5fe9",
+      "name": "Send Low-Confidence Flagging Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2912,
+        48
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "account (Gmail OAuth2)"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "6a2bc251-f7bc-40b4-8d40-33fa028dc7f0",
+      "name": "High Confidence - No Flag Needed",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2912,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $json.brandFolderId }}",
+            "cachedResultName": "Brand Folder"
+          },
+          "whatToSearch": "folders"
+        },
+        "options": {}
+      },
+      "id": "d2443d48-a489-49be-838c-496bde9e7ded",
+      "name": "Search Brand Subfolders",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2688,
+        432
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst brandData = $('Set Brand Folder ID').first().json;\nconst transcriptsItem = items.find(i => i.json.name?.toLowerCase().includes('transcript'));\nconst summariesItem = items.find(i => i.json.name?.toLowerCase().includes('summar'));\nconst store = $getWorkflowStaticData('global');\nstore.transcriptsFolderId = transcriptsItem?.json?.id || null;\nstore.summariesFolderId = summariesItem?.json?.id || null;\nreturn [{ json: { ...brandData, transcriptsFolderId: transcriptsItem?.json?.id || null, summariesFolderId: summariesItem?.json?.id || null, needsTranscripts: !transcriptsItem, needsSummaries: !summariesItem } }];"
+      },
+      "id": "e7b92ec4-3c55-4409-adec-03156c7edda3",
+      "name": "Resolve Subfolder IDs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2912,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.needsTranscripts }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "07122969-252b-48a0-93c3-060c60a5c811",
+      "name": "Transcripts Subfolder Missing?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3136,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "transcripts",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $(\"Resolve Subfolder IDs\").first().json.brandFolderId }}",
+          "cachedResultName": "Brand Folder"
+        },
+        "options": {}
+      },
+      "id": "91c7409e-addf-4834-8337-bafb831b7380",
+      "name": "Create Transcripts Subfolder",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3360,
+        368
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const store = $getWorkflowStaticData('global');\nconst resolveData = $('Resolve Subfolder IDs').first().json;\nconst item = $input.first().json;\nif (item.id && !item.meetingId) { store.transcriptsFolderId = item.id; }\nreturn [{ json: { ...resolveData, transcriptsFolderId: store.transcriptsFolderId || resolveData.transcriptsFolderId } }];"
+      },
+      "id": "1ea34ff8-47fc-4b1c-a7d6-7a160dfef655",
+      "name": "Continue to Summaries Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3584,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.needsSummaries }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "fbd9feed-b17e-4ed2-81d7-e5df7339c46a",
+      "name": "Summaries Subfolder Missing?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3808,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "summaries",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $(\"Resolve Subfolder IDs\").first().json.brandFolderId }}",
+          "cachedResultName": "Brand Folder"
+        },
+        "options": {}
+      },
+      "id": "f8b2ed20-9d39-4e53-a77c-2b6e1f002fcf",
+      "name": "Create Summaries Subfolder",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4032,
+        368
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const store = $getWorkflowStaticData('global');\nconst item = $input.first().json;\nconst summariesCheckData = $('Continue to Summaries Check').first().json;\n\n// Always derive transcriptsFolderId from Continue to Summaries Check —\n// it captures both the pre-existing ID and any freshly created ID.\nconst transcriptsFolderId = summariesCheckData.transcriptsFolderId || null;\n\n// summariesFolderId: if item passed through from Summaries Subfolder Missing? it\n// already carries summariesFolderId; if it came from Create Summaries Subfolder,\n// item.id is the newly created folder — never fall back to stale store data.\nconst summariesFolderId = item.summariesFolderId || item.id || null;\n\n// Keep store in sync with current run\nif (transcriptsFolderId) store.transcriptsFolderId = transcriptsFolderId;\nif (summariesFolderId) store.summariesFolderId = summariesFolderId;\n\nconst brandData = $('Set Brand Folder ID').first().json;\nreturn [{ json: { ...brandData, brandFolderId: summariesCheckData.brandFolderId, transcriptsFolderId, summariesFolderId } }];"
+      },
+      "id": "45d14053-69fd-4ce2-adb7-28e86d307ec1",
+      "name": "Finalize Folder IDs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4256,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst sentences = data.sentences || [];\nconst transcriptText = sentences.length > 0\n  ? sentences.map(s => (s.speaker_name || 'Unknown') + ': ' + s.text).join('\\n')\n  : '[No transcript sentences available]';\nconst dateStr = data.meetingDate ? new Date(data.meetingDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];\nconst { sentences: _dropped, ...rest } = data;\nreturn [{ json: { ...rest, transcriptText, dateStr } }];"
+      },
+      "id": "09464075-faf5-4e17-a668-a02316723232",
+      "name": "Build Transcript Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4480,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "={{ $json.transcriptText }}",
+        "name": "={{ $json.meetingTitle + \" - \" + $json.dateStr + \".txt\" }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.transcriptsFolderId }}",
+          "cachedResultName": "Transcripts Folder"
+        },
+        "options": {}
+      },
+      "id": "06cadaa1-6847-46d5-8e44-da317fcb448d",
+      "name": "Upload Transcript to Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4704,
+        432
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $('Build Transcript Text').first().json;\nconst previousSummary = $input.first().json.previousSummary || '';\n\nconst section10Prompt = previousSummary ? `\n\n---\n\nIF a [HISTORICAL CONTEXT] block is present in the message:\n- Add a **## 10. Historical Information** section at the end of the report.\n- Section 10 must contain the same 9 sub-sections as the main report above (Call Snapshot, Executive Summary, The 5 Agreements — Verdict, True Stage and Proposal Readiness, Discovery Detail, Problem Agreement Block, Action Items, Prospect Follow-Up Email, Coaching Note).\n- These 9 sub-sections must be a SYNTHESISED, COMBINED view of ALL calls — including the current call — not a copy-paste of each call separately. Merge them into one coherent picture.\n- Where the deal has evolved across calls (e.g. an Agreement moved from Partial to Proven), reflect that evolution clearly.\n- Label which calls were used as source (e.g. \"*(Synthesised from calls on 2026-02-26, 2026-06-09, and 2026-06-16)*\").\n- Section 10 is a complete relationship snapshot as of today — it must incorporate this call's findings as well.\n- For sub-section 8 (Prospect Follow-Up Email), write \"Not applicable — see Section 8 above.\"\n\nIf no [HISTORICAL CONTEXT] block is present, omit Section 10 entirely.` : '';\n\nconst systemPrompt = \"IMPORTANT: The transcript you receive may be in Hindi, Hinglish, or a mix of languages. Before doing anything else, translate the entire transcript into proper formal English. Then generate the report based on the translated English version only. Your output must be in strict, proper English — no Hindi words, Hinglish phrases, or transliterated text anywhere in the report.\\n\\nYou are a B2B sales-deal analyst for Growisto. You read ONE sales-call transcript and produce a structured Markdown report that assesses the deal against the 5 Agreements framework (Mark Kosoglow / 30 Minutes to President's Club), layered with SPIN discovery notes and a BANT scorecard. Your job is to tell the rep the TRUTH about where the deal really stands — so they never mistake activity (a proposal sent, a friendly call) for progress (an agreement earned).\\n\\nThe 5 Agreements (sequential — each builds on the previous):\\n1. PROBLEM — The buyer has an executive-level business problem we can solve, and we know the real numbers and the real decision-maker. Proven when: a specific exec-level initiative is named (a revenue / lead / cost / growth target — NOT we want better X); current baseline numbers are known; the economic buyer (or their explicit sign-off) is engaged, not just a junior contact. Red flags: vague preference, can't state current numbers, only talking to someone who doesn't own the outcome.\\n2. PRIORITY — Fixing it is urgent enough to act NOW. Proven when: the gap is quantified in money / volume; there is a hard, event-tied deadline; the buyer can articulate the cost of waiting. Red flags: whenever, sometime this year, no business event forcing a timeline, defers to let's see how next quarter looks, an incumbent already in place with no trigger to switch.\\n3. EVALUATION — We have agreed HOW they will choose and judge a partner. Proven when: success criteria are stated as OUTCOMES, not deliverables; there is a named internal owner; an evaluation path / mutual action plan exists; we helped shape the criteria. Red flags: comparing vendors on a feature/deliverable checklist or price-per-unit, no single owner, demands a guarantee, criteria undefined.\\n4. VALUE — They believe WE specifically can deliver enough value to justify the price. Proven when: the decision-maker (not a delegate) personally engaged with proof (case study / model / pilot), said in effect the math works, and success/pilot criteria are locked. Red flags: send the proposal, we'll review with no real engagement, comparing only on fee, decision-maker absent, long silence after proposal.\\n5. COMMERCIAL — They are ready to transact and start. Proven when: terms agreed/signed, access and onboarding granted, kickoff scheduled. Red flags: access/coordination delays, almost ready for weeks, renegotiating terms after a verbal yes.\\n\\nScoring rules: Ground EVERY judgment in the transcript. Quote or closely paraphrase the actual words spoken (name the speaker if known). If an agreement was not discussed at all, mark it Not discussed — never infer or invent. Be strict. They seemed interested is NOT a proven agreement. When evidence is thin, default to the LOWER status. Accuracy over optimism — the rep needs the truth, not reassurance. Use exactly these status labels for each agreement: Proven, Partial, Not proven, or Not discussed. When an agreement is the deciding blocker, say so plainly. A proposal being sent or discussed is a TOOL, not a stage. Judge the deal by which agreements are earned, not by what artifacts were exchanged. true_stage = the highest N such that agreements 1..N are ALL Proven. If PROBLEM is not Proven, true_stage is 0 (Unqualified), regardless of any later activity, budget, or proposal. proposal_readiness: a proposal is only legitimate once PROBLEM + PRIORITY + EVALUATION are all Proven. State Ready or Premature and the one-line reason. The 5 Agreements verdict is the source of truth. The BANT table is a familiarity-aid only; if BANT and the Agreements seem to disagree, the Agreements win.\\n\\nOutput ONLY the Markdown report below — no preamble, no closing commentary. Fill every section. If a fact isn't in the transcript, write Not discussed rather than guessing. Keep quotes short and attributed.\\n\\n# Sales Call Analysis — Growisto x [CLIENT]\\n**Date:** [date] - **Client:** [client] - **Type:** [e.g. first discovery call]\\n\\n## 1. Call Snapshot\\n- **Prospect:** [name, role, company]\\n- **Reps:** [Growisto attendees + roles]\\n- **Context:** [how the call came about + key company facts: size, stage, current setup]\\n\\n## 2. Executive Summary\\n[3-5 sentences a busy person reads in 15 seconds. State the true stage and the single most important truth about this deal — including any looks advanced but isn't trap.]\\n\\n## 3. The 5 Agreements — Verdict\\nFor each: status label + evidence (short attributed quote) + what's missing.\\n**1. PROBLEM — [status]**\\n**2. PRIORITY — [status]**\\n**3. EVALUATION — [status]**\\n**4. VALUE — [status]**\\n**5. COMMERCIAL — [status]**\\n\\n## 4. True Stage and Proposal Readiness\\n- **True stage: [0-5] — [label]** ([one-line reason])\\n- **Proposal readiness: [Ready / Premature]** ([one-line reason])\\n\\n## 5. Discovery Detail\\n**SPIN**\\n- **Situation:** [...]\\n- **Problem:** [...]\\n- **Implication:** [...]\\n- **Need-payoff:** [...]\\n\\n**BANT** (quick scorecard — 5 Agreements above are the source of truth)\\n| | Status | Note |\\n|---|---|---|\\n| Budget | [status] | [...] |\\n| Authority | [status] | [...] |\\n| Need | [status] | [...] |\\n| Timeline | [status] | [...] |\\n\\n## 6. Problem Agreement Block (client's words — proposal-ready)\\n- [bullet list of the client's key problems, quoted or closely paraphrased, framed so they can drop into a proposal]\\n\\n## 7. Action Items\\n**Growisto (our side):** [owner — action — date if stated, else TBD]\\n**[Client] (their side):** [owner — action — date if stated, else TBD]\\n\\n## 8. Prospect Follow-Up Email (draft, ready to send)\\nSubject: [...]\\n[A warm, concise recap email in the voice of the lead Growisto rep: what we heard, what Growisto will do, what we need from the client, and the next step. No pricing unless it was firmly agreed on the call.]\\n\\n## 9. Coaching Note (for the rep)\\n[2-4 sentences: the single highest-leverage thing the rep should do next to advance the lowest unearned agreement — not just send the proposal. Be direct.]\\n\\nFinal reminder: If the transcript shows budget, KPIs, or a proposal in motion but PROBLEM is not earned (e.g. the economic buyer never engaged, or no quantified target), you must still report true_stage 0 and explain the trap in the Executive Summary. That contrast is the most valuable thing this report produces.\" + section10Prompt;\n\nconst userContent = \"Meeting: \" + data.meetingTitle + \"\\nDate: \" + data.dateStr + \"\\n\\nTranscript:\\n\" + data.transcriptText + (previousSummary ? \"\\n\\n[HISTORICAL CONTEXT]\\nThe following is the previous summary for this client. Use it to generate Section 10 — a synthesised historical view of ALL calls including the current one.\\n\\n\" + previousSummary : '');\n\nreturn [{ json: { ...data, claudeRequestBody: { model: \"claude-opus-4-8\", max_tokens: 8000, system: systemPrompt, messages: [{ role: \"user\", content: userContent }] } } }];"
+      },
+      "id": "dda3ee11-a126-454d-8451-b7be8b647a71",
+      "name": "Prepare Claude Summary Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5880,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.claudeRequestBody }}",
+        "options": {}
+      },
+      "id": "50006f2f-4f02-46f5-a2d7-2c441b673746",
+      "name": "Claude - Generate Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        6104,
+        432
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Header Auth account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const summaryText = $input.first().json.content?.[0]?.text || 'Summary not available.';\nconst meetingData = $('Build Transcript Text').first().json;\n// Always get summariesFolderId from Finalize Folder IDs — never from the store\n// (store values can be stale from previous runs; Finalize Folder IDs is authoritative for this run)\nconst summariesFolderId = $('Finalize Folder IDs').first().json.summariesFolderId;\nconst summariesFolderLink = 'https://drive.google.com/drive/folders/' + summariesFolderId;\nreturn [{ json: { ...meetingData, summaryText, summariesFolderId, summariesFolderLink } }];"
+      },
+      "id": "d71cdba8-e84c-428b-ac6b-5f2b5253fd29",
+      "name": "Extract Summary Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6328,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "={{ $json.summaryText }}",
+        "name": "={{ $json.meetingTitle + \" - \" + $json.dateStr + \" - Summary.md\" }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.summariesFolderId }}",
+          "cachedResultName": "Summaries Folder"
+        },
+        "options": {}
+      },
+      "id": "d5793c77-c63f-434c-9b50-8a60561af4ea",
+      "name": "Upload Summary to Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        6768,
+        432
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const meetingData = $('Convert Summary to HTML').first().json;\nconst rawEmails = meetingData.participantEmails || [];\n\n// Split any comma/semicolon/space-separated strings, flatten, deduplicate, filter @growisto.com\nconst seen = new Set();\nconst growistoAttendees = [];\n\nfor (const entry of rawEmails) {\n  const parts = String(entry == null ? '' : entry).split(/[,;\\s]+/);\n  for (const part of parts) {\n    const email = part.trim().toLowerCase();\n    if (!email || !email.includes('@')) continue;\n    if (!email.endsWith('@growisto.com')) continue;\n    if (seen.has(email)) continue;\n    seen.add(email);\n    growistoAttendees.push(email);\n  }\n}\n\nreturn [{ json: { ...meetingData, growistoAttendees, hasGrowistoAttendees: growistoAttendees.length > 0 } }];"
+      },
+      "id": "7d743307-39db-4487-8bfc-5d9f9b64edf3",
+      "name": "Filter Growisto Attendees",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6988,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.hasGrowistoAttendees }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              },
+              "id": "dd8b4924-19e9-4469-9536-41c918b49348"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7e42d8e6-1332-4f10-aab7-41d3119bff33",
+      "name": "Has Growisto Attendees?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        7208,
+        412
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.growistoAttendees.join(\",\") }}",
+        "subject": "={{ $json.meetingTitle + \" — Call Summary\" }}",
+        "message": "={{ \"<div style='font-family:Arial,sans-serif;font-size:14px;color:#333'>\" + \"<p>Hi,</p><p>Please find the call summary for <b>\" + $json.meetingTitle + \"</b> (\" + $json.dateStr + \") below.</p><hr style='border:none;border-top:1px solid #eee;margin:12px 0'>\" + ($json.summaryHtml || $json.summaryText || 'Summary not available') + \"<hr style='border:none;border-top:1px solid #eee;margin:12px 0'><p><b>Drive folder:</b> <a href='\" + $json.summariesFolderLink + \"'>View in Drive</a></p><p><b>Meeting recording:</b> <a href='https://app.fireflies.ai/view/\" + $('Extract Meeting ID').first().json.meetingId + \"'>View in Fireflies</a></p></div>\" }}",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "user2@example.com, user3@example.com, user4@example.com, user5@example.com"
+        },
+        "ccList": "user2@example.com, user3@example.com, user4@example.com, user5@example.com"
+      },
+      "id": "b0adebbf-e39c-4652-92b9-e63c6d78b461",
+      "name": "Send Summary Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        7428,
+        316
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "account (Gmail OAuth2)"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "4a3a727a-4bf1-4c53-b802-50781328bc90",
+      "name": "Skip Email - No Growisto Attendees",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        7428,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst md = data.summaryText || '';\n\nfunction mdToHtml(text) {\n  return text\n    .replace(/^#### (.+)$/gm, '<h4>$1</h4>')\n    .replace(/^### (.+)$/gm, '<h3>$1</h3>')\n    .replace(/^## (.+)$/gm, '<h2 style=\"color:#1F3864;border-bottom:1px solid #ccc;padding-bottom:4px\">$1</h2>')\n    .replace(/^# (.+)$/gm, '<h1 style=\"color:#1F3864\">$1</h1>')\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<b>$1</b>')\n    .replace(/\\*(.+?)\\*/g, '<i>$1</i>')\n    .replace(/^---$/gm, '<hr style=\"border:none;border-top:1px solid #eee;margin:12px 0\">')\n    .replace(/((?:^\\|.+\\|\\n?)+)/gm, (match) => {\n      const rows = match.trim().split('\\n').filter(r => !/^\\|[-| :]+\\|$/.test(r));\n      const htmlRows = rows.map((row, i) => {\n        const cells = row.split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1);\n        const tag = i === 0 ? 'th' : 'td';\n        const style = i === 0 ? 'background:#1F3864;color:#fff;padding:6px 10px;text-align:left' : 'padding:6px 10px;border-bottom:1px solid #eee';\n        return '<tr>' + cells.map(c => '<' + tag + ' style=\"' + style + '\">' + c.trim() + '</' + tag + '>').join('') + '</tr>';\n      });\n      return '<table style=\"border-collapse:collapse;width:100%;margin:12px 0\">' + htmlRows.join('') + '</table>';\n    })\n    .replace(/^[*-] (.+)$/gm, '<li>$1</li>')\n    .replace(/(<li>.*<\\/li>\\n?)+/g, (match) => '<ul style=\"margin:6px 0;padding-left:20px\">' + match + '</ul>')\n    .replace(/`(.+?)`/g, '<code style=\"background:#f4f4f4;padding:1px 4px;border-radius:3px;font-size:0.9em\">$1</code>')\n    .replace(/\\n{2,}/g, '</p><p style=\"margin:8px 0\">')\n    .replace(/\\n/g, '<br>')\n    .replace(/^/, '<p style=\"margin:8px 0\">')\n    .replace(/$/, '</p>');\n}\n\nconst summaryHtml = '<div style=\"font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#333;max-width:800px\">' + mdToHtml(md) + '</div>';\n\nreturn [{ json: { ...data, summaryHtml } }];"
+      },
+      "id": "7c730113-e842-4d4d-8efe-7117469c6796",
+      "name": "Convert Summary to HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6548,
+        280
+      ]
+    },
+    {
+      "id": "d98fabf4-767f-4d68-a368-3a52a2474ae6",
+      "name": "List Summary Files",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4928,
+        432
+      ],
+      "parameters": {
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $('Finalize Folder IDs').first().json.summariesFolderId }}"
+          },
+          "whatToSearch": "files"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "",
+          "name": "Google Drive OAuth2 API"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "id": "0f620708-a901-4ea3-b626-17310f3d868d",
+      "name": "Select Latest Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5152,
+        432
+      ],
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst mdFiles = items.filter(item => item.json.name && item.json.name.endsWith('.md'));\nif (mdFiles.length === 0) {\n  return [{ json: { hasPreviousSummary: false, latestSummaryId: null, latestSummaryName: null } }];\n}\nmdFiles.sort((a, b) => new Date(b.json.createdTime) - new Date(a.json.createdTime));\nconst latest = mdFiles[0].json;\nreturn [{ json: { hasPreviousSummary: true, latestSummaryId: latest.id, latestSummaryName: latest.name } }];"
+      }
+    },
+    {
+      "id": "d5db6476-c3c4-4395-9613-d7c0589a373a",
+      "name": "Has Previous Summary?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        5396,
+        412
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.hasPreviousSummary }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "b2e1ebfa-c07f-4070-abc8-a031037e16f7",
+      "name": "No Previous Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5640,
+        232
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { previousSummary: '' } }];"
+      }
+    },
+    {
+      "id": "553e4b69-bbfb-4560-ad70-c16f4ed80382",
+      "name": "Download Previous Summary",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        5396,
+        632
+      ],
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.latestSummaryId }}"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "id": "0beb9596-1991-46a1-a23d-395216b1d235",
+      "name": "Extract Previous Summary Text",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        5640,
+        632
+      ],
+      "parameters": {
+        "mode": "binaryToJson",
+        "setAllData": false,
+        "destinationKey": "previousSummary",
+        "sourceKey": "data",
+        "options": {
+          "keepAsBase64": false,
+          "encoding": "utf-8"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Fireflies Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Meeting ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Meeting ID": {
+      "main": [
+        [
+          {
+            "node": "Fetch Transcript from Fireflies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Transcript from Fireflies": {
+      "main": [
+        [
+          {
+            "node": "Check If Internal Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Internal Call": {
+      "main": [
+        [
+          {
+            "node": "Internal Call?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Internal Call?": {
+      "main": [
+        [
+          {
+            "node": "Skip - Internal Call",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract Brand Hint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Brand Hint": {
+      "main": [
+        [
+          {
+            "node": "Check Folder Cache",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Folder Cache": {
+      "main": [
+        [
+          {
+            "node": "Cache Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cache Valid?": {
+      "main": [
+        [
+          {
+            "node": "Claude - Brand Disambiguation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "List Brand Folders from Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Brand Folders from Drive": {
+      "main": [
+        [
+          {
+            "node": "Write Cache & Format Folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Cache & Format Folders": {
+      "main": [
+        [
+          {
+            "node": "Claude - Brand Disambiguation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Brand Disambiguation": {
+      "main": [
+        [
+          {
+            "node": "New Brand?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Brand?": {
+      "main": [
+        [
+          {
+            "node": "Create Brand Folder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Brand Folder ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Brand Folder": {
+      "main": [
+        [
+          {
+            "node": "Set Brand Folder ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Brand Folder ID": {
+      "main": [
+        [
+          {
+            "node": "Low Confidence?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search Brand Subfolders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Low Confidence?": {
+      "main": [
+        [
+          {
+            "node": "Send Low-Confidence Flagging Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "High Confidence - No Flag Needed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Brand Subfolders": {
+      "main": [
+        [
+          {
+            "node": "Resolve Subfolder IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Subfolder IDs": {
+      "main": [
+        [
+          {
+            "node": "Transcripts Subfolder Missing?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcripts Subfolder Missing?": {
+      "main": [
+        [
+          {
+            "node": "Create Transcripts Subfolder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Continue to Summaries Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Transcripts Subfolder": {
+      "main": [
+        [
+          {
+            "node": "Continue to Summaries Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue to Summaries Check": {
+      "main": [
+        [
+          {
+            "node": "Summaries Subfolder Missing?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summaries Subfolder Missing?": {
+      "main": [
+        [
+          {
+            "node": "Create Summaries Subfolder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finalize Folder IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Summaries Subfolder": {
+      "main": [
+        [
+          {
+            "node": "Finalize Folder IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finalize Folder IDs": {
+      "main": [
+        [
+          {
+            "node": "Build Transcript Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Transcript Text": {
+      "main": [
+        [
+          {
+            "node": "Upload Transcript to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Claude Summary Request": {
+      "main": [
+        [
+          {
+            "node": "Claude - Generate Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - Generate Summary": {
+      "main": [
+        [
+          {
+            "node": "Extract Summary Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Summary Text": {
+      "main": [
+        [
+          {
+            "node": "Convert Summary to HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Summary to Drive": {
+      "main": [
+        [
+          {
+            "node": "Filter Growisto Attendees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Growisto Attendees": {
+      "main": [
+        [
+          {
+            "node": "Has Growisto Attendees?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Growisto Attendees?": {
+      "main": [
+        [
+          {
+            "node": "Send Summary Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip Email - No Growisto Attendees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Summary to HTML": {
+      "main": [
+        [
+          {
+            "node": "Upload Summary to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - Brand Disambiguation": {
+      "main": [
+        [
+          {
+            "node": "Parse Brand Disambiguation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Transcript to Drive": {
+      "main": [
+        [
+          {
+            "node": "List Summary Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Summary Files": {
+      "main": [
+        [
+          {
+            "node": "Select Latest Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select Latest Summary": {
+      "main": [
+        [
+          {
+            "node": "Has Previous Summary?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Previous Summary?": {
+      "main": [
+        [
+          {
+            "node": "Download Previous Summary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Previous Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Previous Summary": {
+      "main": [
+        [
+          {
+            "node": "Prepare Claude Summary Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Previous Summary": {
+      "main": [
+        [
+          {
+            "node": "Extract Previous Summary Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Previous Summary Text": {
+      "main": [
+        [
+          {
+            "node": "Prepare Claude Summary Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "binaryMode": "separate"
+  }
+}

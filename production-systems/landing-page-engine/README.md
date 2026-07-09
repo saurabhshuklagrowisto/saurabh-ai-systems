@@ -134,3 +134,7 @@ Zoho Forms · registration backend the pages connect to
 The actual brand kit, the production skill source, and the unedited live pages are internal to Growisto. The skill contract, the architecture, the workflow, and two representative sanitised outputs are open.
 
 > The two example files are genuine production artifacts (sanitised), not mockups. The landing page is the real WordPress/Elementor page that ran the webinar, and the email is the real Sendy newsletter that promoted it.
+
+## Infrastructure
+
+- [elementor_mcp_setup_runbook.md](./elementor_mcp_setup_runbook.md) — step-by-step runbook to connect Claude Code to WordPress/Elementor via MCP so pages can be built programmatically. Placeholder credentials only; no secrets.

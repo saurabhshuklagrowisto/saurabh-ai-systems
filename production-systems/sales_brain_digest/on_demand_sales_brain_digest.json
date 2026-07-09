@@ -1,0 +1,440 @@
+{
+  "name": "Growisto On Demand Sales Brain Digest",
+  "nodes": [
+    {
+      "id": "d50301fe-562c-44cb-8da6-a393e9f35e90",
+      "name": "Run On Demand",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        96
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "ca7603b7-cac2-4b23-bc2a-538ba69309e0",
+      "name": "Build Date Window",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        96
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n// On-demand digest: pulls everything since the last known digest date.\n// Update LAST_DIGEST_DATE each time you run this, to the date of the last successful pull.\nconst LAST_DIGEST_DATE = '2026-06-26';\n\nconst now = new Date();\nconst today = now.toISOString().split('T')[0];\nconst fromDate = LAST_DIGEST_DATE;\nconst runStamp = now.toISOString().replace(/[:.]/g, '-');\n\nreturn [{\n  json: {\n    fromDate: fromDate,\n    toDate: today,\n    dateLabel: today,\n    branchName: 'daily/' + today + '-' + runStamp.slice(11, 16),\n    filePath: 'journal/' + fromDate + '_to_' + today + '.md'\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "e27100da-af9e-4404-8d40-2e7f2f4e7093",
+      "name": "Fetch All Meetings",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        448,
+        96
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.fireflies.ai/graphql",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "specifyHeaders": "keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": {
+          "query": "query($from: String, $to: String) { transcripts(limit: 100, fromDate: $from, toDate: $to) { id title date duration summary { short_summary action_items keywords } participants } }",
+          "variables": {
+            "from": "={{ $json.fromDate }}",
+            "to": "={{ $json.toDate }}"
+          }
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "decf0494-d5ae-45fc-a2f9-97240976ba74",
+      "name": "Filter and Aggregate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        96
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\nconst PATTERNS = {\n  scrum:         /scrum.*ai|ai.*scrum|scrum.*sales|scrum.*mktg|scrum.*marketing/i,\n  amazon_nurture:/amazon.*nurtur|nurtur.*amazon|nurture.*sequence/i,\n  ai_progress:   /discussion.*ai.*progress|weekly.*discussion.*ai|ai.*progress/i,\n  sales_marketing:/sales.*marketing|marketing.*sales|sales.*mktg/i,\n  general_ai:    /ai.*team|team.*ai|ai.*weekly|weekly.*ai|ai.*sync|sprint.*ai|ai.*sprint/i\n};\n\nconst CATEGORY_LABELS = {\n  scrum: 'AI Scrum',\n  amazon_nurture: 'Amazon Nurture Sequence',\n  ai_progress: 'AI Progress Discussions',\n  sales_marketing: 'Sales & Marketing',\n  general_ai: 'General AI Meetings'\n};\n\nconst transcripts = $input.first().json?.data?.transcripts || [];\nconst byCategory = {};\nlet total = 0;\n\nfor (const t of transcripts) {\n  if (!t || !t.title) continue;\n  let category = null;\n  for (const [cat, pattern] of Object.entries(PATTERNS)) {\n    if (pattern.test(t.title)) { category = cat; break; }\n  }\n  if (!category) continue;\n  if (!byCategory[category]) byCategory[category] = [];\n  byCategory[category].push(t);\n  total++;\n}\n\nif (total === 0) {\n  return [{ json: { noMeetings: true, dateLabel: $('Build Date Window').item.json.dateLabel } }];\n}\n\nlet meetingContext = '';\nfor (const [cat, meetings] of Object.entries(byCategory)) {\n  meetingContext += '\\n\\n### ' + (CATEGORY_LABELS[cat] || cat) + ' (' + meetings.length + ' meeting(s))\\n';\n  for (const m of meetings) {\n    meetingContext += '\\n**' + m.title + '** (' + (m.date ? new Date(m.date).toDateString() : 'n/a') + ', ' + Math.round(m.duration || 0) + 'min)\\n';\n    if (m.summary?.short_summary) meetingContext += 'Summary: ' + m.summary.short_summary + '\\n';\n    if (m.summary?.action_items)  meetingContext += 'Action items:\\n' + m.summary.action_items + '\\n';\n    if (m.summary?.keywords)      meetingContext += 'Keywords: ' + (Array.isArray(m.summary.keywords) ? m.summary.keywords.join(', ') : m.summary.keywords) + '\\n';\n    if (m.participants)           meetingContext += 'Participants: ' + (Array.isArray(m.participants) ? m.participants.join(', ') : m.participants) + '\\n';\n  }\n}\n\nconst dw = $('Build Date Window').item.json;\nreturn [{\n  json: {\n    noMeetings: false,\n    meetingContext: meetingContext.trim(),\n    totalMeetings: total,\n    dateLabel: dw.dateLabel,\n    branchName: dw.branchName,\n    filePath: dw.filePath\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "4ae59cc4-e961-41ca-8486-12165e68b3f8",
+      "name": "Has Relevant Meetings?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        96
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.noMeetings }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "false"
+              },
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "8b458410-78ca-46b8-ae49-a78cb7b250b1",
+      "name": "Build Claude Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\nconst d = $input.first().json;\nconst prompt = `You are the Growisto Sales-Marketing AI Brain's on-demand digest engine. \n\nWindow: since last digest through ${d.dateLabel}\nMeetings processed: ${d.totalMeetings}\n\nMEETING DATA:\n${d.meetingContext}\n\nGenerate a digest markdown file covering this whole window. Return ONLY the markdown, no preamble.\n\nREQUIRED FORMAT:\n---\ntitle: Digest — through ${d.dateLabel}\ntype: log\ntags: [journal, on-demand-digest]\nupdated: ${d.dateLabel}\nowner: auto\n---\n\n# Digest — through ${d.dateLabel}\n\n> On-demand Fireflies digest. ${d.totalMeetings} meeting(s) processed across the window.\n\n## Key updates by workstream\n\n[For EACH category found in the meeting data, write a concise section with decisions, shipped items, and in-progress work across ALL meetings in this window, not just the most recent one. Max 6 bullet points per section.]\n\n## Action items by owner\n\n| Owner | Action Item | Source | Priority |\n|---|---|---|---|\n[Extract ALL action items across every meeting in the window. Assign: high (urgent/blockers), mid (this week), low (backlog).]\n\n## Blockers and decisions pending\n\n[Explicitly blocked items or decisions awaiting input, across the whole window. If none: \"None flagged.\"]\n\n## Carry-forwards\n\n[Items deferred or marked ongoing. If none: \"None.\"]\n\nRULES:\n- Extract action items from ALL meeting categories, across the full window\n- For AI Progress meetings, extract ONLY sales and marketing relevant items\n- Be concise and actionable\n- Never invent information not in the meeting data\n- If the same topic appears in multiple meetings across the window, consolidate rather than repeating`;\n\nreturn [{ json: { prompt, branchName: d.branchName, filePath: d.filePath, dateLabel: d.dateLabel, totalMeetings: d.totalMeetings } }];\n"
+      }
+    },
+    {
+      "id": "9f4539b1-130a-484a-b9d8-bf12952e9d21",
+      "name": "Claude – Generate Journal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1344,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "specifyHeaders": "keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": {
+          "model": "claude-sonnet-4-6",
+          "max_tokens": 4000,
+          "messages": [
+            {
+              "role": "user",
+              "content": "={{ $json.prompt }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "664f9fba-bc06-4269-8fc1-bb989d30b52d",
+      "name": "Extract Markdown",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\nconst claudeResp = $input.first().json;\nconst markdown = claudeResp?.content?.[0]?.text || '';\nconst meta = $('Build Claude Prompt').item.json;\nreturn [{\n  json: {\n    markdownContent: markdown,\n    branchName: meta.branchName,\n    filePath: meta.filePath,\n    dateLabel: meta.dateLabel,\n    totalMeetings: meta.totalMeetings\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "f2832f6b-412c-4a37-818d-a69f528ff259",
+      "name": "Push to Sales Brain MCP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1792,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://sales-brain-mcp.kiran-patil.workers.dev/mcp",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendHeaders": true,
+        "specifyHeaders": "keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "tools/call",
+          "params": {
+            "name": "create_update",
+            "arguments": {
+              "branch": "={{ $json.branchName }}",
+              "file_path": "={{ $json.filePath }}",
+              "content": "={{ $json.markdownContent }}",
+              "commit_message": "={{ \"journal: on-demand digest through \" + $json.dateLabel }}",
+              "pr_title": "={{ \"On-demand digest — through \" + $json.dateLabel }}",
+              "pr_body": "={{ \"On-demand Fireflies digest. \" + $json.totalMeetings + \" meeting(s) since last pull. Review and merge.\" }}"
+            }
+          }
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json",
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "406f5ccb-1baa-4b01-8d47-5f84499ef5e3",
+      "name": "Notify Cliq – Success",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2016,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://cliq.zoho.com/api/v2/channelsbyname/ai-sales-mktg/message",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "specifyHeaders": "keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": {
+          "text": "={{ \"📋 *On-demand Brain Digest — through \" + $json.dateLabel + \"* — \" + $json.totalMeetings + \" meeting(s) processed. PR open for review → https://github.com/nishantpandey-growisto/sales-mktg-ai-plan/pulls\" }}"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json",
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "9d300552-be61-4654-aa64-ee02f9067d2a",
+      "name": "Notify Cliq – No Meetings",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1120,
+        192
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://cliq.zoho.com/api/v2/channelsbyname/ai-sales-mktg/message",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "specifyHeaders": "keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": {
+          "text": "={{ \"ℹ️ On-demand Brain Digest — through \" + $json.dateLabel + \": no relevant meetings found in the window. No PR created.\" }}"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json",
+              "neverError": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Run On Demand": {
+      "main": [
+        [
+          {
+            "node": "Build Date Window",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Date Window": {
+      "main": [
+        [
+          {
+            "node": "Fetch All Meetings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch All Meetings": {
+      "main": [
+        [
+          {
+            "node": "Filter and Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter and Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Has Relevant Meetings?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Relevant Meetings?": {
+      "main": [
+        [
+          {
+            "node": "Build Claude Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Cliq – No Meetings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Claude Prompt": {
+      "main": [
+        [
+          {
+            "node": "Claude – Generate Journal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude – Generate Journal": {
+      "main": [
+        [
+          {
+            "node": "Extract Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Markdown": {
+      "main": [
+        [
+          {
+            "node": "Push to Sales Brain MCP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Push to Sales Brain MCP": {
+      "main": [
+        [
+          {
+            "node": "Notify Cliq – Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  }
+}

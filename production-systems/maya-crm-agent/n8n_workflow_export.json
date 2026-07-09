@@ -1,0 +1,748 @@
+{
+  "name": "MAYA CRM Lead to Target Account (full pipeline)",
+  "nodes": [
+    {
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 15 * * *"
+            }
+          ]
+        }
+      },
+      "id": "00ada31c-8d93-490f-b595-b4a5fe136c0b"
+    },
+    {
+      "name": "Compute Lookback Window",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        40,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const HOURS = 48;\nconst now = new Date();\nconst since = new Date(now.getTime() - HOURS*60*60*1000);\nconst IST_OFFSET_MIN = 330;\nconst utc = since.getTime() + (since.getTimezoneOffset()*60000);\nconst ist = new Date(utc + IST_OFFSET_MIN*60000);\nconst pad = n => String(n).padStart(2,'0');\nconst since_iso = `${ist.getFullYear()}-${pad(ist.getMonth()+1)}-${pad(ist.getDate())}T${pad(ist.getHours())}:${pad(ist.getMinutes())}:${pad(ist.getSeconds())}+05:30`;\nreturn [{ json: { since_iso } }];"
+      },
+      "id": "9dc825dc-0a10-4ce4-a291-48edd5e4af9f"
+    },
+    {
+      "name": "Fetch Unlinked Leads (Zoho COQL)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        280,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.zohoapis.in/crm/v8/coql",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "zohoOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ select_query: \"SELECT id, Full_Name, Company, Website, Email, Lead_Country, Lead_Source, Lead_Status, Created_Time, Target_Account_Name FROM Leads WHERE Created_Time >= '\" + $json.since_iso + \"' ORDER BY Created_Time DESC LIMIT 200\" }) }}",
+        "options": {}
+      },
+      "credentials": {
+        "zohoOAuth2Api": {
+          "id": "",
+          "name": "Zoho CRM (MAYA - self-client)"
+        }
+      },
+      "id": "4fcb9a12-5c1d-4653-9d84-07bb0fc68294"
+    },
+    {
+      "name": "Filter Website Leads + Resolve Domain (Stage B)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const JUNK = new Set([\"\",\"test\",\"abc\",\"asdf\",\"xyz\",\"demo\",\"tbd\",\"na\",\"n/a\",\"none\",\"sample\"]);\nconst PLACEHOLDER = new Set([\"\",\"test\",\"abc\",\"asdf\",\"xyz\",\"demo\",\"tbd\",\"na\",\"n/a\",\"null\",\"sample\",\"example\",\"unknown\",\"company\",\"some company\"]);\nconst TWO_PART_SUFFIXES = new Set([\"co.in\",\"com.au\",\"co.uk\",\"com.cn\",\"co.jp\"]);\n\nfunction normalizeDomain(value) {\n  if (!value) return null;\n  let v = String(value).trim().toLowerCase();\n  if (PLACEHOLDER.has(v)) return null;\n  const schemeIdx = v.indexOf('://');\n  if (schemeIdx !== -1) v = v.slice(schemeIdx + 3);\n  v = v.split('/')[0].split('?')[0].split('#')[0].trim();\n  if (!v || v.indexOf('.') === -1) return null;\n  v = v.replace(/^www[.]/,'');\n  const parts = v.split('.');\n  if (parts.length < 2) return null;\n  const lastTwo = parts.slice(-2).join('.');\n  if (parts.length >= 3 && TWO_PART_SUFFIXES.has(lastTwo)) return parts.slice(-3).join('.');\n  return parts.slice(-2).join('.');\n}\n\nfunction extractDomainFromText(text) {\n  if (!text) return null;\n  const matches = String(text).match(/[A-Za-z0-9][A-Za-z0-9.-]+[.][A-Za-z]{2,}/g) || [];\n  for (const m of matches) {\n    const d = normalizeDomain(m);\n    if (d) return d;\n  }\n  return null;\n}\n\nconst body = $input.first().json;\nconst rows = body.data || [];\nconst out = [];\n\nfor (const lead of rows) {\n  if ((lead.Lead_Source || '') !== 'Website Lead') continue;\n  if (lead.Target_Account_Name) continue;\n\n  const company = (lead.Company || '').trim();\n  let domain = normalizeDomain(lead.Website);\n  let source = 'website';\n  if (!domain) {\n    domain = normalizeDomain(company) || extractDomainFromText(company);\n    source = 'company_domain';\n  }\n\n  const result = {\n    lead_id: lead.id,\n    lead_name: lead.Full_Name,\n    company,\n    country: lead.Lead_Country,\n    lead_status: lead.Lead_Status,\n    domain: domain || null,\n    source: domain ? source : 'unresolved',\n    action: null,\n    flag_reason: ''\n  };\n\n  if (!company || JUNK.has(company.toLowerCase())) {\n    result.action = 'skip';\n    result.flag_reason = 'Empty/placeholder Company - likely a test lead.';\n  } else if (domain) {\n    result.action = 'resolved_stage_b';\n  } else {\n    result.action = 'needs_stage_c';\n    result.flag_reason = 'Bare brand name, no domain on file - needs Stage C web search (not yet wired).';\n  }\n\n  out.push({ json: result });\n}\n\nreturn out;"
+      },
+      "id": "a9660568-694b-4c4d-83f0-d5a7a7283bf0"
+    },
+    {
+      "name": "Config (DRY_RUN)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        520,
+        220
+      ],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dryrun1",
+              "name": "dry_run",
+              "type": "boolean",
+              "value": true
+            }
+          ]
+        }
+      },
+      "id": "6df82487-22a5-4288-b3c8-70b80523dc1f"
+    },
+    {
+      "name": "IF Needs Stage C",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        760,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.action }}",
+              "rightValue": "needs_stage_c",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "44667ddd-8446-46b3-9f93-0cc0d1a9813a"
+    },
+    {
+      "name": "IF Resolved In Stage B",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1000,
+        140
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.action }}",
+              "rightValue": "resolved_stage_b",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "5cc6623d-a6b0-4b41-ac86-02797afd6fb7"
+    },
+    {
+      "name": "Skipped (junk lead)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        260
+      ],
+      "parameters": {},
+      "id": "1799a304-3ce6-40e1-b413-1c41d07eff76"
+    },
+    {
+      "name": "Web Search + Classify (Claude)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        -140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'claude-sonnet-4-5-20250929', max_tokens: 1024, tools: [{type: 'web_search_20250305', name: 'web_search'}], messages: [{ role: 'user', content: \"Find the official website for the company '\" + $json.company + \"' (country: \" + ($json.country || 'unknown') + \"). Determine whether it is the brand's own direct-to-consumer ecommerce site (has a cart / buy-now flow) or a non-ecommerce / corporate-only site, or whether no such site exists. Respond with ONLY strict JSON, no markdown fences: {\\\"domain\\\": string or null, \\\"is_ecommerce\\\": true, false, or null, \\\"confidence\\\": \\\"high\\\", \\\"medium\\\", or \\\"low\\\", \\\"reasoning\\\": string}\" }] }) }}",
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Anthropic (MAYA web-search)"
+        }
+      },
+      "id": "786e89a9-05fd-4314-92f3-b310ce12042f"
+    },
+    {
+      "name": "Parse Claude Result + Confidence Gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1240,
+        -140
+      ],
+      "parameters": {
+        "jsCode": "const leadItem = $('IF Needs Stage C').item.json;\nconst resp = $input.first().json;\nlet text = '';\ntry {\n  const blocks = resp.content || [];\n  for (const b of blocks) {\n    if (b.type === 'text' && b.text) text += b.text;\n  }\n} catch (e) { text = ''; }\n\nlet parsed = null;\ntry {\n  let t = text.trim();\n  const start = t.indexOf('{');\n  const end = t.lastIndexOf('}');\n  if (start !== -1 && end !== -1) t = t.slice(start, end + 1);\n  parsed = JSON.parse(t);\n} catch (e) { parsed = null; }\n\nconst confidence = parsed && parsed.confidence ? String(parsed.confidence).toLowerCase() : null;\nconst domain = parsed && parsed.domain ? String(parsed.domain).toLowerCase() : null;\nconst isEcom = parsed ? parsed.is_ecommerce : null;\n\nlet rule, finalDomain, flag_reason;\nif (!parsed || confidence !== 'high' || !domain) {\n  rule = 'rule3';\n  finalDomain = null;\n  flag_reason = !parsed ? 'Claude response was not parseable JSON - treated as low confidence.'\n    : (!domain ? 'No website found by web search.' : 'Low/medium confidence result - not trusted for auto-association.');\n} else if (isEcom === true) {\n  rule = 'rule1'; finalDomain = domain; flag_reason = '';\n} else {\n  rule = 'rule2'; finalDomain = domain; flag_reason = '';\n}\n\nreturn [{ json: {\n  lead_id: leadItem.lead_id,\n  lead_name: leadItem.lead_name,\n  company: leadItem.company,\n  country: leadItem.country,\n  domain: finalDomain,\n  rule,\n  is_ecommerce: rule === 'rule1',\n  flag_reason,\n  source: 'stage_c_web_search'\n} }];"
+      },
+      "id": "bc6e0480-cfde-49b4-8693-368e7e8cebaa"
+    },
+    {
+      "name": "Prepare Rule 1/2 from Stage B",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1240,
+        60
+      ],
+      "parameters": {
+        "jsCode": "const j = $input.first().json;\nreturn [{ json: {\n  lead_id: j.lead_id,\n  lead_name: j.lead_name,\n  company: j.company,\n  country: j.country,\n  domain: j.domain,\n  rule: 'rule1',\n  is_ecommerce: true,\n  flag_reason: '',\n  source: j.source\n} }];"
+      },
+      "id": "436ce99e-fb87-4f74-9286-998ed911af3d"
+    },
+    {
+      "name": "Merge Rule Branches",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1480,
+        -40
+      ],
+      "parameters": {
+        "mode": "append"
+      },
+      "id": "92df7d39-8347-447f-872b-248d5bacfa75"
+    },
+    {
+      "name": "IF DRY_RUN",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1720,
+        -40
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $('Config (DRY_RUN)').first().json.dry_run }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "9fff5e78-3dd9-463f-bd44-8bc4b859b5e4"
+    },
+    {
+      "name": "Dry Run - Would Associate",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        60
+      ],
+      "parameters": {},
+      "id": "1d07e769-af6a-412c-b923-149da5935568"
+    },
+    {
+      "name": "Create/Find Target Account (Zoho)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1960,
+        -140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.zohoapis.in/crm/v8/Target_Accounts",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "zohoOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ data: [{ Name: $json.domain || $json.company, Website_URL: $json.domain ? ('https://' + $json.domain) : null, Country: $json.country, eCommerce: $json.is_ecommerce ? 'Yes' : 'No', B2C: $json.is_ecommerce ? ['Yes'] : [], Data_Source: 'MAYA automation (n8n)' }], trigger: ['workflow'] }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "zohoOAuth2Api": {
+          "id": "",
+          "name": "Zoho CRM (MAYA - self-client)"
+        }
+      },
+      "id": "42af08c1-2820-47b3-b7bc-18f04d2d60bc"
+    },
+    {
+      "name": "Handle Create Result (Dedupe)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        -140
+      ],
+      "parameters": {
+        "jsCode": "const src = $('Merge Rule Branches').item.json;\nconst resp = $input.first().json;\nconst row = (resp.data && resp.data[0]) || {};\nlet ta_id = null, created = false, error = null;\nif (row.code === 'SUCCESS') {\n  ta_id = row.details && row.details.id; created = true;\n} else if (row.code === 'DUPLICATE_DATA') {\n  ta_id = row.details && row.details.duplicate_record && row.details.duplicate_record.id;\n} else if (row.code === 'MULTIPLE_OR_MULTI_ERRORS') {\n  const subs = (row.details && row.details.errors) || [];\n  for (const s of subs) {\n    if (s.code === 'DUPLICATE_DATA') {\n      ta_id = s.details && s.details.duplicate_record && s.details.duplicate_record.id;\n    }\n  }\n  if (!ta_id) error = JSON.stringify(row);\n} else {\n  error = JSON.stringify(row);\n}\nreturn [{ json: Object.assign({}, src, { ta_id, created, error }) }];"
+      },
+      "id": "8ee61efb-8f25-4acd-aeed-67daab06b9c0"
+    },
+    {
+      "name": "IF Zoho Write OK",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2440,
+        -140
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.ta_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "2778628e-caad-4227-9208-49eff63e05aa"
+    },
+    {
+      "name": "Link Lead to Target Account (Zoho)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2680,
+        -220
+      ],
+      "parameters": {
+        "method": "PUT",
+        "url": "https://www.zohoapis.in/crm/v8/Leads",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "zohoOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ data: [{ id: $json.lead_id, Target_Account_Name: { id: $json.ta_id } }], trigger: [] }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "zohoOAuth2Api": {
+          "id": "",
+          "name": "Zoho CRM (MAYA - self-client)"
+        }
+      },
+      "id": "4cdb6b92-3e0c-449f-85c4-3b251b80b937"
+    },
+    {
+      "name": "Error - Flag for Review",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2680,
+        -60
+      ],
+      "parameters": {},
+      "id": "d55c1fae-7645-4faa-a72f-8b566a410eae"
+    },
+    {
+      "name": "Aggregate All Results",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2920,
+        -40
+      ],
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "results"
+      },
+      "id": "60ec91a3-6e51-4369-8bc4-3cc33946a6c3"
+    },
+    {
+      "name": "Build Digest Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3160,
+        -40
+      ],
+      "parameters": {
+        "jsCode": "const results = ($input.first().json.results) || [];\nconst isDryRun = true;\nlet rows = '';\nfor (const r of results) {\n  const j = r.json || r;\n  rows += '<tr><td>' + (j.lead_name || '') + '</td><td>' + (j.company || '') + '</td><td>' + (j.domain || j.company || '-') + '</td><td>' + (j.rule || j.action || '-') + '</td><td>' + (j.flag_reason || j.error || '') + '</td></tr>';\n}\nconst subject = (isDryRun ? '[MAYA n8n - DRY RUN] ' : '[MAYA n8n] ') + 'Website Lead -> Target Account report - ' + (results.length) + ' processed';\nconst html = '<p>Daily MAYA (n8n) report.</p><table border=1 cellpadding=6 cellspacing=0><tr><th>Lead</th><th>Company</th><th>Domain / Name</th><th>Rule</th><th>Notes</th></tr>' + rows + '</table>';\nreturn [{ json: { subject, html } }];"
+      },
+      "id": "63cbb446-ce0b-40f6-90e1-c29ca2698de5"
+    },
+    {
+      "name": "Send Digest (Gmail)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        3400,
+        -40
+      ],
+      "parameters": {
+        "sendTo": "user6@example.com",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.html }}",
+        "options": {
+          "ccList": "user7@example.com"
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "account (Gmail OAuth2)"
+        }
+      },
+      "id": "3058e31b-6838-4998-953b-d8434361c747"
+    },
+    {
+      "name": "Merge Link Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2920,
+        -220
+      ],
+      "parameters": {
+        "jsCode": "const src = $('Handle Create Result (Dedupe)').item.json;\nconst resp = $input.first().json;\nconst row = (resp.data && resp.data[0]) || {};\nconst linkOk = row.code === 'SUCCESS';\nreturn [{ json: Object.assign({}, src, {\n  link_status: linkOk ? 'linked' : 'link_failed',\n  link_error: linkOk ? null : JSON.stringify(row)\n}) }];"
+      },
+      "id": "82e337fd-47c0-4f3a-9657-17f8269062b3"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Compute Lookback Window",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Config (DRY_RUN)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Lookback Window": {
+      "main": [
+        [
+          {
+            "node": "Fetch Unlinked Leads (Zoho COQL)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Unlinked Leads (Zoho COQL)": {
+      "main": [
+        [
+          {
+            "node": "Filter Website Leads + Resolve Domain (Stage B)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Website Leads + Resolve Domain (Stage B)": {
+      "main": [
+        [
+          {
+            "node": "IF Needs Stage C",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Needs Stage C": {
+      "main": [
+        [
+          {
+            "node": "Web Search + Classify (Claude)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF Resolved In Stage B",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Resolved In Stage B": {
+      "main": [
+        [
+          {
+            "node": "Prepare Rule 1/2 from Stage B",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skipped (junk lead)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Rule 1/2 from Stage B": {
+      "main": [
+        [
+          {
+            "node": "Merge Rule Branches",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Rule Branches": {
+      "main": [
+        [
+          {
+            "node": "IF DRY_RUN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF DRY_RUN": {
+      "main": [
+        [
+          {
+            "node": "Dry Run - Would Associate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create/Find Target Account (Zoho)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create/Find Target Account (Zoho)": {
+      "main": [
+        [
+          {
+            "node": "Handle Create Result (Dedupe)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Create Result (Dedupe)": {
+      "main": [
+        [
+          {
+            "node": "IF Zoho Write OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Zoho Write OK": {
+      "main": [
+        [
+          {
+            "node": "Link Lead to Target Account (Zoho)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error - Flag for Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Link Lead to Target Account (Zoho)": {
+      "main": [
+        [
+          {
+            "node": "Merge Link Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error - Flag for Review": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dry Run - Would Associate": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skipped (junk lead)": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate All Results": {
+      "main": [
+        [
+          {
+            "node": "Build Digest Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Digest Email": {
+      "main": [
+        [
+          {
+            "node": "Send Digest (Gmail)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Web Search + Classify (Claude)": {
+      "main": [
+        [
+          {
+            "node": "Parse Claude Result + Confidence Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Claude Result + Confidence Gate": {
+      "main": [
+        [
+          {
+            "node": "Merge Rule Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (DRY_RUN)": {
+      "main": [
+        []
+      ]
+    },
+    "Merge Link Result": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
