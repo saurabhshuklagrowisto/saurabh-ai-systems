@@ -202,7 +202,7 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "https://sales-brain-mcp.kiran-patil.workers.dev/mcp",
+        "url": "https://sales-brain-mcp.your-subdomain.workers.dev/mcp",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpQueryAuth",
         "sendHeaders": true,
@@ -255,7 +255,7 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "https://cliq.zoho.com/api/v2/channelsbyname/ai-sales-mktg/message",
+        "url": "https://cliq.zoho.com/api/v2/channelsbyname/your-channel/message",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBearerAuth",
         "sendHeaders": true,
@@ -272,7 +272,7 @@
         "contentType": "json",
         "specifyBody": "json",
         "jsonBody": {
-          "text": "={{ \"📋 *On-demand Brain Digest — through \" + $json.dateLabel + \"* — \" + $json.totalMeetings + \" meeting(s) processed. PR open for review → https://github.com/nishantpandey-growisto/sales-mktg-ai-plan/pulls\" }}"
+          "text": "={{ \"📋 *On-demand Brain Digest — through \" + $json.dateLabel + \"* — \" + $json.totalMeetings + \" meeting(s) processed. PR open for review → https://github.com/your-org/your-planning-repo/pulls\" }}"
         },
         "options": {
           "response": {
@@ -295,7 +295,7 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "https://cliq.zoho.com/api/v2/channelsbyname/ai-sales-mktg/message",
+        "url": "https://cliq.zoho.com/api/v2/channelsbyname/your-channel/message",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBearerAuth",
         "sendHeaders": true,

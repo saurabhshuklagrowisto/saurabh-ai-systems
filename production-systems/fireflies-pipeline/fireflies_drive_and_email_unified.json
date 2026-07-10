@@ -220,7 +220,7 @@
           "folderId": {
             "__rl": true,
             "mode": "id",
-            "value": "1f1zOMZHeZDikWyCnseuDmA92leZe6k-p",
+            "value": "YOUR_FIREFLIES_MEETINGS_FOLDER_ID",
             "cachedResultName": "Fireflies Meetings"
           },
           "whatToSearch": "folders"
@@ -311,7 +311,7 @@
         "folderId": {
           "__rl": true,
           "mode": "id",
-          "value": "1f1zOMZHeZDikWyCnseuDmA92leZe6k-p",
+          "value": "YOUR_FIREFLIES_MEETINGS_FOLDER_ID",
           "cachedResultName": "Fireflies Meetings"
         },
         "options": {}

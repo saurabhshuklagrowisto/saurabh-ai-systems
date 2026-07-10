@@ -17,7 +17,7 @@
         "documentId": {
           "__rl": true,
           "mode": "id",
-          "value": "15Eq1QouqVjgdfGRhcrripzz6K9RcOvE7vnkczWV7Jug",
+          "value": "YOUR_TARGET_ACCOUNTS_SHEET_ID",
           "cachedResultName": "ZOHO_Target_Accounts"
         },
         "sheetName": {
@@ -134,7 +134,7 @@
         "documentId": {
           "__rl": true,
           "mode": "id",
-          "value": "15Eq1QouqVjgdfGRhcrripzz6K9RcOvE7vnkczWV7Jug",
+          "value": "YOUR_TARGET_ACCOUNTS_SHEET_ID",
           "cachedResultName": "ZOHO_Target_Accounts"
         },
         "sheetName": {
@@ -213,8 +213,8 @@
         "fileToWatch": {
           "__rl": true,
           "mode": "id",
-          "value": "1CxiCiUMuW8ARGj-WM56gx_q2YvfcRNB8-A-rebAqoQk",
-          "cachedResultName": "Zoho Accounts source (1CxiC)"
+          "value": "YOUR_ZOHO_ACCOUNTS_SOURCE_SHEET_ID",
+          "cachedResultName": "Zoho Accounts source"
         }
       },
       "id": "cde8a4a5-61de-42df-8b61-03051993c882",
@@ -262,7 +262,7 @@
         "documentId": {
           "__rl": true,
           "mode": "id",
-          "value": "15Eq1QouqVjgdfGRhcrripzz6K9RcOvE7vnkczWV7Jug",
+          "value": "YOUR_TARGET_ACCOUNTS_SHEET_ID",
           "cachedResultName": "ZOHO_Target_Accounts"
         },
         "sheetName": {
@@ -297,8 +297,8 @@
         "documentId": {
           "__rl": true,
           "mode": "id",
-          "value": "1CxiCiUMuW8ARGj-WM56gx_q2YvfcRNB8-A-rebAqoQk",
-          "cachedResultName": "Zoho Accounts source (1CxiC)"
+          "value": "YOUR_ZOHO_ACCOUNTS_SOURCE_SHEET_ID",
+          "cachedResultName": "Zoho Accounts source"
         },
         "sheetName": {
           "__rl": true,
