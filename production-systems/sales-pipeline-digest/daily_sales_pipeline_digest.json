@@ -1,5 +1,5 @@
 {
-  "name": "Daily Sales Brain Digest",
+  "name": "Daily Sales Pipeline Digest",
   "nodes": [
     {
       "id": "bed9e1fa-f073-45b3-8092-5bded195ec4d",
@@ -135,7 +135,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "\nconst d = $input.first().json;\nconst prompt = `You are the Sales-Marketing AI Brain's auto-digest engine. \n\nToday: ${d.dateLabel}\nMeetings processed: ${d.totalMeetings}\n\nMEETING DATA:\n${d.meetingContext}\n\nGenerate a daily journal markdown file. Return ONLY the markdown, no preamble.\n\nREQUIRED FORMAT:\n---\ntitle: Daily Journal – ${d.dateLabel}\ntype: log\ntags: [journal, auto-digest]\nupdated: ${d.dateLabel}\nowner: auto\n---\n\n# Daily Journal – ${d.dateLabel}\n\n> Auto-generated from Fireflies digest. ${d.totalMeetings} meeting(s) processed.\n\n## Key updates by workstream\n\n[For EACH category found in the meeting data, write a concise section with decisions, shipped items, and in-progress work. Max 4 bullet points per section.]\n\n## Action items by owner\n\n| Owner | Action Item | Source | Priority |\n|---|---|---|---|\n[Extract ALL action items. Assign: high (urgent/blockers), mid (this week), low (backlog).]\n\n## Blockers and decisions pending\n\n[Explicitly blocked items or decisions awaiting input. If none: \"None flagged.\"]\n\n## Carry-forwards\n\n[Items deferred or marked ongoing. If none: \"None.\"]\n\nRULES:\n- Extract action items from ALL meeting categories\n- For AI Progress meetings, extract ONLY sales and marketing relevant items\n- Be concise and actionable\n- Never invent information not in the meeting data`;\n\nreturn [{ json: { prompt, branchName: d.branchName, filePath: d.filePath, dateLabel: d.dateLabel, totalMeetings: d.totalMeetings } }];\n"
+        "jsCode": "\nconst d = $input.first().json;\nconst prompt = `You are the Sales Pipeline digest assistant's auto-digest engine. \n\nToday: ${d.dateLabel}\nMeetings processed: ${d.totalMeetings}\n\nMEETING DATA:\n${d.meetingContext}\n\nGenerate a daily journal markdown file. Return ONLY the markdown, no preamble.\n\nREQUIRED FORMAT:\n---\ntitle: Daily Journal – ${d.dateLabel}\ntype: log\ntags: [journal, auto-digest]\nupdated: ${d.dateLabel}\nowner: auto\n---\n\n# Daily Journal – ${d.dateLabel}\n\n> Auto-generated from Fireflies digest. ${d.totalMeetings} meeting(s) processed.\n\n## Key updates by workstream\n\n[For EACH category found in the meeting data, write a concise section with decisions, shipped items, and in-progress work. Max 4 bullet points per section.]\n\n## Action items by owner\n\n| Owner | Action Item | Source | Priority |\n|---|---|---|---|\n[Extract ALL action items. Assign: high (urgent/blockers), mid (this week), low (backlog).]\n\n## Blockers and decisions pending\n\n[Explicitly blocked items or decisions awaiting input. If none: \"None flagged.\"]\n\n## Carry-forwards\n\n[Items deferred or marked ongoing. If none: \"None.\"]\n\nRULES:\n- Extract action items from ALL meeting categories\n- For AI Progress meetings, extract ONLY sales and marketing relevant items\n- Be concise and actionable\n- Never invent information not in the meeting data`;\n\nreturn [{ json: { prompt, branchName: d.branchName, filePath: d.filePath, dateLabel: d.dateLabel, totalMeetings: d.totalMeetings } }];\n"
       }
     },
     {
@@ -204,7 +204,7 @@
     },
     {
       "id": "3755f0dd-22a1-4ee3-8f08-652db4216ce4",
-      "name": "Push to Sales Brain MCP",
+      "name": "Push to Sales Pipeline MCP",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
@@ -213,7 +213,7 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "https://sales-brain-mcp.your-subdomain.workers.dev/mcp",
+        "url": "https://sales-pipeline-mcp.your-subdomain.workers.dev/mcp",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpQueryAuth",
         "sendHeaders": true,
@@ -283,7 +283,7 @@
         "contentType": "json",
         "specifyBody": "json",
         "jsonBody": {
-          "text": "={{ \"📋 *Daily Brain Digest – \" + $json.dateLabel + \"* — \" + $json.totalMeetings + \" meeting(s) processed. PR open for review → https://github.com/your-org/your-planning-repo/pulls\" }}"
+          "text": "={{ \"📋 *Daily Pipeline Digest – \" + $json.dateLabel + \"* — \" + $json.totalMeetings + \" meeting(s) processed. PR open for review → https://github.com/your-org/your-planning-repo/pulls\" }}"
         },
         "options": {
           "response": {
@@ -323,7 +323,7 @@
         "contentType": "json",
         "specifyBody": "json",
         "jsonBody": {
-          "text": "={{ \"ℹ️ Daily Brain Digest – \" + $json.dateLabel + \": No relevant meetings found in the past 24h. No PR created.\" }}"
+          "text": "={{ \"ℹ️ Daily Pipeline Digest – \" + $json.dateLabel + \": No relevant meetings found in the past 24h. No PR created.\" }}"
         },
         "options": {
           "response": {
@@ -425,14 +425,14 @@
       "main": [
         [
           {
-            "node": "Push to Sales Brain MCP",
+            "node": "Push to Sales Pipeline MCP",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Push to Sales Brain MCP": {
+    "Push to Sales Pipeline MCP": {
       "main": [
         [
           {

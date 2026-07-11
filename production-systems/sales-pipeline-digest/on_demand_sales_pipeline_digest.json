@@ -1,5 +1,5 @@
 {
-  "name": "On Demand Sales Brain Digest",
+  "name": "On Demand Sales Pipeline Digest",
   "nodes": [
     {
       "id": "d50301fe-562c-44cb-8da6-a393e9f35e90",
@@ -124,7 +124,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "\nconst d = $input.first().json;\nconst prompt = `You are the Sales-Marketing AI Brain's on-demand digest engine. \n\nWindow: since last digest through ${d.dateLabel}\nMeetings processed: ${d.totalMeetings}\n\nMEETING DATA:\n${d.meetingContext}\n\nGenerate a digest markdown file covering this whole window. Return ONLY the markdown, no preamble.\n\nREQUIRED FORMAT:\n---\ntitle: Digest — through ${d.dateLabel}\ntype: log\ntags: [journal, on-demand-digest]\nupdated: ${d.dateLabel}\nowner: auto\n---\n\n# Digest — through ${d.dateLabel}\n\n> On-demand Fireflies digest. ${d.totalMeetings} meeting(s) processed across the window.\n\n## Key updates by workstream\n\n[For EACH category found in the meeting data, write a concise section with decisions, shipped items, and in-progress work across ALL meetings in this window, not just the most recent one. Max 6 bullet points per section.]\n\n## Action items by owner\n\n| Owner | Action Item | Source | Priority |\n|---|---|---|---|\n[Extract ALL action items across every meeting in the window. Assign: high (urgent/blockers), mid (this week), low (backlog).]\n\n## Blockers and decisions pending\n\n[Explicitly blocked items or decisions awaiting input, across the whole window. If none: \"None flagged.\"]\n\n## Carry-forwards\n\n[Items deferred or marked ongoing. If none: \"None.\"]\n\nRULES:\n- Extract action items from ALL meeting categories, across the full window\n- For AI Progress meetings, extract ONLY sales and marketing relevant items\n- Be concise and actionable\n- Never invent information not in the meeting data\n- If the same topic appears in multiple meetings across the window, consolidate rather than repeating`;\n\nreturn [{ json: { prompt, branchName: d.branchName, filePath: d.filePath, dateLabel: d.dateLabel, totalMeetings: d.totalMeetings } }];\n"
+        "jsCode": "\nconst d = $input.first().json;\nconst prompt = `You are the Sales Pipeline digest assistant's on-demand digest engine. \n\nWindow: since last digest through ${d.dateLabel}\nMeetings processed: ${d.totalMeetings}\n\nMEETING DATA:\n${d.meetingContext}\n\nGenerate a digest markdown file covering this whole window. Return ONLY the markdown, no preamble.\n\nREQUIRED FORMAT:\n---\ntitle: Digest — through ${d.dateLabel}\ntype: log\ntags: [journal, on-demand-digest]\nupdated: ${d.dateLabel}\nowner: auto\n---\n\n# Digest — through ${d.dateLabel}\n\n> On-demand Fireflies digest. ${d.totalMeetings} meeting(s) processed across the window.\n\n## Key updates by workstream\n\n[For EACH category found in the meeting data, write a concise section with decisions, shipped items, and in-progress work across ALL meetings in this window, not just the most recent one. Max 6 bullet points per section.]\n\n## Action items by owner\n\n| Owner | Action Item | Source | Priority |\n|---|---|---|---|\n[Extract ALL action items across every meeting in the window. Assign: high (urgent/blockers), mid (this week), low (backlog).]\n\n## Blockers and decisions pending\n\n[Explicitly blocked items or decisions awaiting input, across the whole window. If none: \"None flagged.\"]\n\n## Carry-forwards\n\n[Items deferred or marked ongoing. If none: \"None.\"]\n\nRULES:\n- Extract action items from ALL meeting categories, across the full window\n- For AI Progress meetings, extract ONLY sales and marketing relevant items\n- Be concise and actionable\n- Never invent information not in the meeting data\n- If the same topic appears in multiple meetings across the window, consolidate rather than repeating`;\n\nreturn [{ json: { prompt, branchName: d.branchName, filePath: d.filePath, dateLabel: d.dateLabel, totalMeetings: d.totalMeetings } }];\n"
       }
     },
     {
@@ -193,7 +193,7 @@
     },
     {
       "id": "f2832f6b-412c-4a37-818d-a69f528ff259",
-      "name": "Push to Sales Brain MCP",
+      "name": "Push to Sales Pipeline MCP",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
@@ -202,7 +202,7 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "https://sales-brain-mcp.your-subdomain.workers.dev/mcp",
+        "url": "https://sales-pipeline-mcp.your-subdomain.workers.dev/mcp",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpQueryAuth",
         "sendHeaders": true,
@@ -272,7 +272,7 @@
         "contentType": "json",
         "specifyBody": "json",
         "jsonBody": {
-          "text": "={{ \"📋 *On-demand Brain Digest — through \" + $json.dateLabel + \"* — \" + $json.totalMeetings + \" meeting(s) processed. PR open for review → https://github.com/your-org/your-planning-repo/pulls\" }}"
+          "text": "={{ \"📋 *On-demand Pipeline Digest — through \" + $json.dateLabel + \"* — \" + $json.totalMeetings + \" meeting(s) processed. PR open for review → https://github.com/your-org/your-planning-repo/pulls\" }}"
         },
         "options": {
           "response": {
@@ -312,7 +312,7 @@
         "contentType": "json",
         "specifyBody": "json",
         "jsonBody": {
-          "text": "={{ \"ℹ️ On-demand Brain Digest — through \" + $json.dateLabel + \": no relevant meetings found in the window. No PR created.\" }}"
+          "text": "={{ \"ℹ️ On-demand Pipeline Digest — through \" + $json.dateLabel + \": no relevant meetings found in the window. No PR created.\" }}"
         },
         "options": {
           "response": {
@@ -414,14 +414,14 @@
       "main": [
         [
           {
-            "node": "Push to Sales Brain MCP",
+            "node": "Push to Sales Pipeline MCP",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Push to Sales Brain MCP": {
+    "Push to Sales Pipeline MCP": {
       "main": [
         [
           {
