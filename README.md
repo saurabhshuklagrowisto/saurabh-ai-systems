@@ -127,6 +127,7 @@ Standalone runnable Claude skills with golden-set eval harnesses. Each runs in `
 | [Website Conversion Audit](./claude-skills/website-conversion-audit) | Buyer-lens funnel audit, five conversion pillars, findings ranked by revenue impact with measurable fixes | `python claude-skills/website-conversion-audit/scripts/audit_score.py` |
 | [AEO / LLM Visibility Audit](./claude-skills/aeo-llm-visibility-audit) | Answer-engine optimisation: share of voice in AI answers, competitor tracking, content-gap targeting | `python claude-skills/aeo-llm-visibility-audit/scripts/aeo_score.py` |
 | [Competitor Teardown](./claude-skills/competitor-teardown) | Weighted positioning matrix, wins/losses/whitespace, and a single defensible wedge from the math | `python claude-skills/competitor-teardown/scripts/teardown_score.py` |
+| [eCommerce (D2C) Conversion Audit](./claude-skills/ecommerce-conversion-audit) | Path-to-purchase audit: PDP, cart, checkout, cost, trust and mobile pillars, findings ranked by revenue impact | `python claude-skills/ecommerce-conversion-audit/scripts/ecom_audit_score.py` |
 
 ## Systems thinking
 

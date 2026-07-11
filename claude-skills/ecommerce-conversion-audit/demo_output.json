@@ -1,0 +1,77 @@
+{
+  "url": "https://example-d2c-store.com/products/hero-item",
+  "verdict": "8 findings, 2 are P0 (fix this week). The leak is between interested and paid, not in traffic.",
+  "pillar_findings": {
+    "Checkout": 3,
+    "Cost": 1,
+    "Trust": 2,
+    "Product": 1,
+    "Urgency": 1
+  },
+  "findings": [
+    {
+      "pillar": "Checkout",
+      "severity": "P0",
+      "what": "No guest checkout \u2014 account creation is forced",
+      "why": "Forced account creation is one of the single biggest causes of checkout abandonment.",
+      "fix": "Enable guest checkout; offer account creation optionally after purchase.",
+      "measure": "Checkout completion rate before/after enabling guest checkout."
+    },
+    {
+      "pillar": "Cost",
+      "severity": "P0",
+      "what": "Shipping cost is sprung at the final step",
+      "why": "Unexpected shipping at the last step is the #1 documented reason for cart abandonment.",
+      "fix": "Show shipping (or a threshold for free shipping) on the cart/PDP, before the final step.",
+      "measure": "Cart-to-purchase rate; abandonment at the shipping step should drop sharply."
+    },
+    {
+      "pillar": "Checkout",
+      "severity": "P1",
+      "what": "Checkout has 5 steps",
+      "why": "Every extra checkout step sheds buyers. Long checkouts convert worse, especially on mobile.",
+      "fix": "Collapse to a single-page or 2-3 step checkout; remove non-essential fields.",
+      "measure": "Completion rate per step; target fewer steps and higher overall completion."
+    },
+    {
+      "pillar": "Checkout",
+      "severity": "P1",
+      "what": "Only one payment option",
+      "why": "Shoppers abandon when their preferred method (wallet, UPI, BNPL, PayPal) is missing.",
+      "fix": "Add at least one wallet / express-pay option beside card.",
+      "measure": "Share of orders by method after adding options; watch completion lift."
+    },
+    {
+      "pillar": "Trust",
+      "severity": "P1",
+      "what": "No reviews or ratings on the product page",
+      "why": "Social proof is decisive for D2C; an absent review block lowers conversion at the exact decision point.",
+      "fix": "Add ratings and reviews to the PDP; seed with real early-customer reviews.",
+      "measure": "Add-to-cart and purchase rate on PDPs with vs without reviews visible."
+    },
+    {
+      "pillar": "Product",
+      "severity": "P2",
+      "what": "Product copy is spec-led, not benefit-led",
+      "why": "Specs inform; benefits sell. Copy that only lists features underperforms.",
+      "fix": "Lead each section with the benefit, then support it with the spec.",
+      "measure": "A/B test benefit-led vs current copy on add-to-cart rate."
+    },
+    {
+      "pillar": "Trust",
+      "severity": "P2",
+      "what": "No payment-security or trust badges at checkout",
+      "why": "Consumers look for security cues before entering card details.",
+      "fix": "Add recognised secure-payment badges near the payment field.",
+      "measure": "Checkout completion at the payment step."
+    },
+    {
+      "pillar": "Urgency",
+      "severity": "P2",
+      "what": "No honest urgency or scarcity cues",
+      "why": "Genuine low-stock or time-bound offers nudge decisions; none means fence-sitters drift.",
+      "fix": "Add honest stock counts or limited offers \u2014 never fake ones, which erode trust.",
+      "measure": "Add-to-cart rate on pages with vs without urgency cues."
+    }
+  ]
+}
