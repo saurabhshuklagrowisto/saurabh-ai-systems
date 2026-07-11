@@ -6,7 +6,7 @@ Where `production-systems/` documents the AI agents and infrastructure, this fol
 
 The case study narratives live on the portfolio website: **[shivsaurabh.netlify.app](https://shivsaurabh.netlify.app)**. This folder documents the workflow architecture, the tools wired together, and where AI plugs in.
 
-## The seven workflows
+## The eight workflows
 
 | # | Workflow | Outcome | Approach |
 |---|---|---|---|
@@ -17,6 +17,7 @@ The case study narratives live on the portfolio website: **[shivsaurabh.netlify.
 | 05 | [Webinar and Podcast Demand Engine](./webinar-podcast-demand) | 12 webinars, 8 podcast episodes, ~150 avg registrants/webinar, 10% registrant → qualified meeting | Closed-loop content engine |
 | 06 | [Upwork CTO Account · End-to-End Motion](./upwork-cto-account) | 22 qualified inbound leads, ~$380K pipeline generated, 100% account ownership | Built from zero, Day 1 |
 | 07 | [Marketing Ops Automation Layer](./marketing-ops-automation) | ~12 hrs/week saved, 14 workflows in production, 0 routing errors/quarter | Self-hosted n8n on Railway |
+| 08 | [Hiring-Signal Outbound · Staffing Vertical](./hiring-signal-outbound) | 259 real postings scraped and scored in one run at $0, only qualified leads reach paid enrichment | Job posting as buying signal, JobSpy + Claude + Clay |
 
 ## How to read each one
 

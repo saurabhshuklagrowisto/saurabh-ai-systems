@@ -99,6 +99,7 @@ The marketing programs I have shipped for B2B SaaS and services clients. Where `
 | [Webinar and Podcast Demand Engine](./marketing-workflows/webinar-podcast-demand) | 12 webinars, 8 podcasts, 10% registrant → qualified meeting | Closed-loop content engine |
 | [Upwork CTO Account · End-to-End Motion](./marketing-workflows/upwork-cto-account) | 22 qualified inbound leads, ~$380K pipeline | Built from zero |
 | [Marketing Ops Automation Layer](./marketing-workflows/marketing-ops-automation) | ~12 hrs/week saved, 14 workflows in production, 0 routing errors/quarter | Self-hosted n8n on Railway |
+| [Hiring-Signal Outbound · Staffing Vertical](./marketing-workflows/hiring-signal-outbound) | Job postings as buying signal: 259 real postings scored at $0/run, only qualified leads reach paid enrichment | JobSpy + Claude + Clay |
 
 ---
 
