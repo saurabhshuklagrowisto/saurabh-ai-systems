@@ -27,9 +27,9 @@ This repo is the proof. Every system here is either running live in production f
 
 <table>
 <tr>
-<td align="center"><b>6</b><br>production systems live</td>
-<td align="center"><b>4</b><br>standalone Claude skills with eval harness</td>
-<td align="center"><b>7</b><br>marketing workflow case studies</td>
+<td align="center"><b>8</b><br>production systems live</td>
+<td align="center"><b>8</b><br>standalone Claude skills</td>
+<td align="center"><b>10</b><br>marketing workflow case studies</td>
 </tr>
 <tr>
 <td align="center"><b>~$1.2M</b><br>influenced pipeline, 6 mo</td>
@@ -53,6 +53,7 @@ Real systems running live for real teams. Click into any folder for the full arc
 | [**Upwork Proposal Automation**](./production-systems/upwork-proposals) | Claude plugin with two live skills (`upwork-scan` + `upwork-proposal`) that scans Upwork, scores jobs on a 16-dimension rubric, runs a brand-permission audit, and generates expertise-first PDF proposals. Architecture and patterns documented. Code is employer IP. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Landing Page & Collateral Engine**](./production-systems/landing-page-engine) | A Claude skill I built that turns a one-paragraph event brief into a publish-ready landing page (WordPress/Elementor or standalone custom HTML) plus the matching collateral like banners, social cards and email headers designed in Claude Design. It powers the webinar and event demand engine, and ships two real production artifacts: a live webinar landing page and its Sendy invite email. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**ATLAS · AI Employee System**](./production-systems/atlas-ai-employee-system) | One orchestrator agent running a team of five specialist agents end to end: a job-posting outbound engine and a content engine, both feeding one shared company memory. Strict lead state machine, two human approval gates, weekly self-grading eval loop. Scout scraper and ICP scorer are live and open, proven on 259 real US postings; the orchestration architecture is fully documented. | ![Live code + architecture](https://img.shields.io/badge/status-live%20code%20%2B%20architecture-blue?style=flat-square) |
+| [**Sales Brain Digest**](./production-systems/sales_brain_digest) | Two n8n workflows that roll up pipeline and sales signals into a scheduled "sales brain" email digest, plus an on-demand trigger for the same. Importable exports, credentials referenced by name only. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 
 ## GTM workflow demos — live-recorded
 

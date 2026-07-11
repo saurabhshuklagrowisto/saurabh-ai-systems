@@ -1,6 +1,6 @@
 # Sales Brain Digest
 
-Two n8n workflows that generate the Growisto "Sales Brain" digest — a rolled-up
+Two n8n workflows that generate a "Sales Brain" digest — a rolled-up
 summary of pipeline and sales signals delivered by email.
 
 | File | What it is |
