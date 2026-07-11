@@ -11,8 +11,8 @@
         "crm_match_confidence": 0.92
       },
       {
-        "name": "Saurabh Shukla",
-        "email": "saurabh@growisto.com",
+        "name": "Sales Rep",
+        "email": "rep@ouragency.example",
         "external": false,
         "crm_match_confidence": 1.0
       }

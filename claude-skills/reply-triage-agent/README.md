@@ -66,4 +66,4 @@ reply-triage-agent/
 
 ## The production version
 
-In production at Growisto, this runs in n8n with Sendy reply webhooks to Claude classifier to switch node to Zoho CRM update plus Cliq review queue. The Python script in this repo is the same logic, runnable standalone, so the prompts and guardrails can be developed and tested without the full integration stack.
+In production, this runs in n8n with email-tool reply webhooks to a Claude classifier to a switch node to a CRM update plus a team review queue. The Python script in this repo is the same logic, runnable standalone, so the prompts and guardrails can be developed and tested without the full integration stack.

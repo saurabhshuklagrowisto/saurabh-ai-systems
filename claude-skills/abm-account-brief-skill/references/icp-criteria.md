@@ -1,4 +1,7 @@
-# ICP Criteria — Growisto ABM (India + USA)
+# ICP Criteria — B2B ABM (sample, India + USA)
+
+<!-- Sample ICP framework for the skill demo. Replace the thresholds and rules below with your own. -->
+
 
 This file is loaded by the `abm-account-brief` Skill to gate hook generation. If a target account fails any **hard criterion**, the Skill must return `out_of_icp: true` and stop.
 
@@ -36,4 +39,4 @@ For the persona named in the input, anchor hooks to these pain themes:
 
 - No public signal in the last 90 days
 - The persona role is currently vacant (cannot infer the human's priorities)
-- Account is already a Growisto customer or in active conversation (check CRM before generation)
+- Account is already a customer or in active conversation (check CRM before generation)

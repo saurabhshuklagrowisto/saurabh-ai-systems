@@ -2,7 +2,7 @@
 
 A Claude Skill that generates structured, evidence-grounded outbound briefs for B2B accounts. Refuses output when ICP is missed or signal is too weak. Eval-gated, prompt-versioned.
 
-This is the packaged, standalone version of a workflow that runs in production via n8n plus Zoho Flow plus Claude API for outbound at Growisto.
+This is the packaged, standalone version of a workflow that runs in production via n8n plus a CRM automation layer plus the Claude API for B2B outbound.
 
 ## What it does
 
