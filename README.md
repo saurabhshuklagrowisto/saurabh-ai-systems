@@ -124,6 +124,9 @@ Standalone runnable Claude skills with golden-set eval harnesses. Each runs in `
 | [Reply Triage Agent](./claude-skills/reply-triage-agent) | Schema-first agent design, critical-safety rules, regression-gated eval harness, n8n deployable | `python claude-skills/reply-triage-agent/reply_triage.py --demo` |
 | [Signal Monitor](./claude-skills/signal-monitor) | Sales Copilot pattern: signal capture, persona match, recency cliff, ranked digest for SDRs | `python claude-skills/signal-monitor/signal_rater.py --demo` |
 | [Pre-Meeting Brief Generator](./claude-skills/meeting-brief) | Identity resolution with confidence, data-freshness warnings, no-fabrication rule | `python claude-skills/meeting-brief/meeting_brief.py --demo` |
+| [Website Conversion Audit](./claude-skills/website-conversion-audit) | Buyer-lens funnel audit, five conversion pillars, findings ranked by revenue impact with measurable fixes | `python claude-skills/website-conversion-audit/scripts/audit_score.py` |
+| [AEO / LLM Visibility Audit](./claude-skills/aeo-llm-visibility-audit) | Answer-engine optimisation: share of voice in AI answers, competitor tracking, content-gap targeting | `python claude-skills/aeo-llm-visibility-audit/scripts/aeo_score.py` |
+| [Competitor Teardown](./claude-skills/competitor-teardown) | Weighted positioning matrix, wins/losses/whitespace, and a single defensible wedge from the math | `python claude-skills/competitor-teardown/scripts/teardown_score.py` |
 
 ## Systems thinking
 

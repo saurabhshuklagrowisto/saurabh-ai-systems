@@ -1,0 +1,80 @@
+{
+  "brand": "YourBrand",
+  "ranking": [
+    {
+      "player": "YourBrand",
+      "score": 59,
+      "pct": 74
+    },
+    {
+      "player": "Rival A",
+      "score": 47,
+      "pct": 59
+    },
+    {
+      "player": "Rival B",
+      "score": 39,
+      "pct": 49
+    }
+  ],
+  "wins": [
+    {
+      "dimension": "Time to value",
+      "you": 5,
+      "best_rival": 3,
+      "weight": 3
+    },
+    {
+      "dimension": "AI-native workflow",
+      "you": 4,
+      "best_rival": 2,
+      "weight": 3
+    },
+    {
+      "dimension": "Price transparency",
+      "you": 4,
+      "best_rival": 2,
+      "weight": 2
+    },
+    {
+      "dimension": "Ease of onboarding",
+      "you": 5,
+      "best_rival": 3,
+      "weight": 2
+    }
+  ],
+  "losses": [
+    {
+      "dimension": "Enterprise security",
+      "you": 3,
+      "leader": "Rival A",
+      "leader_score": 5,
+      "weight": 3
+    },
+    {
+      "dimension": "Integrations depth",
+      "you": 2,
+      "leader": "Rival A",
+      "leader_score": 4,
+      "weight": 2
+    },
+    {
+      "dimension": "Community / content",
+      "you": 1,
+      "leader": "Rival A",
+      "leader_score": 2,
+      "weight": 1
+    }
+  ],
+  "whitespace": [
+    {
+      "dimension": "Community / content",
+      "field_max": 2,
+      "weight": 1
+    }
+  ],
+  "wedge": {
+    "dimension": "Time to value",
+    "why": "You score 5/5 here while the strongest competitor manages 3/5, and this dimension carries weight 3. Lead your positioning here \u2014 it is defensible and the field cannot easily counter it."
+  }
+}

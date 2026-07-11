@@ -1,0 +1,60 @@
+{
+  "url": "https://example-saas.com",
+  "verdict": "6 findings, 3 are P0 (fix this week). Performance is not the constraint; the funnel is.",
+  "pillar_findings": {
+    "Flow": 1,
+    "CTA": 2,
+    "Form": 2,
+    "Clarity": 1
+  },
+  "findings": [
+    {
+      "pillar": "Flow",
+      "severity": "P0",
+      "what": "The primary CTA does not work",
+      "why": "A broken main action means every click intending to convert is lost. This is pipeline leaking in real time.",
+      "fix": "Fix the CTA target/handler so it routes to the intended booking or sign-up flow.",
+      "measure": "Track clicks vs completions on the CTA; target near-zero drop between click and next step."
+    },
+    {
+      "pillar": "CTA",
+      "severity": "P0",
+      "what": "The strongest low-friction asset is hidden from the homepage",
+      "why": "A free trial / instant demo converts far better than a 'contact us' form, but only if visitors can find it.",
+      "fix": "Surface the self-serve asset as a primary homepage CTA alongside the sales CTA.",
+      "measure": "Track % of conversions coming through the self-serve path; target 30%+."
+    },
+    {
+      "pillar": "Form",
+      "severity": "P0",
+      "what": "The form cannot be routed or scored (no company field)",
+      "why": "Without company/role, marketing cannot score or route the lead and sales walks in blind.",
+      "fix": "Add a company field (and enrich role/size via Clay/Apollo on submit).",
+      "measure": "% of new leads with a resolvable company; target 95%+."
+    },
+    {
+      "pillar": "Clarity",
+      "severity": "P1",
+      "what": "Hero does not say what this is or who it is for",
+      "why": "If a buyer cannot place the product in 5 seconds, they leave before reaching the CTA.",
+      "fix": "Rewrite the hero as an outcome for a named buyer, e.g. 'Ramp reps in 15 days, not 90 \u2014 for enterprise sales teams.'",
+      "measure": "5-second test with 5 target-persona users; 4/5 should describe the product correctly."
+    },
+    {
+      "pillar": "CTA",
+      "severity": "P1",
+      "what": "2 competing primary CTAs on the first screen",
+      "why": "More than one primary action splits attention and lowers the rate on all of them.",
+      "fix": "Pick one primary action; demote the rest to secondary styling.",
+      "measure": "A/B test single vs multiple primary CTA; measure primary-action click rate."
+    },
+    {
+      "pillar": "Form",
+      "severity": "P1",
+      "what": "The form asks for 5 fields",
+      "why": "Every extra required field measurably lowers completion.",
+      "fix": "Cut to name, work email, and one qualifier. Enrich the rest automatically after submit.",
+      "measure": "Measure completion rate before/after; expect an 8-15% lift from trimming alone."
+    }
+  ]
+}
