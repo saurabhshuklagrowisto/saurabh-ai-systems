@@ -106,36 +106,13 @@ The marketing programs I have shipped for B2B SaaS and services clients. Where `
 
 ## Generative AI videos
 
-AI-generated explainer and ad videos, grouped into three tracks. Each track holds its walkthroughs and its blueprint deck.
+AI-generated explainer and ad videos, grouped into three tracks. Open a track for its walkthroughs and blueprint deck.
 
-### Generative AI ad
-
-A sample ad-style video produced end to end with a generative AI video stack, a demo of generative AI video output. Generated on a paid tier, so the tool's watermark is visible; the prompts, data and assets behind it can be recreated to regenerate and adjust the output.
-
-**Stack:** Kling AI · Google Veo 3 (via Gemini) · ElevenLabs · Clipchamp
-
-- **Generative AI Ad Sample** — [▶ Watch](https://drive.google.com/file/d/1VjmCcEbmgoFaIVpSrhFtzmsAb5mtMnu_/view?usp=sharing)
-- Folder and download: [`generative-ai-video-sample/`](./generative-ai-video-sample)
-
-### GTM outbound
-
-The signal-led outbound go-to-market motion, walked through end to end.
-
-- **Go to Market Engine** — [▶ Watch](https://drive.google.com/file/d/1XVOE-VvbLrHgi7BfL_6jacjTAJ4AU7Va/view)
-- **Signal Based GTM Engineering** — [▶ Watch](https://drive.google.com/file/d/1wQrZa9Ybx6iG-LqJsUHtQ5aO-MioTrdr/view)
-- **Building the Outbound GTM Engine** — [▶ Watch](https://drive.google.com/file/d/1PEBq7YcSLNskJSu035FuyV_s1fz6LB9p/view)
-- **The Staffing Industry Outbound Signal** — [▶ Watch](https://drive.google.com/file/d/14ePkYSmMxZFLXG5Pfk6vkT_2yJM_Q7XV/view)
-- *Deck:* [Outbound GTM Blueprint (PDF)](https://drive.google.com/file/d/1_qn6-148FAcxvLv1ga6oZtDkeGTnSgFw/view)
-
-### AI employee team
-
-One AI employee running the full marketing motion, outbound, social and the company brain, under a human approval gate.
-
-- **AI Employee Plan** — [▶ Watch](https://drive.google.com/file/d/105BCHPiRjlSH6eS79DwETkIP6ooYrbWF/view)
-- **AI Employee · Agent Corps** — [▶ Watch](https://drive.google.com/file/d/1LTk6DEdVkEVHSiDo9HnJBkgon73OyoYv/view)
-- *Deck:* [AI Employee Blueprint (PDF)](https://drive.google.com/file/d/1-pqATo-Eg0i9RbtzEUBOmyzETCQ-BS3p/view)
-
-> Videos and decks are hosted on Google Drive; each must be shared as **Anyone with the link → Viewer** to open.
+| Track | What's inside |
+|---|---|
+| **[Generative AI ad →](./generative-ai-video-sample)** | A sample ad-style video showing raw generative AI video output. |
+| **[GTM outbound →](./gtm-outbound-videos)** | The signal-led outbound go-to-market motion, four walkthroughs plus the blueprint deck. |
+| **[AI employee team →](./ai-employee-videos)** | One AI employee running the full marketing motion, two walkthroughs plus the blueprint deck. |
 
 ---
 
