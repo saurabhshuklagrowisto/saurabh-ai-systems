@@ -40,19 +40,6 @@ This repo is the proof. Every system here is either running live in production f
 
 ---
 
-## Decks
-
-Blueprint decks for the flagship systems.
-
-| Asset | Deck |
-|---|---|
-| Outbound GTM Engine | [Blueprint (PDF)](https://drive.google.com/file/d/1_qn6-148FAcxvLv1ga6oZtDkeGTnSgFw/view) |
-| AI Employee — full marketing motion | [Blueprint (PDF)](https://drive.google.com/file/d/1-pqATo-Eg0i9RbtzEUBOmyzETCQ-BS3p/view) |
-
-> Decks are hosted on Google Drive. They must be shared as **Anyone with the link → Viewer** to open.
-
----
-
 ## Production systems
 
 Real systems running live for real teams. Click into any folder for the full architecture, the patterns, and what's open versus described.
@@ -117,14 +104,30 @@ The marketing programs I have shipped for B2B SaaS and services clients. Where `
 
 ---
 
-## Generative AI video sample
+## Generative AI videos
 
-A sample video produced with a generative AI video stack, shared as a demo of generative AI video output. Generated on a paid tier, so the tool's watermark is visible; the prompts, data and assets behind it can be recreated to regenerate and adjust the output accordingly.
+Two things here: a generative AI video sample that shows the raw video-production capability, and the strategy plans behind the flagship systems, each recorded as a walkthrough.
+
+### Generative AI sample · ad video
+
+A sample ad-style video produced end to end with a generative AI video stack, shared as a demo of generative AI video output. Generated on a paid tier, so the tool's watermark is visible; the prompts, data and assets behind it can be recreated to regenerate and adjust the output accordingly.
 
 **Stack:** Kling AI · Google Veo 3 (via Gemini) · ElevenLabs · Clipchamp
 
 - [▶ Watch on Google Drive](https://drive.google.com/file/d/1VjmCcEbmgoFaIVpSrhFtzmsAb5mtMnu_/view?usp=sharing) (anyone with the link can view)
 - Folder and download: [`generative-ai-video-sample/`](./generative-ai-video-sample)
+
+### Saurabh Shukla's plan
+
+The strategy walkthroughs behind the flagship systems, each with its blueprint deck where one exists.
+
+| Plan | Video | Deck |
+|---|---|---|
+| Building the Outbound GTM Engine | [▶ Watch](https://drive.google.com/file/d/1XVOE-VvbLrHgi7BfL_6jacjTAJ4AU7Va/view) | [Blueprint (PDF)](https://drive.google.com/file/d/1_qn6-148FAcxvLv1ga6oZtDkeGTnSgFw/view) |
+| Signal Based GTM Engineering | [▶ Watch](https://drive.google.com/file/d/1wQrZa9Ybx6iG-LqJsUHtQ5aO-MioTrdr/view) | — |
+| AI Employee Plan | [▶ Watch](https://drive.google.com/file/d/105BCHPiRjlSH6eS79DwETkIP6ooYrbWF/view) | [Blueprint (PDF)](https://drive.google.com/file/d/1-pqATo-Eg0i9RbtzEUBOmyzETCQ-BS3p/view) |
+
+> Videos and decks are hosted on Google Drive; each must be shared as **Anyone with the link → Viewer** to open.
 
 ---
 
