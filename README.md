@@ -121,11 +121,32 @@ A sample ad-style video produced end to end with a generative AI video stack, sh
 
 The strategy walkthroughs behind the flagship systems, each with its blueprint deck where one exists.
 
-| Plan | Video | Deck |
-|---|---|---|
-| Building the Outbound GTM Engine | [▶ Watch](https://drive.google.com/file/d/1XVOE-VvbLrHgi7BfL_6jacjTAJ4AU7Va/view) | [Blueprint (PDF)](https://drive.google.com/file/d/1_qn6-148FAcxvLv1ga6oZtDkeGTnSgFw/view) |
-| Signal Based GTM Engineering | [▶ Watch](https://drive.google.com/file/d/1wQrZa9Ybx6iG-LqJsUHtQ5aO-MioTrdr/view) | — |
-| AI Employee Plan | [▶ Watch](https://drive.google.com/file/d/105BCHPiRjlSH6eS79DwETkIP6ooYrbWF/view) | [Blueprint (PDF)](https://drive.google.com/file/d/1-pqATo-Eg0i9RbtzEUBOmyzETCQ-BS3p/view) |
+<table width="100%">
+<tr>
+<th align="left" width="460">Plan</th>
+<th align="center" width="240">Video</th>
+<th align="center" width="240">Earlier cut</th>
+<th align="center" width="240">Deck</th>
+</tr>
+<tr>
+<td width="460">Building the Outbound GTM Engine</td>
+<td align="center" width="240"><a href="https://drive.google.com/file/d/1XVOE-VvbLrHgi7BfL_6jacjTAJ4AU7Va/view">▶ Watch</a></td>
+<td align="center" width="240"><a href="https://drive.google.com/file/d/1PEBq7YcSLNskJSu035FuyV_s1fz6LB9p/view">▶ Watch</a></td>
+<td align="center" width="240"><a href="https://drive.google.com/file/d/1_qn6-148FAcxvLv1ga6oZtDkeGTnSgFw/view">Blueprint (PDF)</a></td>
+</tr>
+<tr>
+<td width="460">Signal Based GTM Engineering</td>
+<td align="center" width="240"><a href="https://drive.google.com/file/d/1wQrZa9Ybx6iG-LqJsUHtQ5aO-MioTrdr/view">▶ Watch</a></td>
+<td align="center" width="240"><a href="https://drive.google.com/file/d/14ePkYSmMxZFLXG5Pfk6vkT_2yJM_Q7XV/view">▶ Watch</a></td>
+<td align="center" width="240">—</td>
+</tr>
+<tr>
+<td width="460">AI Employee Plan</td>
+<td align="center" width="240"><a href="https://drive.google.com/file/d/105BCHPiRjlSH6eS79DwETkIP6ooYrbWF/view">▶ Watch</a></td>
+<td align="center" width="240"><a href="https://drive.google.com/file/d/1LTk6DEdVkEVHSiDo9HnJBkgon73OyoYv/view">▶ Watch</a></td>
+<td align="center" width="240"><a href="https://drive.google.com/file/d/1-pqATo-Eg0i9RbtzEUBOmyzETCQ-BS3p/view">Blueprint (PDF)</a></td>
+</tr>
+</table>
 
 > Videos and decks are hosted on Google Drive; each must be shared as **Anyone with the link → Viewer** to open.
 
