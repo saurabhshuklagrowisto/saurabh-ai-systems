@@ -124,6 +124,7 @@ The signal-led outbound go-to-market motion, walked through end to end.
 - **Go to Market Engine** — [▶ Watch](https://drive.google.com/file/d/1XVOE-VvbLrHgi7BfL_6jacjTAJ4AU7Va/view)
 - **Signal Based GTM Engineering** — [▶ Watch](https://drive.google.com/file/d/1wQrZa9Ybx6iG-LqJsUHtQ5aO-MioTrdr/view)
 - **Building the Outbound GTM Engine** — [▶ Watch](https://drive.google.com/file/d/1PEBq7YcSLNskJSu035FuyV_s1fz6LB9p/view)
+- **The Staffing Industry Outbound Signal** — [▶ Watch](https://drive.google.com/file/d/14ePkYSmMxZFLXG5Pfk6vkT_2yJM_Q7XV/view)
 - *Deck:* [Outbound GTM Blueprint (PDF)](https://drive.google.com/file/d/1_qn6-148FAcxvLv1ga6oZtDkeGTnSgFw/view)
 
 ### AI employee team
