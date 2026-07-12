@@ -40,6 +40,20 @@ This repo is the proof. Every system here is either running live in production f
 
 ---
 
+## Decks &amp; recordings
+
+Walkthrough decks and AI-generated explainer videos for the flagship systems.
+
+| Asset | Deck | Video |
+|---|---|---|
+| Outbound GTM Engine | [Blueprint (PDF)](https://drive.google.com/file/d/1_qn6-148FAcxvLv1ga6oZtDkeGTnSgFw/view) | [Watch](https://drive.google.com/file/d/1PEBq7YcSLNskJSu035FuyV_s1fz6LB9p/view) |
+| AI Employee — ATLAS agent corps | [Blueprint (PDF)](https://drive.google.com/file/d/1-pqATo-Eg0i9RbtzEUBOmyzETCQ-BS3p/view) | [Watch](https://drive.google.com/file/d/1LTk6DEdVkEVHSiDo9HnJBkgon73OyoYv/view) |
+| Staffing industry outbound signal | — | [Watch](https://drive.google.com/file/d/14ePkYSmMxZFLXG5Pfk6vkT_2yJM_Q7XV/view) |
+
+> Videos and decks are hosted on Google Drive. They must be shared as **Anyone with the link → Viewer** to open.
+
+---
+
 ## Production systems
 
 Real systems running live for real teams. Click into any folder for the full architecture, the patterns, and what's open versus described.
