@@ -25,16 +25,16 @@ This repo is the proof. Every system here is either running live in production f
 
 ## By the numbers
 
-<table>
+<table width="100%">
 <tr>
-<td align="center"><b>8</b><br>production systems live</td>
-<td align="center"><b>8</b><br>standalone Claude skills</td>
-<td align="center"><b>10</b><br>marketing workflow case studies</td>
+<td align="center" width="33%"><b>8</b><br>production systems live</td>
+<td align="center" width="34%"><b>8</b><br>standalone Claude skills</td>
+<td align="center" width="33%"><b>10</b><br>marketing workflow case studies</td>
 </tr>
 <tr>
-<td align="center"><b>~$1.2M</b><br>influenced pipeline, 6 mo</td>
-<td align="center"><b>25+</b><br>qualified meetings / month</td>
-<td align="center"><b>6%+</b><br>reply rate on cold outbound</td>
+<td align="center" width="33%"><b>~$1.5M</b><br>influenced pipeline, 6 mo</td>
+<td align="center" width="34%"><b>25+</b><br>qualified meetings / month</td>
+<td align="center" width="33%"><b>6%+</b><br>reply rate on cold outbound</td>
 </tr>
 </table>
 
