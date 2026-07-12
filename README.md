@@ -27,9 +27,9 @@ This repo is the proof. Every system here is either running live in production f
 
 <table width="100%">
 <tr>
-<td align="center" width="500"><b>8</b><br>production systems live</td>
-<td align="center" width="500"><b>8</b><br>standalone Claude skills</td>
-<td align="center" width="500"><b>10</b><br>marketing workflow case studies</td>
+<td align="center" width="500"><b>10+</b><br>production systems live</td>
+<td align="center" width="500"><b>12+</b><br>standalone Claude skills</td>
+<td align="center" width="500"><b>7+</b><br>marketing workflow case studies</td>
 </tr>
 <tr>
 <td align="center" width="500"><b>~$1.5M</b><br>influenced pipeline, 6 mo</td>
