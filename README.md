@@ -106,47 +106,33 @@ The marketing programs I have shipped for B2B SaaS and services clients. Where `
 
 ## Generative AI videos
 
-Two things here: a generative AI video sample that shows the raw video-production capability, and the strategy plans behind the flagship systems, each recorded as a walkthrough.
+AI-generated explainer and ad videos, grouped into three tracks. Each track holds its walkthroughs and its blueprint deck.
 
-### Generative AI sample · ad video
+### Generative AI ad
 
-A sample ad-style video produced end to end with a generative AI video stack, shared as a demo of generative AI video output. Generated on a paid tier, so the tool's watermark is visible; the prompts, data and assets behind it can be recreated to regenerate and adjust the output accordingly.
+A sample ad-style video produced end to end with a generative AI video stack, a demo of generative AI video output. Generated on a paid tier, so the tool's watermark is visible; the prompts, data and assets behind it can be recreated to regenerate and adjust the output.
 
 **Stack:** Kling AI · Google Veo 3 (via Gemini) · ElevenLabs · Clipchamp
 
-- [▶ Watch on Google Drive](https://drive.google.com/file/d/1VjmCcEbmgoFaIVpSrhFtzmsAb5mtMnu_/view?usp=sharing) (anyone with the link can view)
+- **Generative AI Ad Sample** — [▶ Watch](https://drive.google.com/file/d/1VjmCcEbmgoFaIVpSrhFtzmsAb5mtMnu_/view?usp=sharing)
 - Folder and download: [`generative-ai-video-sample/`](./generative-ai-video-sample)
 
-### Saurabh Shukla's plan
+### GTM outbound
 
-The strategy walkthroughs behind the flagship systems, each with its blueprint deck where one exists.
+The signal-led outbound go-to-market motion, walked through end to end.
 
-<table width="100%">
-<tr>
-<th align="left" width="460">Plan</th>
-<th align="center" width="240">Video</th>
-<th align="center" width="240">Earlier cut</th>
-<th align="center" width="240">Deck</th>
-</tr>
-<tr>
-<td width="460">Building the Outbound GTM Engine</td>
-<td align="center" width="240"><a href="https://drive.google.com/file/d/1XVOE-VvbLrHgi7BfL_6jacjTAJ4AU7Va/view">▶ Watch</a></td>
-<td align="center" width="240"><a href="https://drive.google.com/file/d/1PEBq7YcSLNskJSu035FuyV_s1fz6LB9p/view">▶ Watch</a></td>
-<td align="center" width="240"><a href="https://drive.google.com/file/d/1_qn6-148FAcxvLv1ga6oZtDkeGTnSgFw/view">Blueprint (PDF)</a></td>
-</tr>
-<tr>
-<td width="460">Signal Based GTM Engineering</td>
-<td align="center" width="240"><a href="https://drive.google.com/file/d/1wQrZa9Ybx6iG-LqJsUHtQ5aO-MioTrdr/view">▶ Watch</a></td>
-<td align="center" width="240"><a href="https://drive.google.com/file/d/14ePkYSmMxZFLXG5Pfk6vkT_2yJM_Q7XV/view">▶ Watch</a></td>
-<td align="center" width="240">—</td>
-</tr>
-<tr>
-<td width="460">AI Employee Plan</td>
-<td align="center" width="240"><a href="https://drive.google.com/file/d/105BCHPiRjlSH6eS79DwETkIP6ooYrbWF/view">▶ Watch</a></td>
-<td align="center" width="240"><a href="https://drive.google.com/file/d/1LTk6DEdVkEVHSiDo9HnJBkgon73OyoYv/view">▶ Watch</a></td>
-<td align="center" width="240"><a href="https://drive.google.com/file/d/1-pqATo-Eg0i9RbtzEUBOmyzETCQ-BS3p/view">Blueprint (PDF)</a></td>
-</tr>
-</table>
+- **Go to Market Engine** — [▶ Watch](https://drive.google.com/file/d/1XVOE-VvbLrHgi7BfL_6jacjTAJ4AU7Va/view)
+- **Signal Based GTM Engineering** — [▶ Watch](https://drive.google.com/file/d/1wQrZa9Ybx6iG-LqJsUHtQ5aO-MioTrdr/view)
+- **Building the Outbound GTM Engine** — [▶ Watch](https://drive.google.com/file/d/1PEBq7YcSLNskJSu035FuyV_s1fz6LB9p/view)
+- *Deck:* [Outbound GTM Blueprint (PDF)](https://drive.google.com/file/d/1_qn6-148FAcxvLv1ga6oZtDkeGTnSgFw/view)
+
+### AI employee team
+
+One AI employee running the full marketing motion, outbound, social and the company brain, under a human approval gate.
+
+- **AI Employee Plan** — [▶ Watch](https://drive.google.com/file/d/105BCHPiRjlSH6eS79DwETkIP6ooYrbWF/view)
+- **AI Employee · Agent Corps** — [▶ Watch](https://drive.google.com/file/d/1LTk6DEdVkEVHSiDo9HnJBkgon73OyoYv/view)
+- *Deck:* [AI Employee Blueprint (PDF)](https://drive.google.com/file/d/1-pqATo-Eg0i9RbtzEUBOmyzETCQ-BS3p/view)
 
 > Videos and decks are hosted on Google Drive; each must be shared as **Anyone with the link → Viewer** to open.
 
