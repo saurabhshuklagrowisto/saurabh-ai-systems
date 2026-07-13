@@ -132,6 +132,7 @@ Standalone runnable Claude skills with golden-set eval harnesses. Each runs in `
 | [AEO Content Brief Generator](./claude-skills/aeo-content-brief-generator) | Third step of the loop: turns a `content`-type fix into a writable brief -- question shape, matching schema, fact-grounded opener (no fabricated claims), section outline | `python claude-skills/aeo-content-brief-generator/scripts/content_brief.py` |
 | [Competitor Teardown](./claude-skills/competitor-teardown) | Weighted positioning matrix, wins/losses/whitespace, and a single defensible wedge from the math | `python claude-skills/competitor-teardown/scripts/teardown_score.py` |
 | [eCommerce (D2C) Conversion Audit](./claude-skills/ecommerce-conversion-audit) | Path-to-purchase audit: PDP, cart, checkout, cost, trust and mobile pillars, findings ranked by revenue impact | `python claude-skills/ecommerce-conversion-audit/scripts/ecom_audit_score.py` |
+| [Lead Nurture Sequencer](./claude-skills/lead-nurture-sequencer) | Stages leads by real engagement (opens, clicks, replies, meetings, unsubscribes) and decides the next nurture touch, with suppression rules that stop automation from talking over a human moment | `python claude-skills/lead-nurture-sequencer/scripts/nurture_sequencer.py` |
 
 ## Systems thinking
 

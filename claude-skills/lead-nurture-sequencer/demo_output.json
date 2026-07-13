@@ -1,0 +1,52 @@
+{
+  "brand": "YourBrand",
+  "leads": [
+    {
+      "name": "Jordan Lee",
+      "stage": "warm",
+      "action": "Send a case-study or proof-point touch while interest is fresh.",
+      "next_touch_in_days": 3,
+      "due_now": false
+    },
+    {
+      "name": "Priya Shah",
+      "stage": "engaged",
+      "action": "A rep replies personally within 24 hours. Do not let an automated touch follow a real reply.",
+      "next_touch_in_days": 0,
+      "due_now": true
+    },
+    {
+      "name": "Tom Rivera",
+      "stage": "cold",
+      "action": "No engagement in 30+ days -- send a breakup/re-engagement email before letting the lead go quiet.",
+      "next_touch_in_days": 0,
+      "due_now": true
+    },
+    {
+      "name": "Ana Kim",
+      "stage": "curious",
+      "action": "Opening but not clicking -- vary the subject line and content type on the next touch.",
+      "next_touch_in_days": 8,
+      "due_now": false
+    },
+    {
+      "name": "Sam Osei",
+      "stage": "suppressed",
+      "action": "Remove from every active sequence immediately. Do not re-add without explicit opt-in.",
+      "next_touch_in_days": null,
+      "due_now": false
+    }
+  ],
+  "stage_counts": {
+    "warm": 1,
+    "engaged": 1,
+    "cold": 1,
+    "curious": 1,
+    "suppressed": 1
+  },
+  "due_now": [
+    "Priya Shah",
+    "Tom Rivera"
+  ],
+  "summary": "2 of 5 lead(s) are due for a touch right now: Priya Shah, Tom Rivera."
+}
