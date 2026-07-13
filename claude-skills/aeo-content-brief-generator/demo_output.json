@@ -1,0 +1,61 @@
+{
+  "brand": "YourBrand",
+  "briefs": [
+    {
+      "question": "how to automate outbound sales with AI",
+      "shape": "how-to",
+      "recommended_schema": "HowTo",
+      "title_suggestion": "How to automate outbound sales with AI (YourBrand)",
+      "opener_draft": "YourBrand cuts manual prospecting time by routing replies by intent automatically.",
+      "sections": [
+        "Direct answer",
+        "Step-by-step",
+        "Common mistakes",
+        "When to use a tool instead"
+      ],
+      "word_count_target": 900,
+      "facts_used": [
+        "cuts manual prospecting time by routing replies by intent automatically"
+      ],
+      "needs_real_data": false
+    },
+    {
+      "question": "best marketing automation platforms 2026",
+      "shape": "best-of",
+      "recommended_schema": "ItemList",
+      "title_suggestion": "Best marketing automation platforms 2026 (YourBrand)",
+      "opener_draft": "[INSERT: one direct, factual sentence that answers 'best marketing automation platforms 2026' using YourBrand's real data -- do not publish this placeholder]",
+      "sections": [
+        "Direct answer (name the pick)",
+        "Criteria used to judge",
+        "Ranked list with one line each",
+        "How to choose"
+      ],
+      "word_count_target": 1100,
+      "facts_used": [],
+      "needs_real_data": true
+    },
+    {
+      "question": "what is answer engine optimisation",
+      "shape": "definition",
+      "recommended_schema": "FAQPage",
+      "title_suggestion": "What is answer engine optimisation (YourBrand)",
+      "opener_draft": "YourBrand is the practice of earning citations inside AI-generated answers, not just search rankings.",
+      "sections": [
+        "Direct answer in one sentence",
+        "Why it matters",
+        "Example",
+        "Related questions"
+      ],
+      "word_count_target": 500,
+      "facts_used": [
+        "is the practice of earning citations inside AI-generated answers, not just search rankings"
+      ],
+      "needs_real_data": false
+    }
+  ],
+  "questions_missing_data": [
+    "best marketing automation platforms 2026"
+  ],
+  "summary": "3 brief(s) drafted. 1 still need real facts supplied before the opener can be written -- see needs_real_data."
+}
