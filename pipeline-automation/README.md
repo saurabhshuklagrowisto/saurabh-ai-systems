@@ -21,6 +21,7 @@ Every flow follows the same design rules I use in production:
 | Lead Enrichment and Qualification | lead-enrichment-qualification.json | Takes a list of emails, enriches each with company info and which email or collaboration provider they run, then qualifies against ICP and flags switch targets already on a rival platform |
 | Weekly Report Bot | weekly-report-bot.json | Scheduled weekly digest that reads the week's pipeline numbers and posts a clean report with week over week movement to Slack or email |
 | AEO / LLM Visibility Monitor | aeo-llm-visibility-monitor.json | Checks whether the brand shows up when buyers ask ChatGPT, Perplexity and Gemini real questions, scores share of voice against competitors, and lists the questions where the brand is invisible |
+| AEO / GEO Improvement Loop | aeo-geo-improvement-loop.json | Runs the full measure to fix loop weekly: same visibility check as above, then diagnoses each gap question (missing content, schema, citations, or authority) and posts a ranked fix plan instead of just a scorecard |
 
 Plus `priority-dashboard-emergent-prompt.md`: a complete build prompt for a working dashboard app (built on Emergent) that visualizes the priority engine: live tier board, signal simulator, score decay, daily queue.
 

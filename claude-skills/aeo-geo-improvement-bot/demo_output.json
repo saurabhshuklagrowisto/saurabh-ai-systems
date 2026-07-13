@@ -1,0 +1,32 @@
+{
+  "brand": "YourBrand",
+  "fixes": [
+    {
+      "question": "best marketing automation platforms 2026",
+      "fix_type": "citation",
+      "action": "Content and schema are in place but no independent source corroborates it. Seed the answer into 2-3 third-party surfaces (Reddit thread, comparison roundup, review site) -- AI answers weight independent corroboration over owned claims.",
+      "recheck_after_days": 14,
+      "priority": 89
+    },
+    {
+      "question": "tools to make my brand discoverable in AI search",
+      "fix_type": "content",
+      "action": "No owned page answers this question directly. Write an answer-shaped page/section (direct answer in the first 2 sentences, then supporting detail) targeting this exact question.",
+      "recheck_after_days": 21,
+      "priority": 78
+    },
+    {
+      "question": "how to automate outbound sales with AI",
+      "fix_type": "schema",
+      "action": "An owned page exists but carries no structured data. Add FAQPage/Article JSON-LD so AI crawlers can parse the answer cleanly, then resubmit for indexing.",
+      "recheck_after_days": 7,
+      "priority": 60
+    }
+  ],
+  "fix_type_mix": {
+    "citation": 1,
+    "content": 1,
+    "schema": 1
+  },
+  "summary": "3 gap question(s) to close. Start with \"best marketing automation platforms 2026\" (citation fix, re-check in 14 days). Mix: {'citation': 1, 'content': 1, 'schema': 1}."
+}

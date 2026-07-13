@@ -1,0 +1,78 @@
+{
+  "name": "AEO / GEO Improvement Loop (measure, diagnose, fix, re-check)",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [ { "field": "weeks" } ] } },
+      "name": "Weekly Monday 7am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [180, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============ EDIT THIS: the buyer questions you want to own in AI answers ============\nconst QUESTIONS = [\n  'best AI platform for GTM and demand generation',\n  'how to automate outbound sales with AI',\n  'tools to make my brand discoverable in AI search',\n  'best marketing automation platforms 2026',\n  'AI tools to enrich and route leads automatically'\n];\nconst BRAND = 'YourBrand'; // EDIT: your brand name\n// =====================================================================================\nreturn QUESTIONS.map(q => ({ json: { question: q, brand: BRAND } }));"
+      },
+      "name": "Target Buyer Questions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// MEASURE. Runs credential-free on a built-in sample of answers so this imports and runs.\n// To go live, swap for HTTP nodes calling the ChatGPT, Perplexity and Gemini APIs per question,\n// then parse the brands named in each answer.\nconst ENGINES = ['ChatGPT','Perplexity','Gemini'];\nfunction sampleBrandsFor(q) {\n  const pool = ['Clay','Instantly','HubSpot','Jasper','YourBrand','Copy.ai','Apollo','Writer'];\n  const seed = q.length;\n  const picks = [];\n  for (let i = 0; i < 4; i++) picks.push(pool[(seed + i * 3) % pool.length]);\n  return picks;\n}\nconst out = [];\nfor (const item of $input.all()) {\n  const q = item.json.question, brand = item.json.brand;\n  for (const engine of ENGINES) {\n    const brands = sampleBrandsFor(q + engine);\n    out.push({ json: { question: q, engine, brands_named: brands, brand_mentioned: brands.includes(brand), brand } });\n  }\n}\nreturn out;"
+      },
+      "name": "Query ChatGPT / Perplexity / Gemini",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [620, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// SCORE SHARE OF VOICE and isolate the gap questions (brand named in zero engines).\nconst rows = $input.all().map(i => i.json);\nconst brand = rows[0].brand;\nconst byQ = {};\nrows.forEach(r => { byQ[r.question] = byQ[r.question] || 0; if (r.brand_mentioned) byQ[r.question]++; });\nconst gapQuestions = Object.keys(byQ).filter(q => byQ[q] === 0);\nreturn [{ json: { brand, gap_questions: gapQuestions } }];"
+      },
+      "name": "Score + Isolate Gaps",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [840, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// DIAGNOSE. Reads what's missing per gap question (owned content, schema, third-party mentions,\n// demand). In production this calls a site-crawl API + a web search; the demo samples deterministically.\nconst FIX_ACTIONS = {\n  content: 'No owned page answers this question directly. Write an answer-shaped page/section.',\n  schema: 'An owned page exists but carries no structured data. Add FAQPage/Article JSON-LD.',\n  citation: 'Content and schema exist but no independent source corroborates it. Seed 2-3 third-party mentions.',\n  authority: 'All layers exist but the brand still loses -- earn citations from higher-trust sources.'\n};\nconst RECHECK_DAYS = { content: 21, schema: 7, citation: 14, authority: 30 };\nfunction classify(sig) {\n  if (!sig.has_owned_content) return 'content';\n  if (!sig.has_schema_markup) return 'schema';\n  if (sig.third_party_mentions === 0) return 'citation';\n  return 'authority';\n}\nconst j = $json;\nconst fixes = j.gap_questions.map((q, i) => {\n  const sig = { has_owned_content: i % 3 !== 0, has_schema_markup: i % 3 === 2, third_party_mentions: [0,1,0][i % 3], search_volume_proxy: [8,6,9][i % 3] };\n  const fixType = classify(sig);\n  const effortRank = { schema: 0, citation: 1, content: 2, authority: 3 }[fixType];\n  const priority = sig.search_volume_proxy * 10 - effortRank;\n  return { question: q, fix_type: fixType, action: FIX_ACTIONS[fixType], recheck_after_days: RECHECK_DAYS[fixType], priority };\n});\nfixes.sort((a, b) => b.priority - a.priority);\nreturn [{ json: { brand: j.brand, fixes } }];"
+      },
+      "name": "Diagnose + Prioritise Fixes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1060, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// BUILD THE REPORT.\nconst j = $json;\nconst lines = [\n  '*AEO / GEO Improvement Plan - ' + j.brand + '*',\n  '',\n  j.fixes.length ? (j.fixes.length + ' gap question(s) to close, ranked by priority:') : 'No visibility gaps this run.',\n  ...j.fixes.map(f => '  - [' + f.fix_type.toUpperCase() + '] ' + f.question + '  (re-check in ' + f.recheck_after_days + 'd)'),\n  '',\n  j.fixes[0] ? ('Start with: ' + j.fixes[0].action) : ''\n];\nreturn [{ json: { report: lines.join('\\n') } }];"
+      },
+      "name": "Build Improvement Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1280, 300]
+    },
+    {
+      "parameters": {
+        "values": { "string": [
+          { "name": "send_to", "value": "#growth (Slack) or a content team task board" },
+          { "name": "message", "value": "={{ $json.report }}" }
+        ] }, "options": {}
+      },
+      "name": "Send Plan",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1500, 300]
+    }
+  ],
+  "connections": {
+    "Weekly Monday 7am": { "main": [[{ "node": "Target Buyer Questions", "type": "main", "index": 0 }]] },
+    "Target Buyer Questions": { "main": [[{ "node": "Query ChatGPT / Perplexity / Gemini", "type": "main", "index": 0 }]] },
+    "Query ChatGPT / Perplexity / Gemini": { "main": [[{ "node": "Score + Isolate Gaps", "type": "main", "index": 0 }]] },
+    "Score + Isolate Gaps": { "main": [[{ "node": "Diagnose + Prioritise Fixes", "type": "main", "index": 0 }]] },
+    "Diagnose + Prioritise Fixes": { "main": [[{ "node": "Build Improvement Report", "type": "main", "index": 0 }]] },
+    "Build Improvement Report": { "main": [[{ "node": "Send Plan", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}
