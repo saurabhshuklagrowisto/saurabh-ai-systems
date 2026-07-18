@@ -164,7 +164,9 @@ The four Claude skills demonstrate each of these in isolation. The six productio
 ## Stack at a glance
 
 **Models**
-![Claude](https://img.shields.io/badge/Claude-Sonnet%204.6%20%2B%20Haiku-cc785c?style=flat-square)
+![Claude](https://img.shields.io/badge/Claude-Sonnet%205%20%2B%20Opus-cc785c?style=flat-square)
+![Claude Code](https://img.shields.io/badge/Claude_Code-agents%20%2B%20skills-cc785c?style=flat-square)
+![MCP](https://img.shields.io/badge/MCP-custom_servers-6b7280?style=flat-square)
 ![OpenRouter](https://img.shields.io/badge/via-OpenRouter-7c3aed?style=flat-square)
 
 **Languages**
@@ -174,6 +176,7 @@ The four Claude skills demonstrate each of these in isolation. The six productio
 
 **Orchestration**
 ![n8n](https://img.shields.io/badge/n8n-production-ea4b71?style=flat-square)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-scheduled_pipelines-2088ff?style=flat-square&logo=githubactions&logoColor=white)
 ![Make.com](https://img.shields.io/badge/Make-scenarios-6d00cc?style=flat-square)
 ![Zoho Flow](https://img.shields.io/badge/Zoho_Flow-workflows-cf2e2e?style=flat-square)
 
@@ -186,6 +189,8 @@ The four Claude skills demonstrate each of these in isolation. The six productio
 
 **CRM and data**
 ![Zoho CRM](https://img.shields.io/badge/Zoho_CRM-system_of_record-cf2e2e?style=flat-square)
+![Close CRM](https://img.shields.io/badge/Close-sales_pipeline-1463ff?style=flat-square)
+![Supabase](https://img.shields.io/badge/Supabase-Postgres_%2B_RLS-3fcf8e?style=flat-square&logo=supabase&logoColor=white)
 ![Zoho Cliq](https://img.shields.io/badge/Zoho_Cliq-real--time_intake-cf2e2e?style=flat-square)
 ![Google Drive](https://img.shields.io/badge/Google_Drive-storage-4285f4?style=flat-square&logo=googledrive&logoColor=white)
 ![BigQuery](https://img.shields.io/badge/BigQuery-logs-669df6?style=flat-square)
@@ -196,9 +201,14 @@ The four Claude skills demonstrate each of these in isolation. The six productio
 ![Prospectoo](https://img.shields.io/badge/Prospectoo-contact_data-7c3aed?style=flat-square)
 ![Sendy](https://img.shields.io/badge/Sendy-self--hosted_email-f59e0b?style=flat-square)
 ![LinkedIn Sales Nav](https://img.shields.io/badge/LinkedIn_Sales_Nav-prospecting-0a66c2?style=flat-square)
+![Smartlead](https://img.shields.io/badge/Smartlead-cold_email-ff6b35?style=flat-square)
+![SalesBlink](https://img.shields.io/badge/SalesBlink-sequences_%2B_warmup-4353ff?style=flat-square)
+![Cleanlist](https://img.shields.io/badge/Cleanlist-waterfall_enrichment-10b981?style=flat-square)
 ![Lemlist](https://img.shields.io/badge/Lemlist-sequences-22c55e?style=flat-square)
 
 **Hosting**
+![Cloudflare Pages](https://img.shields.io/badge/Cloudflare_Pages-live_dashboards-f38020?style=flat-square&logo=cloudflare&logoColor=white)
+![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-live_demos-181717?style=flat-square&logo=github&logoColor=white)
 ![Contabo](https://img.shields.io/badge/Contabo-VPS-1c4e80?style=flat-square)
 ![Railway](https://img.shields.io/badge/Railway-services-0b0d0e?style=flat-square)
 ![Netlify](https://img.shields.io/badge/Netlify-portfolio_site-00c7b7?style=flat-square)
