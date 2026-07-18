@@ -2,7 +2,7 @@
 
 A signal-scored outbound pipeline for a US healthcare-staffing agency (placing offshore virtual admin staff — receptionists, billers, schedulers, records clerks — into US medical and dental practices). Built as a demonstrably better rework of an existing open-source outbound dashboard, with a feedback-driven, eval-gated learning loop the original never had.
 
-**Full build, live demo, and code:** [lead-scraping-plan](https://github.com/saurabhshuklagrowisto/lead-scraping-plan)
+**Full build, live demo, and code:** [lead-scraping-plan](https://github.com/saurabhshuklagrowisto/lead-scraping-plan) · **Live demo:** [outbound command center](https://saurabhshuklagrowisto.github.io/outbound/) · **Production GTM home:** [QuickteamGTM/-lead-scraping-plan](https://github.com/QuickteamGTM/-lead-scraping-plan) (private — access on request)
 
 ## The core finding
 
