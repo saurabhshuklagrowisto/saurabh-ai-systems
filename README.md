@@ -164,7 +164,7 @@ The four Claude skills demonstrate each of these in isolation. The six productio
 ## Stack at a glance
 
 **Models**
-![Claude](https://img.shields.io/badge/Claude-Sonnet%205%20%2B%20Opus-cc785c?style=flat-square)
+![Claude](https://img.shields.io/badge/Claude-Fable%205%20%2B%20Sonnet%205%20%2B%20Opus-cc785c?style=flat-square)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-agents%20%2B%20skills-cc785c?style=flat-square)
 ![MCP](https://img.shields.io/badge/MCP-custom_servers-6b7280?style=flat-square)
 ![OpenRouter](https://img.shields.io/badge/via-OpenRouter-7c3aed?style=flat-square)
