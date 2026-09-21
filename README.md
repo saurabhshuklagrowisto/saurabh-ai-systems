@@ -47,7 +47,8 @@ Real systems running live for real teams. Click into any folder for the full arc
 | System | Description | Status |
 |---|---|---|
 | [**MAYA · CRM Enrichment Agent**](./production-systems/maya-crm-agent) | Autonomous daily agent that links new CRM leads to the right Target Account by resolving the brand's real D2C domain. Self-running playbook, DRY_RUN safety, email digest. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
-| [**WhatsApp AI Agent on VPS**](./production-systems/whatsapp-ai-agent) | A WhatsApp Claude agent on a Contabo VPS that scans group messages on a cron, filters opportunities, alerts the user. Includes the case study of cutting cost from $15 to under $2 a month. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
+| [**WhatsApp AI Agent on VPS · OpenClaw**](./production-systems/whatsapp-ai-agent) | A self-hosted OpenClaw agent on a VPS that scans WhatsApp group messages on a cron, filters them through Claude, and drafts replies. Ships the workspace file contract, a six-line OpenClaw skill, the out-of-band approval gate written after the agent sent a message it should not have, and the case study of cutting cost from $15 to under $2 a month. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
+| [**Provisioning MCP Server**](./production-systems/provisioning-mcp-server) | An 18-tool MCP server over stdio that puts a whole email-infrastructure REST API in front of an agent: domains, DNS, mailboxes, credentials, TOTP, subscriptions, payments. Every write tool carries a `dryRun` flag that sets an `x-dry-run` header, so an agent holding a charge-card tool can rehearse first. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**ABM Automation Pipeline**](./production-systems/abm-automation) | Three-workflow ABM system: ICP scoring on inbound brand lists, POC extraction via Apollo, and a real-time Cliq bot that returns verified contacts on demand. 92 brands scored, codified ICP rules for India and USA. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Fireflies Summary Pipeline**](./production-systems/fireflies-pipeline) | n8n automation that runs every external meeting through a Claude brand-disambiguation step and files the transcript plus an English summary to the right Drive folder. Multi-language friendly. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Upwork Proposal Automation**](./production-systems/upwork-proposals) | Claude plugin with two live skills (`upwork-scan` + `upwork-proposal`) that scans Upwork, scores jobs on a 16-dimension rubric, runs a brand-permission audit, and generates expertise-first PDF proposals. Architecture and patterns documented. Code is employer IP. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
@@ -57,6 +58,16 @@ Real systems running live for real teams. Click into any folder for the full arc
 | [**Sales Pipeline Digest**](./production-systems/sales-pipeline-digest) | Two n8n workflows that roll up pipeline movement and sales signals into a scheduled, AI-written email digest, plus an on-demand trigger for the same. Importable exports, credentials referenced by name only. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Grow Wiki — Linked Sales Intelligence in Obsidian**](./production-systems/growwiki) | A ~1,000-note Obsidian knowledge graph (brand hubs, case studies, testimonials, people, 758 account-history entries across ~19 sectors) served to Claude through a custom MCP server — graph-walk retrieval over wikilinks instead of a vector DB, with a guardrail so confidential client data only surfaces for explicitly named-client questions. The sales team asks in plain English; answers come from curated notes. | ![Production](https://img.shields.io/badge/status-production%20(internal)-green?style=flat-square) |
 | [**Lead Scraping & Scoring for the Staffing Industry**](./production-systems/leadscrapingplan) | Rebuilt an existing outbound dashboard's scoring engine after finding it optimized for the wrong objective (job-seeker logic instead of staffing-seller logic) — re-scoring 61 real human-rated postings against the corrected objective lifted agreement with human judgment from 67% to 77% and cut wrongly-discarded leads from 33% to 6.6%. Account-centric CRM, eval-gated learning loop, free pre-enrichment size gate, Claude MCP server. Full demo + code in the linked repo. | ![Live demo + open code](https://img.shields.io/badge/status-live%20demo%20%2B%20open%20code-blue?style=flat-square) |
+
+### Agent engineering, in depth
+
+The three documents I would point an engineer at first. Each one is a decision I got wrong before I got it right.
+
+- [**The approval gate**](./production-systems/whatsapp-ai-agent/approval-gate.md) · the agent sent a real message to a real person from an opportunity it had invented, while a rule in its prompt said to ask first. Why a prompt is a request and not a lock, and the cron process that replaced it.
+- [**The agent workspace**](./production-systems/whatsapp-ai-agent/agent-workspace-design.md) · what belongs in each OpenClaw workspace file, the prompt-injection boundary, and the capabilities file written after the agent reported three changes it had never made.
+- [**The provisioning MCP server**](./production-systems/provisioning-mcp-server) · one transport function, eighteen thin tools, a dry-run flag on every write, and real HTTP statuses handed back to the model instead of a swallowed error.
+
+---
 
 ## GTM workflow demos — live-recorded
 
@@ -270,6 +281,8 @@ Things I am actively building or extending right now.
 - Adding an MCP server wrapper around the ABM Account Brief Skill so it is callable from Claude Desktop
 - Onboarding the second sales team to MAYA in DRY_RUN mode before flipping their lead-pool to live
 - A shadow-mode harness that runs prompt v(N+1) against prompt v(N) on live traffic for a week before promote
+- Extending the OpenClaw agent's skill set, and pulling each production lesson back into the public write-ups here as it happens
+- An MCP server for outbound infrastructure provisioning, now at 18 tools, with dry-run rehearsal on every write
 
 ---
 
