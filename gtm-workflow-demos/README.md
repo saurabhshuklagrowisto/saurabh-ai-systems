@@ -1,6 +1,6 @@
 # GTM Workflow Demos
 
-Three live-recorded workflow walkthroughs covering Clay enrichment, lead deduplication, and n8n automation. Each one is a pattern I run or have adapted from production at Growisto.
+Three live-recorded workflow walkthroughs covering Clay enrichment, lead deduplication, and n8n automation. Each one is a pattern I run or have adapted from production at the agency.
 
 
 ## Flow 01 · ICP Scoring & Personalized Hooks (Clay)
@@ -87,7 +87,7 @@ A webhook-triggered n8n workflow that fires the moment Fireflies finishes proces
 | **Trigger & intake** | Fireflies Webhook → Extract Meeting ID → Fetch Transcript → Internal call filter | Fireflies POSTs on recording completion. Pull full transcript via API. Skip internal team calls. |
 | **Brand disambiguation** | Extract Brand Hint → Check Folder Cache → Claude disambiguation → Low confidence gate | Claude gets attendee list + meeting title + client list. Returns brand name + confidence score. Low confidence → flag email to human. New brand → auto-create Drive folder. |
 | **File structure** | Check/create Transcripts subfolder → Check/create Summaries subfolder → Upload transcript | Ensure folder structure exists before writing. |
-| **Summary & delivery** | Check for previous summary → Download if exists → Claude generate summary → Upload summary → Internal check → Send email | Previous summary fed as context so Claude writes a continuation, not a one-off. Email only sent if Growisto team was on the call. |
+| **Summary & delivery** | Check for previous summary → Download if exists → Claude generate summary → Upload summary → Internal check → Send email | Previous summary fed as context so Claude writes a continuation, not a one-off. Email only sent if the agency team was on the call. |
 
 **The canonical key pattern:**  
 Claude's output brand name becomes the key that links transcript filing, summary storage, and CRM records. Without a consistent canonical brand name, you cannot join across systems. This is the same pattern the Brand Name Normalizer (separate workflow) enforces at ingestion.

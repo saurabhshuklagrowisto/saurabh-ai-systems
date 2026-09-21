@@ -4,7 +4,7 @@
 ![Workflows](https://img.shields.io/badge/workflows_live-14-1e40af?style=flat-square)
 ![Time saved](https://img.shields.io/badge/weekly_time_saved-~12_hrs-22c55e?style=flat-square)
 
-Replaced 12 hours per week of manual marketing operations work with an automation layer spanning CRM hygiene, lead routing, lead scoring, campaign attribution, and reporting. Built at [Growisto](https://growisto.com), self-hosted on Railway.
+Replaced 12 hours per week of manual marketing operations work with an automation layer spanning CRM hygiene, lead routing, lead scoring, campaign attribution, and reporting. Built at a B2B ecommerce and services agency, self-hosted on Railway.
 
 ## The outcome
 

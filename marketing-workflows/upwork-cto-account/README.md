@@ -4,7 +4,7 @@
 ![Ownership](https://img.shields.io/badge/account_ownership-100%25-22c55e?style=flat-square)
 ![Pipeline](https://img.shields.io/badge/pipeline_generated-~%24380K-22c55e?style=flat-square)
 
-Won and now operate the Upwork CTO account in full for [Growisto](https://growisto.com). Built the positioning, content cadence, and outbound system from a blank page. Manages ongoing account growth across both inbound proposals and outbound prospecting.
+Won and now operate the Upwork CTO account in full for a B2B ecommerce and services agency. Built the positioning, content cadence, and outbound system from a blank page. Manages ongoing account growth across both inbound proposals and outbound prospecting.
 
 This is the end-to-end **business motion**. The [Upwork plugin](../../production-systems/upwork-proposals) is the technical layer that powers the inbound-proposal side of it.
 

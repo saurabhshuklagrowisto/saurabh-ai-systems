@@ -23,7 +23,7 @@ Grow Wiki (~1,000 notes)
 │   ├── <Brand>-Testimonial.md   quote, person, designation
 │   └── <Brand>-People.md        key contacts and roles
 ├── Account-History/             758 dated account interaction notes, linked to brands
-├── Growisto-Capability/         65 notes: services, playbooks, proof points
+├── the agency-Capability/         65 notes: services, playbooks, proof points
 └── link graph                   every [[wikilink]] = a typed edge Claude can walk
 ```
 
@@ -38,7 +38,7 @@ Grow Wiki (~1,000 notes)
 | `list_categories` | sector coverage overview with note counts |
 | `get_related_notes` / `get_recent_notes` | discovery + freshness |
 
-Guardrail baked into the system prompt: the tools answer **only** questions that name a specific client or Growisto's own work — general questions never touch the vault, so confidential data can't leak into unrelated answers.
+Guardrail baked into the system prompt: the tools answer **only** questions that name a specific client or the agency's own work — general questions never touch the vault, so confidential data can't leak into unrelated answers.
 
 ## What it's used for
 

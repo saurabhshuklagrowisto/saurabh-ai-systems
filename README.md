@@ -2,9 +2,11 @@
 
 # Saurabh Shukla
 
-### AI-Powered Marketing Specialist · Mumbai · Open to remote roles
+### AI Architect · Automation and AI · GTM Engineer
 
-**Production AI systems for sales and marketing teams. Built at [Growisto](https://growisto.com).**
+### Mumbai · Open to remote roles
+
+**I design and run the agent systems that go to market: outbound infrastructure, autonomous CRM agents, MCP servers, and the guardrail layer that keeps them safe in production.**
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-shivsaurabh.netlify.app-2b6cb0?style=flat-square)](https://shivsaurabh.netlify.app)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-shivsaurabh-0a66c2?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/shivsaurabh)
@@ -17,9 +19,11 @@
 
 ## TL;DR
 
-I build the AI systems my marketing team uses every day. Autonomous CRM enrichment agents, WhatsApp opportunity scanners, ABM scoring pipelines, eval-gated Claude skills, and the boring guardrail layer that keeps it all from breaking. I work account-based: curated lists, real per-account research, and multichannel cadences that book meetings.
+I am a GTM engineer. I build and operate the systems a revenue team actually runs on: autonomous CRM agents, cold email infrastructure at scale, agent workspaces and MCP servers, ABM scoring pipelines, eval-gated Claude skills, and the guardrail layer that stops any of it from doing something expensive.
 
-This repo is the proof. Every system here is either running live in production for a real team right now, or is a scoped-down packaging of a pattern I run in production. Code where I can share it. Architecture where I can't.
+The work sits across three jobs that usually go to three people. Architecture, because someone has to decide where the model ends and the process begins. Automation, because the system has to run without me at 9am on a Sunday. Go to market, because none of it counts until it books a meeting.
+
+This repo is the proof. Every system here is either running live in production right now, or is a scoped-down packaging of a pattern I run in production. Code where I can share it. Architecture where I cannot. Several of the write-ups lead with what broke first, because that is where the real design decisions came from.
 
 ---
 
@@ -27,7 +31,7 @@ This repo is the proof. Every system here is either running live in production f
 
 <table width="100%">
 <tr>
-<td align="center" width="500"><b>10+</b><br>production systems live</td>
+<td align="center" width="500"><b>13+</b><br>production systems live</td>
 <td align="center" width="500"><b>12+</b><br>standalone Claude skills</td>
 <td align="center" width="500"><b>7+</b><br>marketing workflow case studies</td>
 </tr>
@@ -49,15 +53,18 @@ Real systems running live for real teams. Click into any folder for the full arc
 | [**MAYA · CRM Enrichment Agent**](./production-systems/maya-crm-agent) | Autonomous daily agent that links new CRM leads to the right Target Account by resolving the brand's real D2C domain. Self-running playbook, DRY_RUN safety, email digest. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**WhatsApp AI Agent on VPS · OpenClaw**](./production-systems/whatsapp-ai-agent) | A self-hosted OpenClaw agent on a VPS that scans WhatsApp group messages on a cron, filters them through Claude, and drafts replies. Ships the workspace file contract, a six-line OpenClaw skill, the out-of-band approval gate written after the agent sent a message it should not have, and the case study of cutting cost from $15 to under $2 a month. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Provisioning MCP Server**](./production-systems/provisioning-mcp-server) | An 18-tool MCP server over stdio that puts a whole email-infrastructure REST API in front of an agent: domains, DNS, mailboxes, credentials, TOTP, subscriptions, payments. Every write tool carries a `dryRun` flag that sets an `x-dry-run` header, so an agent holding a charge-card tool can rehearse first. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
+| [**Website Lead Intake & Reply Routing**](./production-systems/website-lead-intake) | Three dependency-free serverless endpoints closing the loop between a website form, Close CRM and the people working the pipeline: domain-level dedup on intake, a webhook listener that classifies inbound replies and sets status in real time, and a daily Slack digest. Carries a dedicated `job_misread` class that exists as a smoke alarm for outbound copy reading like a job offer. Full code and a ten-case test suite, no framework. | ![Live code](https://img.shields.io/badge/status-live%20code-blue?style=flat-square) |
+| [**Cold Email Infrastructure at 152 Mailboxes**](./production-systems/cold-email-infrastructure) | Audit and rebuild of a three-domain, 152-mailbox sending estate: SPF hard-fail, dual DKIM selectors, DMARC at quarantine, 45 of 45 blacklist families clean. Found twelve months of assumed warmup that had never run, auto-renew silently off on the domains that carried all the age, and a bulk warmup import blocked by Microsoft's Basic Auth retirement. The real blocker was on the recipient side: 400 sends a day of capacity against seven usable addresses. | ![Architecture](https://img.shields.io/badge/status-architecture%20write--up-green?style=flat-square) |
+| [**Answer Engine Pages (GEO/AEO)**](./production-systems/answer-engine-pages) | A ten-page service section built so an AI assistant quotes it correctly and refuses the claims it should refuse: an `llms.txt` whose most useful section is written in negatives, `speakable` selectors pointing at a self-contained answer block, one organization entity referenced by `@id` across all ten pages, and a staging copy locked down with both robots.txt and an `X-Robots-Tag` header. | ![Architecture](https://img.shields.io/badge/status-architecture%20write--up-green?style=flat-square) |
 | [**ABM Automation Pipeline**](./production-systems/abm-automation) | Three-workflow ABM system: ICP scoring on inbound brand lists, POC extraction via Apollo, and a real-time Cliq bot that returns verified contacts on demand. 92 brands scored, codified ICP rules for India and USA. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Fireflies Summary Pipeline**](./production-systems/fireflies-pipeline) | n8n automation that runs every external meeting through a Claude brand-disambiguation step and files the transcript plus an English summary to the right Drive folder. Multi-language friendly. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Upwork Proposal Automation**](./production-systems/upwork-proposals) | Claude plugin with two live skills (`upwork-scan` + `upwork-proposal`) that scans Upwork, scores jobs on a 16-dimension rubric, runs a brand-permission audit, and generates expertise-first PDF proposals. Architecture and patterns documented. Code is employer IP. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Landing Page & Collateral Engine**](./production-systems/landing-page-engine) | A Claude skill I built that turns a one-paragraph event brief into a publish-ready landing page (WordPress/Elementor or standalone custom HTML) plus the matching collateral like banners, social cards and email headers designed in Claude Design. It powers the webinar and event demand engine, and ships two real production artifacts: a live webinar landing page and its Sendy invite email. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**ATLAS · AI Employee System**](./production-systems/atlas-ai-employee-system) | One orchestrator agent running a team of five specialist agents end to end: a job-posting outbound engine and a content engine, both feeding one shared company memory. Strict lead state machine, two human approval gates, weekly self-grading eval loop. Scout scraper and ICP scorer are live and open, proven on 259 real US postings; the orchestration architecture is fully documented. | ![Live code + architecture](https://img.shields.io/badge/status-live%20code%20%2B%20architecture-blue?style=flat-square) |
-| [**CRM Nurture Dashboard Pipeline**](https://github.com/saurabhshuklagrowisto/nurturedashboardpipeline) | Zero-cost auto-refreshing sales dashboard: GitHub Actions cron pulls Zoho CRM daily via COQL, rebuilds a static HTML dashboard (data embedded at build time — no backend, no auth service), deploys to Cloudflare Pages. Deterministic pending/overdue logic, fail-loud guards that keep yesterday's data live instead of shipping a blank page, IST-safe date handling. $0/month infra. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
+| [**CRM Nurture Dashboard Pipeline**](https://github.com/saurabhshuklagrowisto/nurturedashboardpipeline) | Zero-cost auto-refreshing sales dashboard: GitHub Actions cron pulls Zoho CRM daily via COQL, rebuilds a static HTML dashboard (data embedded at build time, no backend, no auth service), deploys to Cloudflare Pages. Deterministic pending/overdue logic, fail-loud guards that keep yesterday's data live instead of shipping a blank page, IST-safe date handling. $0/month infra. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
 | [**Sales Pipeline Digest**](./production-systems/sales-pipeline-digest) | Two n8n workflows that roll up pipeline movement and sales signals into a scheduled, AI-written email digest, plus an on-demand trigger for the same. Importable exports, credentials referenced by name only. | ![Live](https://img.shields.io/badge/status-live-success?style=flat-square) |
-| [**Grow Wiki — Linked Sales Intelligence in Obsidian**](./production-systems/growwiki) | A ~1,000-note Obsidian knowledge graph (brand hubs, case studies, testimonials, people, 758 account-history entries across ~19 sectors) served to Claude through a custom MCP server — graph-walk retrieval over wikilinks instead of a vector DB, with a guardrail so confidential client data only surfaces for explicitly named-client questions. The sales team asks in plain English; answers come from curated notes. | ![Production](https://img.shields.io/badge/status-production%20(internal)-green?style=flat-square) |
-| [**Lead Scraping & Scoring for the Staffing Industry**](./production-systems/leadscrapingplan) | Rebuilt an existing outbound dashboard's scoring engine after finding it optimized for the wrong objective (job-seeker logic instead of staffing-seller logic) — re-scoring 61 real human-rated postings against the corrected objective lifted agreement with human judgment from 67% to 77% and cut wrongly-discarded leads from 33% to 6.6%. Account-centric CRM, eval-gated learning loop, free pre-enrichment size gate, Claude MCP server. Full demo + code in the linked repo. | ![Live demo + open code](https://img.shields.io/badge/status-live%20demo%20%2B%20open%20code-blue?style=flat-square) |
+| [**Grow Wiki: Linked Sales Intelligence in Obsidian**](./production-systems/growwiki) | A ~1,000-note Obsidian knowledge graph (brand hubs, case studies, testimonials, people, 758 account-history entries across ~19 sectors) served to Claude through a custom MCP server, graph-walk retrieval over wikilinks instead of a vector DB, with a guardrail so confidential client data only surfaces for explicitly named-client questions. The sales team asks in plain English; answers come from curated notes. | ![Production](https://img.shields.io/badge/status-production%20(internal)-green?style=flat-square) |
+| [**Lead Scraping & Scoring for the Staffing Industry**](./production-systems/leadscrapingplan) | Rebuilt an existing outbound dashboard's scoring engine after finding it optimized for the wrong objective (job-seeker logic instead of staffing-seller logic). Re-scoring 61 real human-rated postings against the corrected objective lifted agreement with human judgment from 67% to 77% and cut wrongly-discarded leads from 33% to 6.6%. Account-centric CRM, eval-gated learning loop, free pre-enrichment size gate, Claude MCP server. Full demo + code in the linked repo. | ![Live demo + open code](https://img.shields.io/badge/status-live%20demo%20%2B%20open%20code-blue?style=flat-square) |
 
 ### Agent engineering, in depth
 
@@ -69,7 +76,7 @@ The three documents I would point an engineer at first. Each one is a decision I
 
 ---
 
-## GTM workflow demos — live-recorded
+## GTM workflow demos, live-recorded
 
 Three Clay and n8n workflows recorded live, showing the actual tooling in action. Each video follows the same pattern documented in ARCHITECTURE.md: pre-process outside the tool, route before acting, confidence gate before any customer touch.
 
@@ -83,7 +90,7 @@ Full documentation and demo data template in [`gtm-workflow-demos/`](./gtm-workf
 
 ---
 
-## Pipeline automation flows — import-ready n8n
+## Pipeline automation flows, import-ready n8n
 
 Seven n8n workflows that compose into a self-running B2B pipeline engine, plus an Emergent-built dashboard that visualizes the priority queue. Import the JSON, drop in credentials, run. Includes a zero-credential demo mode with real execution outputs documented.
 
@@ -230,11 +237,11 @@ The four Claude skills demonstrate each of these in isolation. The six productio
 
 ## What I claim, what I am not
 
-I am a marketing specialist running an AI-powered GTM stack, who treats marketing operations as an engineering problem. I architect the systems, write the routing and the guardrails, and ship production workflows in Claude, n8n and Python orchestration. I work with sales and marketing teams in B2B SaaS and services.
+I am a GTM engineer and an AI architect. I hold the whole system: I decide the architecture, write the prompts and the routing and the guardrails, stand up the infrastructure, ship it to production, and own the number it is supposed to move. On the systems in this repo I was usually the only person touching them, from the DNS records to the eval harness.
 
-I am not a CS-trained full-stack web engineer. I do not build React frontends or backend services at production scale. I write Python for orchestration and automation. Heavier engineering is something I would partner with engineers on.
+I am not a CS-trained full-stack web engineer. I do not build React frontends or backend services at production scale. I write Python and JavaScript for orchestration, agents and integrations. Heavier engineering is something I would partner with engineers on.
 
-If you need a builder who can hold the architecture, write the prompts, write the evals, build production workflows on top of Claude and the modern marketing stack, and partner cleanly with engineers when the work needs them, that is the role I fit. If the role you have needs the React plus Python backend generalist, that is not me, and I would rather we both know that early.
+If you need someone who can hold the architecture in their head, write the agent layer, build the infrastructure under it, put real safety gates around it, and stay accountable for whether it produces pipeline, that is the role I fit. If the role you have needs the React plus Python backend generalist, that is not me, and I would rather we both know that early.
 
 ---
 
@@ -288,9 +295,10 @@ Things I am actively building or extending right now.
 
 ## Open to
 
-- **Remote AI-powered marketing roles** in GTM systems, agentic AI for sales and marketing, marketing engineering
-- **Consulting engagements** for teams ramping a Claude-driven GTM motion from zero
-- **Conversations** with founders and operators thinking about the next layer of AI in sales and marketing
+- **GTM engineer and AI architect roles**, remote: agent systems, outbound infrastructure, automation, AI for revenue teams
+- **Agent engineering roles** where someone owns the safety layer as well as the capability layer
+- **Consulting engagements** for teams standing up an agent-driven GTM motion from zero
+- **Conversations** with founders and operators thinking about the next layer of AI in go to market
 
 If something here fits a problem you are working on, the [contact form on the portfolio site](https://shivsaurabh.netlify.app#contact) is the fastest path.
 

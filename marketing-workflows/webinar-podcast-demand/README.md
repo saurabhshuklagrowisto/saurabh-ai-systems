@@ -4,7 +4,7 @@
 ![Webinars](https://img.shields.io/badge/webinars_run-12-1e40af?style=flat-square)
 ![Conversion](https://img.shields.io/badge/registrant_to_meeting-10%25-22c55e?style=flat-square)
 
-A top-of-funnel demand generation engine built around a closed-loop content motion: pre-event ABM activation for high-intent accounts, live engagement scoring during sessions, and attendance-based nurture sequences that turn listeners into qualified meetings. Built at [Growisto](https://growisto.com).
+A top-of-funnel demand generation engine built around a closed-loop content motion: pre-event ABM activation for high-intent accounts, live engagement scoring during sessions, and attendance-based nurture sequences that turn listeners into qualified meetings. Built at a B2B ecommerce and services agency.
 
 ## The outcome
 

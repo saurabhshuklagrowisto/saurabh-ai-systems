@@ -7,7 +7,7 @@
 | **Model** | Claude (Sonnet 4.6) | Best-in-class on long-context reasoning + structured output reliability. Native MCP support for the production system. |
 | **Orchestration (prod)** | n8n | Self-hostable, low-code-but-not-no-code (you can drop into JS when needed), good Claude + Zoho + Apollo + custom webhook nodes. |
 | **Orchestration (dev)** | Python + Anthropic SDK | Lets me iterate on prompts and guardrails outside the n8n canvas. Same Python becomes a service when needed. |
-| **CRM** | Zoho CRM | What Growisto runs. Concepts (lifecycle stages, custom modules, workflows) map cleanly to HubSpot/Salesforce. |
+| **CRM** | Zoho CRM | What the agency runs. Concepts (lifecycle stages, custom modules, workflows) map cleanly to HubSpot/Salesforce. |
 | **Outbound** | Sendy, Lemlist, Apollo, Clay, Prospectoo | Sendy (self-hosted, Amazon SES backend) for high-volume cold sends; Lemlist for warm personalized sequences; Apollo + Prospectoo + Clay for enrichment. |
 | **Enrichment** | Clay + Apollo + LinkedIn Sales Nav | Clay for waterfall enrichment, Apollo for contact data, LiSN for signals. |
 | **Landing pages** | WordPress + Elementor, custom HTML | Elementor for site-resident pages a non-technical teammate can edit later; custom HTML for fast standalone event microsites. A Claude skill generates both from one brief. |

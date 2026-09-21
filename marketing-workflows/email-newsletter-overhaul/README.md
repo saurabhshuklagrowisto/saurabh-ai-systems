@@ -4,7 +4,7 @@
 ![Open rate](https://img.shields.io/badge/open_rate-14%25_to_29%25-22c55e?style=flat-square)
 ![CTR](https://img.shields.io/badge/CTR-1.4%25_to_3.8%25-22c55e?style=flat-square)
 
-Took over and rebuilt the full lifecycle email and newsletter motion for a B2B client at [Growisto](https://growisto.com). Work spanned list hygiene, advanced segmentation, deliverability tuning, A/B testing, and AI-assisted copy generation across a high-cadence send schedule. Sends ran through Sendy (self-hosted on Amazon SES), which kept the per-send cost near zero at the 12,000-contact list size.
+Took over and rebuilt the full lifecycle email and newsletter motion for a B2B client at a B2B ecommerce and services agency. Work spanned list hygiene, advanced segmentation, deliverability tuning, A/B testing, and AI-assisted copy generation across a high-cadence send schedule. Sends ran through Sendy (self-hosted on Amazon SES), which kept the per-send cost near zero at the 12,000-contact list size.
 
 ## The outcome
 

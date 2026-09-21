@@ -4,7 +4,7 @@
 ![Channel](https://img.shields.io/badge/cadence-email_%2B_LinkedIn-7c3aed?style=flat-square)
 ![Goal](https://img.shields.io/badge/goal-in--person_founder_meetings-1e40af?style=flat-square)
 
-An automated Lemlist multichannel sequence that books in-person US meetings for my company's founder with founders of US eCommerce brands. It is founder-to-founder outreach: a curated list, account-specific hooks, and a paced cadence that moves across email and LinkedIn so the request earns a reply instead of getting buried in one channel. Built at [Growisto](https://growisto.com).
+An automated Lemlist multichannel sequence that books in-person US meetings for my company's founder with founders of US eCommerce brands. It is founder-to-founder outreach: a curated list, account-specific hooks, and a paced cadence that moves across email and LinkedIn so the request earns a reply instead of getting buried in one channel. Built at a B2B ecommerce and services agency.
 
 ## The outcome
 

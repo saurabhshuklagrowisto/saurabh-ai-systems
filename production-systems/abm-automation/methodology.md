@@ -1,6 +1,6 @@
 # Methodology · ABM Automation Pipeline
 
-How the three workflows actually decide what is a fit account, who the right contact is, and how the data lands in CRM. This is the same methodology used in production at [Growisto](https://growisto.com), with internal client names and competitor names redacted.
+How the three workflows actually decide what is a fit account, who the right contact is, and how the data lands in CRM. This is the same methodology used in production at a B2B ecommerce and services agency, with internal client names and competitor names redacted.
 
 ## Data sources
 

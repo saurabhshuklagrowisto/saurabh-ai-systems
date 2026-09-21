@@ -4,7 +4,7 @@
 ![Channels](https://img.shields.io/badge/channels-paid_%2B_outbound_%2B_events-7c3aed?style=flat-square)
 ![Region](https://img.shields.io/badge/region-USA-1e40af?style=flat-square)
 
-A multi-touch Account-Based Marketing motion combining LinkedIn paid, outbound sequences, and offline US event activation, run against a curated list of 100 named US B2B accounts. Built for a client at [Growisto](https://growisto.com).
+A multi-touch Account-Based Marketing motion combining LinkedIn paid, outbound sequences, and offline US event activation, run against a curated list of 100 named US B2B accounts. Built for a client at a B2B ecommerce and services agency.
 
 ## The outcome
 

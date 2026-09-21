@@ -1,7 +1,7 @@
 {
   "_meta": {
     "version": "1.0",
-    "description": "Sanitised example ICP criteria for the ABM Automation Pipeline. The production file used at Growisto has the same shape with internal threshold values tuned to the ecommerce services business.",
+    "description": "Sanitised example ICP criteria for the ABM Automation Pipeline. The production file used at the agency has the same shape with internal threshold values tuned to the ecommerce services business.",
     "schema": "Each market has a list of categories. The system walks them top-down. An account qualifies for the highest category whose ALL criteria it meets. Cat 1 = highest priority."
   },
   "india": {

@@ -4,14 +4,14 @@
 ![Skills](https://img.shields.io/badge/Claude_skills-2-cc785c?style=flat-square)
 ![Version](https://img.shields.io/badge/version-v2.2-blue?style=flat-square)
 
-A Claude plugin built at [Growisto](https://growisto.com) that scans Upwork for Shopify and ecommerce jobs, scores them on a 16-dimension rubric, runs a brand-permission audit before any client name is cited, and generates expertise-first PDF proposals with industry-matched portfolio examples.
+A Claude plugin built at a B2B ecommerce and services agency that scans Upwork for Shopify and ecommerce jobs, scores them on a 16-dimension rubric, runs a brand-permission audit before any client name is cited, and generates expertise-first PDF proposals with industry-matched portfolio examples.
 
 The plugin ships **two live slash commands** that the team uses every day:
 
-- `/growisto-upwork:upwork-scan` · scan + score + post to Cliq
-- `/growisto-upwork:upwork-proposal [job URL]` · generate cover letter + PDF proposal
+- `/agency-upwork:upwork-scan` · scan + score + post to Cliq
+- `/agency-upwork:upwork-proposal [job URL]` · generate cover letter + PDF proposal
 
-**Note on what is open here.** The plugin source code is internal to Growisto. This README describes the architecture and the patterns that are reusable. The actual prompts, the portfolio database, and the permission audit content are not redistributed.
+**Note on what is open here.** The plugin source code is internal to the agency. This README describes the architecture and the patterns that are reusable. The actual prompts, the portfolio database, and the permission audit content are not redistributed.
 
 ## What problem it solves
 
@@ -95,7 +95,7 @@ This means a wrong cover letter cannot ship even if a sales rep would have manua
 - LinkedIn URL banned in cover letter and signature
 - Phone numbers and personal emails banned
 - Domain URLs banned for past-client examples (NAME ONLY allowed, no `discoverpilgrim.com`)
-- One highlighted external link per cover letter, pointing to the Growisto-hosted portfolio
+- One highlighted external link per cover letter, pointing to the agency-hosted portfolio
 
 These are not soft suggestions in a prompt. They are validation rules the plugin applies before the proposal is finalised.
 

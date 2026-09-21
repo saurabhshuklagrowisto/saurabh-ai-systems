@@ -1,6 +1,6 @@
 # Marketing Workflows
 
-The marketing programs I have shipped at [Growisto](https://growisto.com) for B2B SaaS and services clients in the US and India. Each one is a real production system that ran (or still runs) for a paying client.
+The marketing programs I have shipped at a B2B ecommerce and services agency for B2B SaaS and services clients in the US and India. Each one is a real production system that ran (or still runs) for a paying client.
 
 Where `production-systems/` documents the AI agents and infrastructure, this folder documents the marketing motions those agents and tools support. Different level of abstraction, same standard of proof.
 

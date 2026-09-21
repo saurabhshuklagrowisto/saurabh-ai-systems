@@ -100,7 +100,7 @@ Base64-encode the credentials locally:
 echo -n "claude-mcp-service:YOUR_APP_PASSWORD" | base64
 ```
 
-Create a project folder (e.g. `~/projects/growisto-live-pages`). Inside it, create `.mcp.json`:
+Create a project folder (e.g. `~/projects/agency-live-pages`). Inside it, create `.mcp.json`:
 
 ```json
 {

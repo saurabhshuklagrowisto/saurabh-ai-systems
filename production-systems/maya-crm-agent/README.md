@@ -1,6 +1,6 @@
 # MAYA · CRM Lead Enrichment Agent
 
-An autonomous Claude agent that runs every night at 9:30 PM IST. It fetches new CRM leads with no Target Account linked, resolves each one to the brand's real D2C ecommerce domain, dedupes against existing Target Accounts, writes the link back to Zoho CRM, and emails a digest. Built at [Growisto](https://growisto.com).
+An autonomous Claude agent that runs every night at 9:30 PM IST. It fetches new CRM leads with no Target Account linked, resolves each one to the brand's real D2C ecommerce domain, dedupes against existing Target Accounts, writes the link back to Zoho CRM, and emails a digest. Built at a B2B ecommerce and services agency.
 
 ## What problem it solves
 
@@ -17,7 +17,7 @@ MAYA does the matching, every night, for every new lead, without supervision. Wi
 | [**n8n_workflow_export.json**](./n8n_workflow_export.json) | The full workflow as an importable n8n export — Schedule trigger, Zoho COQL fetch, deterministic domain resolution, Claude web search with a confidence gate, dedupe + create/link in Zoho, and a Gmail digest. Credentials are referenced by name only; no secrets are included. Ships with DRY_RUN on by default. |
 | [**zoho_accounts_common_names.json**](./zoho_accounts_common_names.json) | Companion n8n workflow that resolves Zoho account records to their real brand common names (Claude-assisted). Credentials referenced by name only; no secrets or internal emails included. |
 
-Source code for the Python helper that talks to Zoho is internal to Growisto and not redistributed here. The architecture, the playbook structure and the patterns are all open.
+Source code for the Python helper that talks to Zoho is internal to the agency and not redistributed here. The architecture, the playbook structure and the patterns are all open.
 
 ## Architecture in one diagram
 
@@ -106,7 +106,7 @@ The digest is the only human touch point in the normal case. Everything else is 
 
 ## Numbers
 
-Numbers are from internal CRM data at Growisto. Specific brand examples are redacted from this public repo. The system has been live for several weeks at the time of writing.
+Numbers are from internal CRM data at the agency. Specific brand examples are redacted from this public repo. The system has been live for several weeks at the time of writing.
 
 - **Coverage** · Every new lead in the rolling 48 hour window gets a decision. None are dropped.
 - **Auto-associate rate** · ~80% of leads resolve to high or medium confidence and auto-link.

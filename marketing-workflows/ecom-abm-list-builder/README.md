@@ -95,7 +95,7 @@ Context:
 - Replatforming signal: {{Replatform Signal}}
 
 Write one sentence (under 20 words) that references something specific to this company's growth or tech setup. 
-Sound curious, not salesy. Do not mention Growisto. Do not use generic phrases like "I noticed" or "I came across".
+Sound curious, not salesy. Do not mention the agency. Do not use generic phrases like "I noticed" or "I came across".
 Output only the sentence. No quotes, no punctuation at the end.
 ```
 

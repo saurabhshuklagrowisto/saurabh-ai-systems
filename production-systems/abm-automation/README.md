@@ -1,6 +1,6 @@
 # ABM Automation Pipeline
 
-Three coordinated workflows that take a list of brand domains and turn them into a CRM-loaded, contact-enriched, sales-team-actionable ABM pipeline. Built at [Growisto](https://growisto.com) for the inbound and outbound ABM motion.
+Three coordinated workflows that take a list of brand domains and turn them into a CRM-loaded, contact-enriched, sales-team-actionable ABM pipeline. Built at a B2B ecommerce and services agency for the inbound and outbound ABM motion.
 
 ## What problem it solves
 
@@ -25,7 +25,7 @@ This system replaces all three manual passes with three automated workflows, wit
 | [icp-criteria-example.json](./icp-criteria-example.json) | Sample ICP criteria structure for India and USA (sanitised, generic categories) |
 | [**code-samples/cliq-bot-parsing.py**](./code-samples/cliq-bot-parsing.py) | Sanitised Python showing the four parsing patterns (LinkedIn profile, LinkedIn company, domain, plain name), the skip-domain list, the title priority ladder, and how each parsed input routes to Apollo. Runnable example included at the bottom. |
 
-The Python source files that talk to Apollo, Zoho and Cliq are internal to Growisto and not redistributed. The architecture and the methodology are open.
+The Python source files that talk to Apollo, Zoho and Cliq are internal to the agency and not redistributed. The architecture and the methodology are open.
 
 ## Architecture in one diagram
 
@@ -94,7 +94,7 @@ The Python source files that talk to Apollo, Zoho and Cliq are internal to Growi
 
 ## Numbers
 
-These numbers are from the system being live for several months at Growisto.
+These numbers are from the system being live for several months at the agency.
 
 | Metric | Value |
 |---|---|

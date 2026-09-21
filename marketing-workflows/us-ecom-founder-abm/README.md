@@ -4,7 +4,7 @@
 ![Channel](https://img.shields.io/badge/motion-account--based_outbound-7c3aed?style=flat-square)
 ![Region](https://img.shields.io/badge/region-USA-1e40af?style=flat-square)
 
-An account-based outbound motion targeting founders of US eCommerce companies. I build the target account lists, the account-specific hooks, and the multichannel sequences that turn a curated list of founders into booked meetings. Apollo for the contact data, Claude for per-account personalization, Lemlist for multichannel delivery. Built for a client at [Growisto](https://growisto.com).
+An account-based outbound motion targeting founders of US eCommerce companies. I build the target account lists, the account-specific hooks, and the multichannel sequences that turn a curated list of founders into booked meetings. Apollo for the contact data, Claude for per-account personalization, Lemlist for multichannel delivery. Built for a client at a B2B ecommerce and services agency.
 
 ## The outcome
 

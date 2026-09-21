@@ -11,7 +11,7 @@ description: >
 # Landing Page Generator, Skill Contract
 
 This is the sanitised contract for the production skill. The actual brand kit and the
-client event pages are internal to Growisto. This file documents what the skill takes
+client event pages are internal to the agency. This file documents what the skill takes
 in, what it produces, and the rules it follows.
 
 ## Inputs

@@ -1,6 +1,6 @@
 # Fireflies Summary Pipeline
 
-An n8n automation that catches every external meeting via the Fireflies webhook, runs Claude through a brand disambiguation step against the existing Drive folder structure, and files the transcript and an English summary to the right brand folder. Multi-language friendly. Live in production at [Growisto](https://growisto.com).
+An n8n automation that catches every external meeting via the Fireflies webhook, runs Claude through a brand disambiguation step against the existing Drive folder structure, and files the transcript and an English summary to the right brand folder. Multi-language friendly. Live in production at a B2B ecommerce and services agency.
 
 ## What problem it solves
 
@@ -20,7 +20,7 @@ This pipeline files every transcript into the right brand folder automatically. 
                 │
                 v
    ┌─────────────────────────────┐
-   │  Internal call?             │  All participants @growisto.com?
+   │  Internal call?             │  All participants @company.com?
    │  (decision diamond)         │
    └────────┬───────────┬────────┘
             │ Yes       │ No (external)
@@ -31,7 +31,7 @@ This pipeline files every transcript into the right brand folder automatically. 
                 ┌───────────────────────────────┐
                 │  Extract raw brand hint       │
                 │  1. From meeting title        │
-                │  2. Fallback: non-Growisto    │
+                │  2. Fallback: external    │
                 │     participant email domain  │
                 └────────────┬──────────────────┘
                              │
@@ -92,7 +92,7 @@ This pipeline files every transcript into the right brand folder automatically. 
                                v
                 ┌──────────────────────────────┐
                 │  Filter recipients           │
-                │  Keep only @growisto.com     │
+                │  Keep only @company.com     │
                 │  attendees from the call     │
                 └──────────────┬───────────────┘
                                │
@@ -109,11 +109,11 @@ This pipeline files every transcript into the right brand folder automatically. 
 
 **Claude does the brand disambiguation.** The naive approach is to string-match the meeting title against folder names. That breaks the moment a meeting is titled "Quick sync" or when a brand has subsidiaries ("Dove Chocolate" vs "Dove Personal Care"). Claude gets the raw hint, the full existing folder list, and decides which existing brand matches or whether a new brand folder is warranted. The disambiguation prompt is short and tight: "Given a raw hint and an existing folder list, return the canonical brand identity, with a confidence rating and your reasoning."
 
-**Internal calls are silently skipped.** If all participants are `@growisto.com`, the meeting is internal and not stored as client intel. The check is done at the start of the workflow before any expensive operations run.
+**Internal calls are silently skipped.** If all participants are `@company.com`, the meeting is internal and not stored as client intel. The check is done at the start of the workflow before any expensive operations run.
 
 **Transcript stored as-is, summary always in English.** The transcript keeps the original language (Hindi, English, mix). The summary is always translated to English so anyone on the team can search and skim it. This costs more in tokens than English-only would, but the trade-off is right for an India-USA team where half the team prefers English-skim.
 
-**Clients excluded from the summary email.** The summary email goes only to internal `@growisto.com` attendees of the call. Clients are filtered out. This is a real guardrail — accidentally summarising a client's own meeting back to them with internal notes would be embarrassing at best, brand-damaging at worst.
+**Clients excluded from the summary email.** The summary email goes only to internal `@company.com` attendees of the call. Clients are filtered out. This is a real guardrail — accidentally summarising a client's own meeting back to them with internal notes would be embarrassing at best, brand-damaging at worst.
 
 **Pre-existing summary refinement (rolled back).** A version tried to use n8n's "simple memory" to take an existing brand's prior summary and produce a refined cumulative summary on each new meeting. It did not work well in production — the cumulative summary drifted off-topic over time. Rolled back to per-meeting summaries with the brand folder as the natural organising structure. Documented in the project tracker as a real research-and-development cycle that closed with "this path does not work here".
 
@@ -142,7 +142,7 @@ n8n · the orchestrator
 Fireflies · meeting recording, transcript and webhook
 Google Drive · storage of canonical brand folders, each with Transcripts and Summaries subfolders
 Claude · brand disambiguation + summary generation
-Email · sent from n8n SMTP node to the internal `@growisto.com` recipients of the call only
+Email · sent from n8n SMTP node to the internal `@company.com` recipients of the call only
 
 ## What is in scope, what is not
 

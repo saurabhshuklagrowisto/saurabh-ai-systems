@@ -4,7 +4,7 @@
 ![Skill](https://img.shields.io/badge/Claude_skill-1-cc785c?style=flat-square)
 ![Outputs](https://img.shields.io/badge/outputs-WordPress%2FElementor%20%2B%20custom%20HTML-1e40af?style=flat-square)
 
-A Claude skill I built that turns a one-paragraph event brief into a publish-ready landing page (either a WordPress/Elementor layout or a standalone custom-HTML page) plus the matching set of marketing collaterals like banners, social cards and email headers designed in Claude Design. Built at [Growisto](https://growisto.com) to power the webinar and event demand engine.
+A Claude skill I built that turns a one-paragraph event brief into a publish-ready landing page (either a WordPress/Elementor layout or a standalone custom-HTML page) plus the matching set of marketing collaterals like banners, social cards and email headers designed in Claude Design. Built at a B2B ecommerce and services agency to power the webinar and event demand engine.
 
 This is the production system behind the landing pages and creatives in the [Webinar and Podcast Demand Engine](../../marketing-workflows/webinar-podcast-demand).
 
@@ -128,10 +128,10 @@ Zoho Forms · registration backend the pages connect to
 |---|---|
 | [README.md](./README.md) | This doc. Architecture and workflow. |
 | [SKILL.md](./SKILL.md) | The skill contract: the inputs it takes, the two output paths, the brand-kit dependency, and the review gate. Sanitised of the actual brand kit. |
-| [examples/webinar-landing-page.html](./examples/webinar-landing-page.html) | A **real production landing page** for a live Growisto webinar, shipped on WordPress + Elementor with a Contact Form 7 registration form (Path A). Open it in any browser. Sanitised: embedded photos removed, the CF7 shortcode point left in place. |
+| [examples/webinar-landing-page.html](./examples/webinar-landing-page.html) | A **real production landing page** for a live the agency webinar, shipped on WordPress + Elementor with a Contact Form 7 registration form (Path A). Open it in any browser. Sanitised: embedded photos removed, the CF7 shortcode point left in place. |
 | [examples/sendy-invite-email.html](./examples/sendy-invite-email.html) | A **real production HTML email** built for Sendy (self-hosted on Amazon SES). It is the kind of collateral that drives registrations into the landing page above. Email-client-safe, mobile-responsive, bulletproof CTA buttons. |
 
-The actual brand kit, the production skill source, and the unedited live pages are internal to Growisto. The skill contract, the architecture, the workflow, and two representative sanitised outputs are open.
+The actual brand kit, the production skill source, and the unedited live pages are internal to the agency. The skill contract, the architecture, the workflow, and two representative sanitised outputs are open.
 
 > The two example files are genuine production artifacts (sanitised), not mockups. The landing page is the real WordPress/Elementor page that ran the webinar, and the email is the real Sendy newsletter that promoted it.
 

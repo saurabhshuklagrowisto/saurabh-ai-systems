@@ -2,7 +2,7 @@
 cliq-bot-parsing.py
 
 Sanitised example of the parsing logic in the Workflow 3 Cliq Bot.
-Real production version is internal to Growisto; this file shows the
+Real production version is internal to the agency; this file shows the
 exact parsing patterns and the title priority ladder.
 
 When an SDR drops a message in the #abm-leads channel, the bot needs to
@@ -44,7 +44,7 @@ SKIP_DOMAINS = {
     "linkedin.com", "twitter.com", "x.com", "github.com",
     "youtube.com", "instagram.com", "facebook.com",
     "drive.google.com", "docs.google.com", "sheets.google.com",
-    "zoho.com", "zoho.in", "growisto.com",
+    "zoho.com", "zoho.in", "company.com",
     "apollo.io", "hubspot.com", "salesforce.com",
     "gmail.com", "yahoo.com", "outlook.com",
 }
