@@ -23,6 +23,8 @@ I am a GTM engineer. I build and operate the systems a revenue team actually run
 
 The work sits across three jobs that usually go to three people. Architecture, because someone has to decide where the model ends and the process begins. Automation, because the system has to run without me at 9am on a Sunday. Go to market, because none of it counts until it books a meeting.
 
+Day to day that means Claude and GPT on the model side, Close CRM and Zoho on the CRM side (HubSpot and Salesforce are the same objects and the same integration surface), SalesBlink, Smartlead, Lemlist, Leadbird, Sendy and Apollo on the outbound side, Clay and Prospectoo for enrichment, n8n and Python holding it together. The full table with the reasoning behind each choice is in [docs/stack.md](./docs/stack.md).
+
 This repo is the proof. Every system here is either running live in production right now, or is a scoped-down packaging of a pattern I run in production. Code where I can share it. Architecture where I cannot. Several of the write-ups lead with what broke first, because that is where the real design decisions came from.
 
 ---
@@ -31,7 +33,7 @@ This repo is the proof. Every system here is either running live in production r
 
 <table width="100%">
 <tr>
-<td align="center" width="500"><b>13+</b><br>production systems live</td>
+<td align="center" width="500"><b>15</b><br>production systems live</td>
 <td align="center" width="500"><b>12+</b><br>standalone Claude skills</td>
 <td align="center" width="500"><b>7+</b><br>marketing workflow case studies</td>
 </tr>
@@ -176,7 +178,7 @@ Most teams ship AI demos. Production AI needs five things this repo demonstrates
 4. **Prompt versioning.** v1 deprecated with a documented reason. v2 in production. v3 must pass the golden set before promote.
 5. **Brain and hands separated.** The reasoning layer (Claude) is one component. The action layer (Python, n8n, SQL) is another. The brain calls the hands through clean contracts.
 
-The four Claude skills demonstrate each of these in isolation. The six production systems show what they look like once they are wired together for a real team.
+The standalone Claude skills demonstrate each of these in isolation. The production systems show what they look like once they are wired together for a real team.
 
 ---
 
@@ -187,6 +189,9 @@ The four Claude skills demonstrate each of these in isolation. The six productio
 ![Claude Code](https://img.shields.io/badge/Claude_Code-agents%20%2B%20skills-cc785c?style=flat-square)
 ![MCP](https://img.shields.io/badge/MCP-custom_servers-6b7280?style=flat-square)
 ![OpenRouter](https://img.shields.io/badge/via-OpenRouter-7c3aed?style=flat-square)
+![GPT](https://img.shields.io/badge/GPT-cross--model_checks-10a37f?style=flat-square)
+![Astra](https://img.shields.io/badge/Astra-multimodal_work-4285f4?style=flat-square)
+![OpenClaw](https://img.shields.io/badge/OpenClaw-always--on_agent-0f766e?style=flat-square)
 
 **Languages**
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab?style=flat-square&logo=python&logoColor=white)
@@ -208,7 +213,9 @@ The four Claude skills demonstrate each of these in isolation. The six productio
 
 **CRM and data**
 ![Zoho CRM](https://img.shields.io/badge/Zoho_CRM-system_of_record-cf2e2e?style=flat-square)
-![Close CRM](https://img.shields.io/badge/Close-sales_pipeline-1463ff?style=flat-square)
+![Close CRM](https://img.shields.io/badge/Close_CRM-API_%2B_webhooks-1463ff?style=flat-square)
+![HubSpot](https://img.shields.io/badge/HubSpot-model--equivalent-ff7a59?style=flat-square)
+![Salesforce](https://img.shields.io/badge/Salesforce-model--equivalent-00a1e0?style=flat-square)
 ![Supabase](https://img.shields.io/badge/Supabase-Postgres_%2B_RLS-3fcf8e?style=flat-square&logo=supabase&logoColor=white)
 ![Zoho Cliq](https://img.shields.io/badge/Zoho_Cliq-real--time_intake-cf2e2e?style=flat-square)
 ![Obsidian](https://img.shields.io/badge/Obsidian-linked_knowledge_base-7c3aed?style=flat-square&logo=obsidian&logoColor=white)
@@ -225,6 +232,10 @@ The four Claude skills demonstrate each of these in isolation. The six productio
 ![SalesBlink](https://img.shields.io/badge/SalesBlink-sequences_%2B_warmup-4353ff?style=flat-square)
 ![Cleanlist](https://img.shields.io/badge/Cleanlist-waterfall_enrichment-10b981?style=flat-square)
 ![Lemlist](https://img.shields.io/badge/Lemlist-sequences-22c55e?style=flat-square)
+![Leadbird](https://img.shields.io/badge/Leadbird-outbound_capacity-f43f5e?style=flat-square)
+![EmailListVerify](https://img.shields.io/badge/EmailListVerify-verification_gate-0ea5e9?style=flat-square)
+![Microsoft 365](https://img.shields.io/badge/Microsoft_365-mailbox_estates-0078d4?style=flat-square)
+![Cloudflare DNS](https://img.shields.io/badge/Cloudflare_DNS-SPF_%2F_DKIM_%2F_DMARC-f38020?style=flat-square)
 
 **Hosting**
 ![Cloudflare Pages](https://img.shields.io/badge/Cloudflare_Pages-live_dashboards-f38020?style=flat-square&logo=cloudflare&logoColor=white)
