@@ -23,7 +23,7 @@ I am a GTM engineer. I build and operate the systems a revenue team actually run
 
 The work sits across three jobs that usually go to three people. Architecture, because someone has to decide where the model ends and the process begins. Automation, because the system has to run without me at 9am on a Sunday. Go to market, because none of it counts until it books a meeting.
 
-Day to day that means Claude and GPT on the model side, Close CRM and Zoho on the CRM side (HubSpot and Salesforce are the same objects and the same integration surface), SalesBlink, Smartlead, Lemlist, Leadbird, Sendy and Apollo on the outbound side, Clay and Prospectoo for enrichment, n8n and Python holding it together. The full table with the reasoning behind each choice is in [docs/stack.md](./docs/stack.md).
+Day to day that means Claude and GPT on the model side with Astra for image, video and same-day site builds, Close CRM and Zoho on the CRM side (HubSpot and Salesforce are the same objects and the same integration surface), SalesBlink, Smartlead, Lemlist, Leadbird, Sendy and Apollo on the outbound side, Clay and Prospectoo for enrichment, n8n and Python holding it together. The full table with the reasoning behind each choice is in [docs/stack.md](./docs/stack.md).
 
 This repo is the proof. Every system here is either running live in production right now, or is a scoped-down packaging of a pattern I run in production. Code where I can share it. Architecture where I cannot. Several of the write-ups lead with what broke first, because that is where the real design decisions came from.
 
@@ -191,7 +191,7 @@ The standalone Claude skills demonstrate each of these in isolation. The product
 ![MCP](https://img.shields.io/badge/MCP-custom_servers-6b7280?style=flat-square)
 ![OpenRouter](https://img.shields.io/badge/via-OpenRouter-7c3aed?style=flat-square)
 ![GPT](https://img.shields.io/badge/GPT-cross--model_checks-10a37f?style=flat-square)
-![Astra](https://img.shields.io/badge/Astra-multimodal_work-4285f4?style=flat-square)
+![Astra](https://img.shields.io/badge/Astra-image_%2F_video_%2F_site_builds-4285f4?style=flat-square)
 ![OpenClaw](https://img.shields.io/badge/OpenClaw-always--on_agent-0f766e?style=flat-square)
 
 **Languages**

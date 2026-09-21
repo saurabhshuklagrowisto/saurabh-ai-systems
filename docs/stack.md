@@ -6,7 +6,8 @@
 |---|---|---|
 | **Model (build)** | Claude Opus 5, Sonnet 5 | Long-context reasoning and structured-output reliability. Native MCP support, which is what the production agents are built on. |
 | **Model (volume)** | Claude Haiku 4.5 via OpenRouter | High-volume filtering and classification where a strict-rule prompt beats reasoning depth. Runs the WhatsApp agent at under $2 a month. |
-| **Second opinion** | GPT, Astra | Cross-model checks on prompts and outputs that matter, plus generative media work. When two models disagree on a classification, that case goes straight into the golden set. |
+| **Second opinion** | GPT | Cross-model checks on prompts and outputs that matter. When two models disagree on a classification, that case goes into the golden set. |
+| **Generative media and fast builds** | Astra | Image and video generation for campaign creative, and website builds when a page has to exist the same day. Also where a hard problem goes when I want it approached from a different angle than the one I already took. |
 | **Agent runtime** | Claude Code, OpenClaw, custom MCP servers | Claude Code for skills and agents at the desk, OpenClaw for the always-on WhatsApp agent on a VPS, MCP for anything a model needs to call safely. |
 | **Orchestration (prod)** | n8n | Self-hostable, low-code but not no-code (drop into JS when needed), good Claude, CRM and Apollo nodes plus custom webhooks. |
 | **Orchestration (dev)** | Python + Anthropic SDK | Lets me iterate on prompts and guardrails outside the n8n canvas. The same Python becomes a service when it needs to be. |
