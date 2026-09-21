@@ -17,6 +17,10 @@ This system reads the groups for you, twice a day, filters by your rules, and al
 | [README.md](./README.md) | This doc. Architecture and patterns. |
 | [cost-optimization-case-study.md](./cost-optimization-case-study.md) | How the monthly run cost dropped from $15 to under $2 through five small changes. Useful if you are running any Claude agent at sustained volume. |
 | [**scripts/analyse-groups.sh**](./scripts/analyse-groups.sh) | The actual bash script running on the VPS, sanitised. Real control flow, real cron entry, real Python parsing inline. Phone numbers, IP, and persona-specific filter rules replaced with placeholders. |
+| [**approval-gate.md**](./approval-gate.md) | The agent sent a message it should not have. Why a prompt rule failed to stop it, and the out-of-band approval gate that replaced it. |
+| [**scripts/approval-gate.sh**](./scripts/approval-gate.sh) | The gate itself, sanitised. Code generation, expiry sweep, flock, and the pending to sent state machine. |
+| [**agent-workspace-design.md**](./agent-workspace-design.md) | The OpenClaw workspace file contract. What each file holds, and the incident behind the ones that were added later. |
+| [**skills/group-scan/SKILL.md**](./skills/group-scan/SKILL.md) | A six line OpenClaw skill. One spoken phrase starts the whole scan pipeline. |
 
 The full system is on a private VPS. Phone numbers and the specific filter rules for the user's domain are not in the public repo. The architecture, the scripts and the cost story are.
 
@@ -93,7 +97,9 @@ The full system is on a private VPS. Phone numbers and the specific filter rules
 
 **Filter prompt is one tight paragraph.** Not a 3000 character system prompt. Just the rules. "Filter for [profile]. REJECT: ... ACCEPT: ... Extract: ..." Haiku follows it reliably because the rules are explicit and the model is not asked to reason about anything else.
 
-**Two-step send (draft then approve).** Auto-sending WhatsApp messages to real people is dangerous. The system always drafts, asks for explicit approval, and only sends after a "yes". Same human-in-the-loop pattern as the production reply triage agent.
+**Approval is a process, not a prompt.** The first version of this told the agent in its prompt to always ask before sending. The agent read that rule, agreed with it, and then sent a real WhatsApp message to a real person from an opportunity it had invented. Sending now lives in a separate cron process the agent cannot call. The agent writes a draft to a directory. A gate previews it, generates a random four character code, and waits for that exact code to arrive from the owner's own number before it sends. Full write-up in [approval-gate.md](./approval-gate.md).
+
+**Workspace files carry the behaviour, not the prompt.** Voice, capabilities, security boundary, messaging rules and memory each live in their own file the agent reads at boot. The reasoning for each one is in [agent-workspace-design.md](./agent-workspace-design.md), including the prompt-injection boundary, which matters because every message the agent reads comes from a channel a stranger can write into.
 
 ## Numbers
 
